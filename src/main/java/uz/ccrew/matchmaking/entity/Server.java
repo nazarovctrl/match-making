@@ -2,6 +2,8 @@ package uz.ccrew.matchmaking.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "servers")
 public class Server {
@@ -12,8 +14,8 @@ public class Server {
     private String name;
     @Column
     private String location;
+    @OneToMany
+    private List<Match> matches;
     @Column
-    private Integer maxPlayers;
-    @Column
-    private Integer currentPlayers;
+    private Boolean isBusy;
 }
