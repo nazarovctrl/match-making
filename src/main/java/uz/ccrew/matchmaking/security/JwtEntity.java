@@ -1,35 +1,43 @@
 package uz.ccrew.matchmaking.security;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import uz.ccrew.matchmaking.entity.User;
-import uz.ccrew.matchmaking.enums.UserRole;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
-public class CustomUserDetails implements UserDetails {
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-    private User user;
 
-    public CustomUserDetails(User user) {
-        this.user = user;
-    }
+/**
+ * Представляет сущность пользователя для аутентификации через JWT.
+ * Реализует интерфейс UserDetails Spring Security для интеграции с Spring Security.
+ */
+@Data
+@AllArgsConstructor
+public class JwtEntity implements UserDetails {
+
+    private String id;
+    private final String login;
+    private final String password;
+    private final Collection<? extends GrantedAuthority> authorities; // Для кого пишется этот метод для админа, или юзера
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return user.getLogin();
+        return login;
     }
 
     @Override
@@ -51,4 +59,5 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

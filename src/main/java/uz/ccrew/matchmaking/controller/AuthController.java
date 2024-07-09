@@ -1,52 +1,50 @@
 package uz.ccrew.matchmaking.controller;
 
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-import uz.ccrew.matchmaking.security.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import uz.ccrew.matchmaking.dto.auth.JwtRequest;
+import uz.ccrew.matchmaking.dto.auth.JwtResponse;
+import uz.ccrew.matchmaking.entity.User;
+import uz.ccrew.matchmaking.service.AuthService;
+import uz.ccrew.matchmaking.service.UserService;
+
+import java.nio.file.AccessDeniedException;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
+@Validated
+@RequiredArgsConstructor
+@Tag(name = "Auth Controller", description = "Auth API")
 public class AuthController {
+    private final AuthService authService;
+    private final UserService userService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getLogin(),
-                        loginRequest.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.generateToken(authentication.getName());
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+    @Operation(summary = "Login User")
+    public JwtResponse login(@Validated @RequestBody JwtRequest loginRequest){
+        return authService.login(loginRequest);
     }
-}
 
-@Data
-class LoginRequest {
-    private String login;
-    private String password;
-}
-@Data
-class JwtAuthenticationResponse {
-    private String accessToken;
-
-    public JwtAuthenticationResponse(String accessToken) {
-        this.accessToken = accessToken;
+    @PostMapping("/register")
+    @Operation(summary = "Register User")
+    public User register(@RequestBody User user){
+        return userService.create(user);
     }
+
+
+    @PostMapping("/refresh")
+    @Operation(summary = "Refresh JWTToken")
+    public JwtResponse refresh(@RequestBody String refreshToken) throws AccessDeniedException {
+        return authService.refresh(refreshToken);
+    }
+
 }
+
