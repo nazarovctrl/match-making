@@ -1,11 +1,13 @@
 package uz.ccrew.matchmaking.entity;
 
+import lombok.Data;
 import uz.ccrew.matchmaking.enums.UserRole;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
