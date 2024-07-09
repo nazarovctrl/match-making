@@ -8,6 +8,7 @@ public class MatchController {
     /* API list
     1. find match (notify when match starts) for Player(team leader)
     2. add match result and calculate rank points for Server
-    3. get match result
+    3. get match list by PlayerId for Player
+    4. get match result by matchId for Player
      */
 }

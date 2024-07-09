@@ -7,7 +7,6 @@ public class ServerController {
     1. add for Administrator
     2. edit for Administrator
     3. delete for Administrator
-    4. view for Admin, Player
-    5. list for Admin, Player
+    4. handle request to change isBusy for Server
     */
 }
