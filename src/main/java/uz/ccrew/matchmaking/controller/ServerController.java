@@ -1,13 +1,14 @@
 package uz.ccrew.matchmaking.controller;
 
+import uz.ccrew.matchmaking.dto.server.ServerDTO;
+import uz.ccrew.matchmaking.service.ServerService;
+
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uz.ccrew.matchmaking.dto.server.ServerDTO;
-import uz.ccrew.matchmaking.service.ServerService;
 
 @RestController
 @RequestMapping("server")
