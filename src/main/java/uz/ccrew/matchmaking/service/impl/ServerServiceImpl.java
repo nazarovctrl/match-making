@@ -1,6 +1,6 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import uz.ccrew.matchmaking.dto.server.ServerDTO;
 import uz.ccrew.matchmaking.entity.Server;
 import uz.ccrew.matchmaking.entity.User;
@@ -17,18 +17,19 @@ public class ServerServiceImpl implements ServerService {
     private final ServerRepository repository;
     private final ServiceMapper mapper;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ServerServiceImpl(ServerRepository repository, ServiceMapper mapper, UserRepository userRepository) {
+    public ServerServiceImpl(ServerRepository repository, ServiceMapper mapper, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.mapper = mapper;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Override
     public ServerDTO add(ServerDTO dto) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        User user = new User(dto.login(), bCryptPasswordEncoder.encode(dto.password()), UserRole.SERVER);
+        User user = new User(dto.login(), passwordEncoder.encode(dto.password()), UserRole.SERVER);
         userRepository.save(user);
 
         Server server = mapper.mapDTO(dto);
