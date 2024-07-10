@@ -33,23 +33,19 @@ public class AuthService {
                     )
             );
             User user = userService.getByLogin(loginRequest.getLogin());
-            jwtResponse.setId(String.valueOf(user.getId()));
+            jwtResponse.setId(user.getId());
             jwtResponse.setLogin(user.getLogin());
             jwtResponse.setAccessToken(jwtTokenProvider.createAccessToken(
-                    Long.valueOf(user.getId()),
+                    (user.getId()),
                     user.getLogin(),
                     Collections.singleton(user.getRole())
             ));
             jwtResponse.setRefreshToken(jwtTokenProvider.createRefreshToken(
-                    Long.valueOf(user.getId()),
+                    user.getId(),
                     user.getLogin()
             ));
         } catch (Exception e) {
-            // Обработка ошибки аутентификации
-            // Например, возврат сообщения об ошибке или логирование
             e.printStackTrace();
-            // В данном случае можно вернуть null или пустой объект JwtResponse,
-            // так как аутентификация не удалась
             return null;
         }
         return jwtResponse;

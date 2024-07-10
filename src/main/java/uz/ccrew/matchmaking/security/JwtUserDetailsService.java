@@ -13,18 +13,9 @@ import uz.ccrew.matchmaking.service.UserService;
 public class JwtUserDetailsService implements UserDetailsService {
     private final UserService userService;
 
-
-    /**
-     * Загружает детали пользователя по имени пользователя.
-     *
-     * @param username Имя пользователя, для которого загружаются детали пользователя.
-     * @return UserDetails, представляющий пользователя для аутентификации.
-     * @throws UsernameNotFoundException Если пользователь с указанным именем пользователя не найден.
-     * То есть
-     */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.getByLogin(username);
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        User user = userService.getByLogin(login);
         return JwtEntityFactory.create(user);
     }
 }

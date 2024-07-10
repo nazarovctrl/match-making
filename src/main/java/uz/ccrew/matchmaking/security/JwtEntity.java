@@ -4,24 +4,21 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
-/**
- * Представляет сущность пользователя для аутентификации через JWT.
- * Реализует интерфейс UserDetails Spring Security для интеграции с Spring Security.
- */
+
 @Data
 @AllArgsConstructor
 public class JwtEntity implements UserDetails {
 
-    private String id;
+    private Integer id;
     private final String login;
     private final String password;
-    private final Collection<? extends GrantedAuthority> authorities; // Для кого пишется этот метод для админа, или юзера
+    private final Collection<? extends GrantedAuthority> authorities;
 
 
 

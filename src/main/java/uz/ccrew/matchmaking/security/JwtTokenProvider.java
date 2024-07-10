@@ -38,13 +38,13 @@ public class JwtTokenProvider {
     private SecretKey key;
 
 
-    @PostConstruct // он вызвовится после конструктора
+    @PostConstruct
     public void init(){
         this.key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
     }
 
     public String createAccessToken(
-            final Long userId,
+            final Integer userId,
             final String login,
             final Set<UserRole> roles
     ) {
@@ -62,15 +62,15 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // мы спарсили роль, чтобы придумать вместе с ней jwt token
+
     private List<String> resolveRoles(Set<UserRole> roles) {
         return roles.stream()
                 .map(Enum::name)
-                .collect(Collectors.toList()); // мы спарсили Роли в String лист
+                .collect(Collectors.toList());
     }
 
 
-    public String createRefreshToken(final Long userId, final String login) {
+    public String createRefreshToken(final Integer userId, final String login) {
         Claims claims = Jwts.claims()
                 .subject(login)
                 .add("id", userId)
@@ -92,9 +92,9 @@ public class JwtTokenProvider {
         if (!isValid(refreshToken)) throw new AccessDeniedException("Доступ запрещен");
 
 
-        Long userId = Long.valueOf(getId(refreshToken));
-        User user = userService.getById(String.valueOf(userId));
-        jwtResponse.setId(String.valueOf(userId));
+        Integer userId = Integer.valueOf(getId(refreshToken));
+        User user = userService.getById(userId);
+        jwtResponse.setId(userId);
         jwtResponse.setLogin(user.getLogin());
         jwtResponse.setAccessToken(
                 createAccessToken(userId, user.getLogin(), Collections.singleton(user.getRole()))
@@ -105,16 +105,6 @@ public class JwtTokenProvider {
         return jwtResponse;
     }
 
-
-    //    public boolean validatedToken(String token){ // Мы проверяем дату сейчас с датой которая будет заканчиваться
-//            Jws<Claims> claimsJwts = Jwts
-//                    .parserBuilder()
-//                    .setSigningKey(key)
-//                    .build()
-//                    .parseClaimsJws(token);
-//            return !claimsJwts.getBody().getExpiration().before(new Date()); // он будет не будет заканчиваться раньше
-//
-//    }
     public boolean isValid(
             final String token
     ) {
@@ -153,7 +143,7 @@ public class JwtTokenProvider {
                 .getSubject();
     }
     public Authentication getAuthentication(String token){
-        String userName = getUsernameFromToken(token); // получили юзернейм(спарсили)
+        String userName = getUsernameFromToken(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
         return new UsernamePasswordAuthenticationToken(userDetails,"",userDetails.getAuthorities());
     }
