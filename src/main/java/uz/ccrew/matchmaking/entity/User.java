@@ -1,11 +1,13 @@
 package uz.ccrew.matchmaking.entity;
 
+import lombok.NoArgsConstructor;
 import uz.ccrew.matchmaking.enums.UserRole;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,4 +19,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column
     private UserRole role;
+
+    public User(String login, String password, UserRole role) {
+        this.login = login;
+        this.password = password;
+        this.role = role;
+    }
 }
