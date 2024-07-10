@@ -13,8 +13,6 @@ import java.util.List;
 public class Match {
     @Id
     private String id;
-    @ManyToOne
-    private Server serverId;
     @Enumerated(EnumType.STRING)
     @Column
     private Rank rank;

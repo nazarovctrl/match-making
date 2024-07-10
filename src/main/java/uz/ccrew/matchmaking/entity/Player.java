@@ -17,8 +17,4 @@ public class Player {
     private Rank rank;
     @Column(nullable = false)
     private Integer points = 0;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Server server;
 }
