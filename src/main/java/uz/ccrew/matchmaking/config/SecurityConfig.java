@@ -28,7 +28,6 @@ public class SecurityConfig {
     @Autowired
     private final JwtTokenProvider jwtTokenProvider;
 
-
     public SecurityConfig(@Lazy JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -42,29 +41,28 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     @Bean
     public JwtProperties jwtProperties() {
         return new JwtProperties();
     }
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .csrf().disable() //Отключает CSRF (Cross-Site Request Forgery)
-                .cors() // Включает поддержку Cross-Origin Resource Sharing
+                .csrf().disable()
+                .cors()
                 .and()
                 .httpBasic()
-                .disable()// Отключает HTTP Basic аутентификацию
+                .disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // указывает, что не нужно создавать сессии, так как аутентификация будет выполняться с использованием токенов
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(((request, response, authException) ->{
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
                     response.getWriter().write("Unouthorized");
-                })) // Настраивает обработку исключений, связанных с аутентификацией и доступом
+                }))
                 .accessDeniedHandler(((request, response, accessDeniedException) -> {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write("Unouthorized");
@@ -76,9 +74,9 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .anonymous() // Отключает анонимную аутентификацию.
+                .anonymous()
                 .disable()
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-        return httpSecurity.build(); // фильтр будет обрабатывать токены JWT, выполнять аутентификацию и устанавливать контекст
+        return httpSecurity.build();
     }
 }
