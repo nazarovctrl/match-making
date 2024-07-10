@@ -18,7 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import uz.ccrew.matchmaking.security.JwtTokenFilter;
 import uz.ccrew.matchmaking.security.JwtTokenProvider;
-import uz.ccrew.matchmaking.service.JwtProperties;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -27,6 +29,17 @@ public class SecurityConfig {
 
     @Autowired
     private final JwtTokenProvider jwtTokenProvider;
+    private static final List<String> SWAGGER_WHITELIST = Arrays.asList(
+            "/v2/api-docs",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/api/v1/auth/**"
+    );
 
     public SecurityConfig(@Lazy JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -40,11 +53,6 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public JwtProperties jwtProperties() {
-        return new JwtProperties();
     }
 
     @Bean
@@ -69,9 +77,7 @@ public class SecurityConfig {
                 }))
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll()
-                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers(SWAGGER_WHITELIST.toArray(new String[0])).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .anonymous()

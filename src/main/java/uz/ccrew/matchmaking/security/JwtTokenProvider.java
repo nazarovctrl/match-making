@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 public class JwtTokenProvider {
     private final JwtProperties jwtProperties;
     private final UserDetailsService  userDetailsService;
