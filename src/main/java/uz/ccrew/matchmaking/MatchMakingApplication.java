@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 @SpringBootApplication
 public class MatchMakingApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(MatchMakingApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(MatchMakingApplication.class, args);
+    }
 }
