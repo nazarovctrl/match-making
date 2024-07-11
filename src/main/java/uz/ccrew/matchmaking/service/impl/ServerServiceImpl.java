@@ -24,11 +24,13 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public ServerDTO add(ServerDTO dto) {
-        User user = User.builder().login(dto.login()).password(passwordEncoder.encode(dto.password())).role(UserRole.SERVER).build();
+        User user = User.builder()
+                .login(dto.login())
+                .password(passwordEncoder.encode(dto.password()))
+                .role(UserRole.SERVER)
+                .build();
         userRepository.save(user);
-
         Server server = mapper.mapDTO(dto);
-
         server.setUser(user);
         repository.save(server);
 
