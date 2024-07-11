@@ -34,7 +34,7 @@ public class SecurityConfig {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
-            "/v3/api-docs/",
+            "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-resources",
             "/swagger-resources/**"
@@ -55,7 +55,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setHideUserNotFoundExceptions(true);
+        provider.setHideUserNotFoundExceptions(false);
         return provider;
     }
 
