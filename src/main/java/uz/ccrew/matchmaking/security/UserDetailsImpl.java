@@ -1,10 +1,14 @@
 package uz.ccrew.matchmaking.security;
 
+import uz.ccrew.matchmaking.enums.UserRole;
+
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -12,11 +16,11 @@ public class UserDetailsImpl implements UserDetails {
     private Integer id;
     private final String login;
     private final String password;
-    private final Collection<? extends GrantedAuthority> authorities;
+    private final UserRole role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

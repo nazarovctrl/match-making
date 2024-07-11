@@ -15,11 +15,10 @@ public class JWTEntityFactory {
                 user.getId(),
                 user.getLogin(),
                 user.getPassword(),
-                mapToGrantedAuthorities(Collections.singletonList(user.getRole()))
-        );
+                user.getRole());
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(List<UserRole> roles) {
+    public static List<GrantedAuthority> mapToGrantedAuthorities(List<UserRole> roles) {
         return roles.stream()
                 .map(Enum::name)
                 .map(SimpleGrantedAuthority::new)
