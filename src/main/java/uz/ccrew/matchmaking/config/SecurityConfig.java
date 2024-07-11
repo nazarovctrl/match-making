@@ -1,6 +1,5 @@
 package uz.ccrew.matchmaking.config;
 
-import uz.ccrew.matchmaking.security.JWTService;
 import uz.ccrew.matchmaking.security.UserAuthenticationEntryPoint;
 import uz.ccrew.matchmaking.security.JWTFilter;
 
@@ -29,7 +28,6 @@ public class SecurityConfig {
     private final JWTFilter jwtFilter;
     private final UserAuthenticationEntryPoint authenticationEntryPoint;
     private final UserDetailsService userDetailsService;
-    private final JWTService JWTService;
     private static final String[] SWAGGER_WHITELIST = {
             "/v2/api-docs",
             "/configuration/ui",
@@ -38,6 +36,7 @@ public class SecurityConfig {
             "/webjars/**",
             "/v3/api-docs/",
             "/swagger-ui/**",
+            "/swagger-resources",
             "/swagger-resources/**"
     };
 

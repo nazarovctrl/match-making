@@ -1,20 +1,14 @@
 package uz.ccrew.matchmaking.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.NoArgsConstructor;
 import uz.ccrew.matchmaking.enums.UserRole;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class User {
+public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

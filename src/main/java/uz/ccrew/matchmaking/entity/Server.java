@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Server {
+public class Server extends Auditable {
     @Id
     @Column(name = "user_id")
     private Integer userId;

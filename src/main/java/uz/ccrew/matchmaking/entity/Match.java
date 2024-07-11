@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "matches")
-public class Match {
+public class Match extends Auditable {
     @Id
     private String id;
     @Enumerated(EnumType.STRING)
