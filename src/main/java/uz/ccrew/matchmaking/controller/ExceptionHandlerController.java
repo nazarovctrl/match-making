@@ -1,6 +1,6 @@
 package uz.ccrew.matchmaking.controller;
 
-import uz.ccrew.matchmaking.dto.GoodResponse;
+import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.exp.AuthHeaderNotFound;
 
@@ -38,16 +38,16 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         String message = e.getMessage();
         int index = message.indexOf(": ");
         message = message.substring(index + 1);
-        return GoodResponse.badRequest(message);
+        return ResponseMaker.badRequest(message);
     }
 
     @ExceptionHandler({JWTDecodeException.class, SignatureException.class})
     private ResponseEntity<Response<?>> forbiddenHandler(RuntimeException e) {
-        return GoodResponse.error(HttpStatus.FORBIDDEN, 0, e.getMessage());
+        return ResponseMaker.error(HttpStatus.FORBIDDEN, 0, e.getMessage());
     }
 
     @ExceptionHandler({IllegalStateException.class, TokenExpiredException.class, AuthHeaderNotFound.class})
     private ResponseEntity<Response<?>> exceptionHandler(RuntimeException e) {
-        return GoodResponse.error(HttpStatus.BAD_REQUEST, 0, e.getMessage());
+        return ResponseMaker.error(HttpStatus.BAD_REQUEST, 0, e.getMessage());
     }
 }
