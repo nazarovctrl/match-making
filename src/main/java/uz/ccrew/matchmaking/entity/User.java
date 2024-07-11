@@ -1,5 +1,8 @@
 package uz.ccrew.matchmaking.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import uz.ccrew.matchmaking.enums.UserRole;
 
@@ -8,6 +11,9 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
+@Data
+@Builder
+@AllArgsConstructor
 public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +26,9 @@ public class User extends Auditable {
     @Column
     private UserRole role;
 
-    public User(String login, String password, UserRole role) {
-        this.login = login;
-        this.password = password;
-        this.role = role;
-    }
+//    public User(String login, String password, UserRole role) {
+//        this.login = login;
+//        this.password = password;
+//        this.role = role;
+//    }
 }

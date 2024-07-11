@@ -66,7 +66,7 @@ public class AuthService {
         if (optional.isPresent()) {
             throw new IllegalStateException("Username is already existing");
         }
-        User user = new User(dto.login(), passwordEncoder.encode(dto.password()), UserRole.PLAYER);
+        User user = User.builder().login(dto.login()).password(passwordEncoder.encode(dto.password())).role(UserRole.PLAYER).build();
         userRepository.save(user);
         return userMapper.mapEntity(user);
     }
