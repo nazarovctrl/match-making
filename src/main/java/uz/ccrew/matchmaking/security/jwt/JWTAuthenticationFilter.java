@@ -1,6 +1,7 @@
-package uz.ccrew.matchmaking.security;
+package uz.ccrew.matchmaking.security.jwt;
 
 import uz.ccrew.matchmaking.exp.TokenExpiredException;
+import uz.ccrew.matchmaking.security.UserDetailsService;
 
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
@@ -20,12 +21,12 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Component
 @RequiredArgsConstructor
-public class JWTFilter extends OncePerRequestFilter {
+public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Qualifier("handlerExceptionResolver")
     @Autowired
     private HandlerExceptionResolver exceptionResolver;
     private final JWTService jwtService;
-    private final JWTUserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

@@ -1,7 +1,6 @@
-package uz.ccrew.matchmaking.config;
+package uz.ccrew.matchmaking.security;
 
-import uz.ccrew.matchmaking.security.UserAuthenticationEntryPoint;
-import uz.ccrew.matchmaking.security.JWTFilter;
+import uz.ccrew.matchmaking.security.jwt.JWTAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JWTFilter jwtFilter;
+    private final JWTAuthenticationFilter authenticationFilter;
     private final UserAuthenticationEntryPoint authenticationEntryPoint;
     private final UserDetailsService userDetailsService;
     private static final String[] SWAGGER_WHITELIST = {
@@ -67,7 +66,7 @@ public class SecurityConfig {
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(handler -> handler.authenticationEntryPoint(authenticationEntryPoint))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth.requestMatchers(SWAGGER_WHITELIST).permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated());
