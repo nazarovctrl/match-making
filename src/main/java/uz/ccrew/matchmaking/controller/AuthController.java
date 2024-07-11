@@ -1,6 +1,6 @@
 package uz.ccrew.matchmaking.controller;
 
-import uz.ccrew.matchmaking.dto.GoodResponse;
+import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.RegisterDTO;
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.UserDTO;
@@ -29,18 +29,18 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "Login User")
     public ResponseEntity<Response<LoginResponseDTO>> login(@RequestBody @Valid LoginDTO loginRequest) {
-        return GoodResponse.ok(authService.login(loginRequest));
+        return ResponseMaker.ok(authService.login(loginRequest));
     }
 
     @PostMapping("/register")
     @Operation(summary = "Register User")
     public ResponseEntity<Response<UserDTO>> registerDTO(@RequestBody @Valid RegisterDTO dto) {
-        return GoodResponse.ok(authService.register(dto));
+        return ResponseMaker.ok(authService.register(dto));
     }
 
     @PostMapping("/refresh")
     @Operation(summary = "Refresh JWTToken")
     public ResponseEntity<Response<String>> refresh(HttpServletRequest request) {
-        return GoodResponse.ok(authService.refresh(request));
+        return ResponseMaker.ok(authService.refresh(request));
     }
 }

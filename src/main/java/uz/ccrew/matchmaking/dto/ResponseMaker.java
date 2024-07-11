@@ -3,7 +3,7 @@ package uz.ccrew.matchmaking.dto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class GoodResponse {
+public class ResponseMaker {
 
     public static ResponseEntity<Response<?>> okMessage(String message) {
         Response<?> response = new Response<>();
