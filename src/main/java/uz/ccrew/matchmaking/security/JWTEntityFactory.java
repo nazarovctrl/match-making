@@ -11,11 +11,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JwtEntityFactory {
+public class JWTEntityFactory {
 
 
-    public static JwtEntity create(final User user) {
-        return new JwtEntity(
+    public static UserDetailsImpl create(final User user) {
+        return new UserDetailsImpl(
                 user.getId(),
                 user.getLogin(),
                 user.getPassword(),

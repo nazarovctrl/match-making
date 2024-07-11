@@ -6,16 +6,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import uz.ccrew.matchmaking.entity.User;
-import uz.ccrew.matchmaking.service.UserService;
+import uz.ccrew.matchmaking.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-public class JwtUserDetailsService implements UserDetailsService {
-    private final UserService userService;
+public class JWTUserDetailsService implements UserDetailsService {
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User user = userService.getByLogin(login);
-        return JwtEntityFactory.create(user);
+        User user = userRepository.findByLogin(login).get();
+        return JWTEntityFactory.create(user);
     }
 }

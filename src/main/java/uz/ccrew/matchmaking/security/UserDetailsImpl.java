@@ -13,8 +13,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class JwtEntity implements UserDetails {
-
+public class UserDetailsImpl implements UserDetails {
     private Integer id;
     private final String login;
     private final String password;

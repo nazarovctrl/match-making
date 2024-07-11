@@ -1,58 +1,71 @@
 package uz.ccrew.matchmaking.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.ccrew.matchmaking.dto.auth.JwtRequest;
-import uz.ccrew.matchmaking.dto.auth.JwtResponse;
-import uz.ccrew.matchmaking.entity.User;
-import uz.ccrew.matchmaking.security.JwtTokenProvider;
 
-import java.nio.file.AccessDeniedException;
-import java.util.Collections;
+import uz.ccrew.matchmaking.dto.RegisterDTO;
+import uz.ccrew.matchmaking.dto.UserDTO;
+import uz.ccrew.matchmaking.dto.auth.LoginDTO;
+import uz.ccrew.matchmaking.dto.auth.LoginResponseDTO;
+import uz.ccrew.matchmaking.entity.User;
+import uz.ccrew.matchmaking.enums.UserRole;
+import uz.ccrew.matchmaking.exp.AuthHeaderNotFound;
+import uz.ccrew.matchmaking.exp.TokenExpiredException;
+import uz.ccrew.matchmaking.repository.UserRepository;
+import uz.ccrew.matchmaking.security.JWTService;
+import uz.ccrew.matchmaking.security.UserDetailsImpl;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
-
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JWTService jwtService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
 
-
-    public JwtResponse login(final JwtRequest loginRequest) {
-        JwtResponse jwtResponse = new JwtResponse();
-        try {
-            authenticationManager.authenticate(
+    public LoginResponseDTO login(final LoginDTO loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getLogin(),
-                            loginRequest.getPassword()
-                    )
-            );
-            User user = userService.getByLogin(loginRequest.getLogin());
-            jwtResponse.setId(user.getId());
-            jwtResponse.setLogin(user.getLogin());
-            jwtResponse.setAccessToken(jwtTokenProvider.createAccessToken(
-                    (user.getId()),
-                    user.getLogin(),
-                    Collections.singleton(user.getRole())
-            ));
-            jwtResponse.setRefreshToken(jwtTokenProvider.createRefreshToken(
-                    user.getId(),
-                    user.getLogin()
-            ));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return jwtResponse;
+                            loginRequest.getPassword()));
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            LoginResponseDTO responseDTO = new LoginResponseDTO();
+            responseDTO.setAccessToken(jwtService.generateAccessToken(userDetails.getUsername()));
+            responseDTO.setRefreshToken(jwtService.generateRefreshToken(userDetails.getUsername()));
+            return responseDTO;
     }
 
+    public String refresh(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")){
+         throw new AuthHeaderNotFound("AuthHeader Not Found");
+        }
+        String refreshToken = authHeader.substring(7);
+        if (jwtService.isTokenExpired(refreshToken)){
+            throw new TokenExpiredException(jwtService.getTokenExpiredMessage(refreshToken));
+        }
+        String login = jwtService.extractRefreshTokenLogin(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+        return jwtService.generateAccessToken(refreshToken);
+    }
 
-    public JwtResponse refresh(final String refreshToken) throws AccessDeniedException {
-        return jwtTokenProvider.refreshUserTokens(refreshToken);
+    public UserDTO register(RegisterDTO dto) {
+        Optional<User> optional = userRepository.findByLogin(dto.login());
+        if (optional.isPresent()){
+            throw new IllegalStateException("Username is already existing");
+        }
+        User user = new User(dto.login(),dto.password(),UserRole.PLAYER);
+        userRepository.save(user);
+        return user;
     }
 }

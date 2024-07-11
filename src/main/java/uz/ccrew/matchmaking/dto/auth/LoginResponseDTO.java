@@ -3,11 +3,7 @@ package uz.ccrew.matchmaking.dto.auth;
 import lombok.Data;
 
 @Data
-public class JwtResponse {
-
-    private Integer id;
-
-    private String login;
+public class LoginResponseDTO {
 
     private String accessToken;
 
