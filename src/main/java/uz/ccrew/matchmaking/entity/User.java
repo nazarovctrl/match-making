@@ -1,11 +1,11 @@
 package uz.ccrew.matchmaking.entity;
 
+import uz.ccrew.matchmaking.enums.UserRole;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uz.ccrew.matchmaking.enums.UserRole;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -25,10 +25,4 @@ public class User extends Auditable {
     @Enumerated(EnumType.STRING)
     @Column
     private UserRole role;
-
-//    public User(String login, String password, UserRole role) {
-//        this.login = login;
-//        this.password = password;
-//        this.role = role;
-//    }
 }

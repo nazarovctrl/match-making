@@ -1,12 +1,12 @@
 package uz.ccrew.matchmaking.mapper;
 
-import org.springframework.stereotype.Component;
 import uz.ccrew.matchmaking.dto.server.ServerDTO;
 import uz.ccrew.matchmaking.entity.Server;
 
+import org.springframework.stereotype.Component;
+
 @Component
 public class ServiceMapper implements Mapper<ServerDTO, Server> {
-
 
     @Override
     public Server mapDTO(ServerDTO dto) {

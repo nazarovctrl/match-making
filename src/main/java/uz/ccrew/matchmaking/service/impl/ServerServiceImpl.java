@@ -1,6 +1,5 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import uz.ccrew.matchmaking.dto.server.ServerDTO;
 import uz.ccrew.matchmaking.entity.Server;
 import uz.ccrew.matchmaking.entity.User;
@@ -10,9 +9,9 @@ import uz.ccrew.matchmaking.repository.ServerRepository;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.service.ServerService;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import org.springframework.stereotype.Service;
 
 @Service

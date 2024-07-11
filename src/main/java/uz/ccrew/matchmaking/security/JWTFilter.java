@@ -1,5 +1,7 @@
 package uz.ccrew.matchmaking.security;
 
+import uz.ccrew.matchmaking.exp.TokenExpiredException;
+
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,8 +17,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-
-import uz.ccrew.matchmaking.exp.TokenExpiredException;
 
 @Component
 @RequiredArgsConstructor

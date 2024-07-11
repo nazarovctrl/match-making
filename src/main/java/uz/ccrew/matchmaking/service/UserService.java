@@ -1,12 +1,13 @@
 package uz.ccrew.matchmaking.service;
 
+import uz.ccrew.matchmaking.entity.User;
+import uz.ccrew.matchmaking.enums.UserRole;
+import uz.ccrew.matchmaking.repository.UserRepository;
+
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.ccrew.matchmaking.entity.User;
-import uz.ccrew.matchmaking.enums.UserRole;
-import uz.ccrew.matchmaking.repository.UserRepository;
 
 @Service
 public class UserService {

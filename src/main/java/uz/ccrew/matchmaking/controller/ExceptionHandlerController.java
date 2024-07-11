@@ -1,5 +1,9 @@
 package uz.ccrew.matchmaking.controller;
 
+import uz.ccrew.matchmaking.dto.GoodResponse;
+import uz.ccrew.matchmaking.dto.Response;
+import uz.ccrew.matchmaking.exp.AuthHeaderNotFound;
+
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import jakarta.validation.ConstraintViolationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
@@ -14,10 +18,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import uz.ccrew.matchmaking.dto.GoodResponse;
-import uz.ccrew.matchmaking.dto.Response;
-import uz.ccrew.matchmaking.exp.AuthHeaderNotFound;
 
 @ControllerAdvice
 @RequiredArgsConstructor
