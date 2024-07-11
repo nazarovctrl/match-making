@@ -30,7 +30,9 @@ public class ServerServiceImpl implements ServerService {
                 .role(UserRole.SERVER)
                 .build();
         userRepository.save(user);
+
         Server server = mapper.mapDTO(dto);
+
         server.setUser(user);
         repository.save(server);
 
