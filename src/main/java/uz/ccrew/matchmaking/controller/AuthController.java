@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import uz.ccrew.matchmaking.dto.GoodResponse;
 import uz.ccrew.matchmaking.dto.RegisterDTO;
 import uz.ccrew.matchmaking.dto.Response;
+import uz.ccrew.matchmaking.dto.UserDTO;
 import uz.ccrew.matchmaking.dto.auth.LoginDTO;
 import uz.ccrew.matchmaking.dto.auth.LoginResponseDTO;
-import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.service.AuthService;
 
 @RestController
@@ -33,8 +33,8 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "Register User")
-    public User RegisterDTO(@RequestBody @Valid RegisterDTO dto){
-        return authService.register(dto);
+    public ResponseEntity<Response<UserDTO>> registerDTO(@RequestBody @Valid RegisterDTO dto){
+        return GoodResponse.ok(authService.register(dto));
     }
 
     @PostMapping("/refresh")

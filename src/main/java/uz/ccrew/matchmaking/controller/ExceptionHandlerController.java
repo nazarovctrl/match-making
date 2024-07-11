@@ -1,5 +1,6 @@
 package uz.ccrew.matchmaking.controller;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import uz.ccrew.matchmaking.dto.GoodResponse;
 import uz.ccrew.matchmaking.dto.Response;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import uz.ccrew.matchmaking.exp.AuthHeaderNotFound;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -43,4 +45,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     private ResponseEntity<Response<?>> forbiddenHandler(RuntimeException e) {
         return GoodResponse.error(HttpStatus.FORBIDDEN, 0, e.getMessage());
     }
+    @ExceptionHandler({IllegalStateException.class, TokenExpiredException.class, AuthHeaderNotFound.class})
+    private ResponseEntity<Response<?>> exceptionHandler(RuntimeException e){
+        return GoodResponse.error(HttpStatus.BAD_REQUEST,0,e.getMessage());
+    }
+
 }

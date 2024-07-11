@@ -5,7 +5,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import uz.ccrew.matchmaking.exp.TokenNotValid;
+import uz.ccrew.matchmaking.exp.TokenExpiredException;
 
 import java.io.IOException;
 
@@ -41,7 +40,7 @@ public class JWTFilter extends OncePerRequestFilter {
         final String token = bearerToken.substring(7);
 
         if (!jwtService.isTokenExpired(token)){
-            exceptionResolver.resolveException(request,response,null,new TokenNotValid("JWT token is not valid"));
+            exceptionResolver.resolveException(request,response,null,new TokenExpiredException(jwtService.getTokenExpiredMessage(token)));
             return;
         }
 

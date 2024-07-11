@@ -18,6 +18,7 @@ import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
 import uz.ccrew.matchmaking.exp.AuthHeaderNotFound;
 import uz.ccrew.matchmaking.exp.TokenExpiredException;
+import uz.ccrew.matchmaking.mapper.UserMapper;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.security.JWTService;
 import uz.ccrew.matchmaking.security.UserDetailsImpl;
@@ -32,6 +33,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
+    private final UserMapper userMapper;
 
     public LoginResponseDTO login(final LoginDTO loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -64,8 +66,8 @@ public class AuthService {
         if (optional.isPresent()){
             throw new IllegalStateException("Username is already existing");
         }
-        User user = new User(dto.login(),dto.password(),UserRole.PLAYER);
+        User user = new User(dto.login(),passwordEncoder.encode(dto.password()),UserRole.PLAYER);
         userRepository.save(user);
-        return user;
+        return userMapper.mapEntity(user);
     }
 }
