@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "teams")
-public class Team {
+public class Team extends Auditable {
     @Id
     private String id;
     @Enumerated(EnumType.STRING)

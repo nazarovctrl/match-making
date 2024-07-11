@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-public class User {
+public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
