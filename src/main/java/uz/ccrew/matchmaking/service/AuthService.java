@@ -38,13 +38,12 @@ public class AuthService {
     public LoginResponseDTO login(final LoginDTO loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getLogin(),
-                        loginRequest.getPassword()));
+                        loginRequest.login(),
+                        loginRequest.password()));
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        LoginResponseDTO responseDTO = new LoginResponseDTO();
-        responseDTO.setAccessToken(jwtService.generateAccessToken(userDetails.getUsername()));
-        responseDTO.setRefreshToken(jwtService.generateRefreshToken(userDetails.getUsername()));
+        LoginResponseDTO responseDTO = new LoginResponseDTO(jwtService.generateAccessToken(userDetails.getUsername()),
+                jwtService.generateRefreshToken(userDetails.getUsername()));
         return responseDTO;
     }
 

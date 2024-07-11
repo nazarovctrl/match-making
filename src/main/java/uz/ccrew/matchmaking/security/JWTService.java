@@ -1,6 +1,5 @@
 package uz.ccrew.matchmaking.security;
 
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.jsonwebtoken.Claims;

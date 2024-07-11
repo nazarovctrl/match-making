@@ -1,10 +1,4 @@
 package uz.ccrew.matchmaking.dto.auth;
 
-import lombok.Data;
+public record LoginResponseDTO(String accessToken, String refreshToken){}
 
-@Data
-public class LoginResponseDTO {
-    private String accessToken;
-
-    private String refreshToken;
-}
