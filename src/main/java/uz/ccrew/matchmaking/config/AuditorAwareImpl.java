@@ -21,12 +21,11 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (!authentication.isAuthenticated() || authentication.getPrincipal() == null) {
-            return null;
-        }
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (!authentication.isAuthenticated()) {
+                return null;
+            }
             UserDetails user = (UserDetails) authentication.getPrincipal();
             Optional<User> byLogin = userRepository.findByLogin(user.getUsername());
             return byLogin.map(value -> value.getId().toString()).or(Optional::empty);
@@ -34,5 +33,4 @@ public class AuditorAwareImpl implements AuditorAware<String> {
             return null;
         }
     }
-
 }
