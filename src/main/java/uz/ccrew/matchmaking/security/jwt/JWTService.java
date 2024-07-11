@@ -1,4 +1,4 @@
-package uz.ccrew.matchmaking.security;
+package uz.ccrew.matchmaking.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;

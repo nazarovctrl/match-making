@@ -21,8 +21,8 @@ public class ResponseMaker {
         return ResponseEntity.ok(response);
     }
 
-    public static ResponseEntity<Response<?>> error(HttpStatus status, int code, String error) {
-        return ResponseEntity.status(status).body(new Response<>(code, error));
+    public static ResponseEntity<Response<?>> error(HttpStatus status, String error) {
+        return ResponseEntity.status(status).body(new Response<>(error));
     }
 
     public static <T> ResponseEntity<Response<?>> error(HttpStatus status, int code, String error, T data) {
@@ -30,6 +30,6 @@ public class ResponseMaker {
     }
 
     public static ResponseEntity<Response<?>> badRequest(String message) {
-        return ResponseEntity.badRequest().body(new Response<>(101, message));
+        return ResponseEntity.badRequest().body(new Response<>(message));
     }
 }

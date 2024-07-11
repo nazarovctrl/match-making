@@ -6,11 +6,12 @@ import uz.ccrew.matchmaking.dto.auth.LoginDTO;
 import uz.ccrew.matchmaking.dto.auth.LoginResponseDTO;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
+import uz.ccrew.matchmaking.exp.AlreadyExistException;
 import uz.ccrew.matchmaking.exp.AuthHeaderNotFound;
 import uz.ccrew.matchmaking.exp.TokenExpiredException;
 import uz.ccrew.matchmaking.mapper.UserMapper;
 import uz.ccrew.matchmaking.repository.UserRepository;
-import uz.ccrew.matchmaking.security.JWTService;
+import uz.ccrew.matchmaking.security.jwt.JWTService;
 import uz.ccrew.matchmaking.security.UserDetailsImpl;
 import uz.ccrew.matchmaking.service.AuthService;
 
@@ -19,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -60,8 +60,10 @@ public class AuthServiceImpl implements AuthService {
         if (jwtService.isTokenExpired(refreshToken)) {
             throw new TokenExpiredException(jwtService.getTokenExpiredMessage(refreshToken));
         }
+
         String login = jwtService.extractRefreshTokenLogin(refreshToken);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+        userDetailsService.loadUserByUsername(login);
+
         return jwtService.generateAccessToken(refreshToken);
     }
 
@@ -69,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
     public UserDTO register(RegisterDTO dto) {
         Optional<User> optional = userRepository.findByLogin(dto.login());
         if (optional.isPresent()) {
-            throw new IllegalStateException("Username is already existing");
+            throw new AlreadyExistException("Username is already existing");
         }
         User user = User.builder().login(dto.login()).password(passwordEncoder.encode(dto.password())).role(UserRole.PLAYER).build();
         userRepository.save(user);

@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Response<T> {
-    private Integer code;
     private T data;
     private List<String> errors;
     private String message;
@@ -20,13 +19,11 @@ public class Response<T> {
         this.data = data;
     }
 
-    public Response(int code, String error) {
-        this.code = code;
+    public Response(String error) {
         addError(error);
     }
 
     public Response(int code, String error, T data) {
-        this.code = code;
         this.data = data;
         addError(error);
     }

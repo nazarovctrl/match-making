@@ -2,6 +2,7 @@ package uz.ccrew.matchmaking.service.impl;
 
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
+import uz.ccrew.matchmaking.exp.AlreadyExistException;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.service.UserService;
 
@@ -19,7 +20,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         if (userRepository.findByLogin(user.getLogin()).isPresent()) {
-            throw new IllegalStateException("User is already existing");
+            throw new AlreadyExistException("User is already existing");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(UserRole.PLAYER);
