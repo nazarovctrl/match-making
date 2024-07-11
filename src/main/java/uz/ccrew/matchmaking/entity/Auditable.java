@@ -17,14 +17,14 @@ import java.time.LocalDateTime;
 @Getter
 public abstract class Auditable {
     @CreatedBy
-    protected String createdBy;
+    protected Integer createdBy;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
     protected LocalDateTime createdDate;
 
     @LastModifiedBy
-    protected String lastModifiedBy;
+    protected Integer lastModifiedBy;
 
     @LastModifiedDate
     protected LocalDateTime lastModifiedDate;
