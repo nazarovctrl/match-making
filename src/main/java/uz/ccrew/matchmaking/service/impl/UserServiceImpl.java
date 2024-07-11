@@ -5,11 +5,9 @@ import uz.ccrew.matchmaking.enums.UserRole;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.service.UserService;
 
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,9 +20,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByLogin(login).get();
     }
 
-    @SneakyThrows
     @Override
-    public User getById(Integer id) {
+    public User getById(Integer id) throws Exception {
         return userRepository.findById(id).orElseThrow(() -> new Exception("User nor found"));
     }
 
