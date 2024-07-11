@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public User create(User user) {
-        if (userRepository.findByLogin(user.getLogin()).isPresent()) { // есть ли такой пользователь в базе
+        if (userRepository.findByLogin(user.getLogin()).isPresent()) {
             throw new IllegalStateException("User is already existing");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));

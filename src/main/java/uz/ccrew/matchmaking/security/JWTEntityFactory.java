@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class JWTEntityFactory {
-    public static UserDetailsImpl create(final User user) {
+    public static UserDetailsImpl create(User user) {
         return new UserDetailsImpl(
                 user.getId(),
                 user.getLogin(),
@@ -19,9 +19,7 @@ public class JWTEntityFactory {
         );
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(
-            final List<UserRole> roles
-    ) {
+    private static List<GrantedAuthority> mapToGrantedAuthorities(List<UserRole> roles) {
         return roles.stream()
                 .map(Enum::name)
                 .map(SimpleGrantedAuthority::new)
