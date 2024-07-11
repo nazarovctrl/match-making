@@ -27,8 +27,8 @@ public class ServerController {
         this.service = service;
     }
 
-    @PostMapping("add")
-    public ResponseEntity<ServerDTO> add(@RequestBody @Valid ServerDTO dto) {
-        return ResponseEntity.ok(service.add(dto));
+    @PostMapping("create")
+    public ResponseEntity<ServerDTO> create(@RequestBody @Valid ServerDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
     }
 }
