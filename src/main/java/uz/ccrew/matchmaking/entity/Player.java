@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "players")
-public class Player {
+public class Player extends Auditable {
     @Id
     @OneToOne
     private User user;
