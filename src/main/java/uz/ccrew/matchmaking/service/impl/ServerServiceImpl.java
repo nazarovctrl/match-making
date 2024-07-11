@@ -23,7 +23,7 @@ public class ServerServiceImpl implements ServerService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public ServerDTO add(ServerDTO dto) {
+    public ServerDTO create(ServerDTO dto) {
         User user = User.builder()
                 .login(dto.login())
                 .password(passwordEncoder.encode(dto.password()))

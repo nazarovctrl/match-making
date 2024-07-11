@@ -1,5 +1,6 @@
 package uz.ccrew.matchmaking.security;
 
+import uz.ccrew.matchmaking.enums.UserRole;
 import uz.ccrew.matchmaking.security.jwt.JWTAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,8 @@ public class SecurityConfig {
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth.requestMatchers(SWAGGER_WHITELIST).permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/server/create", "/api/v1/server/edit", "api/v1/server/delete", "api/v1/server/list", "/api/v1/server/get/*").hasAuthority(UserRole.ADMINISTRATOR.name())
+                        .requestMatchers("/api/v1/server/ready").hasAuthority(UserRole.SERVER.name())
                         .anyRequest().authenticated());
         return httpSecurity.build();
     }
