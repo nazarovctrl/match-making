@@ -37,23 +37,23 @@ public class AuthService {
 
     public LoginResponseDTO login(final LoginDTO loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequest.getLogin(),
-                            loginRequest.getPassword()));
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            LoginResponseDTO responseDTO = new LoginResponseDTO();
-            responseDTO.setAccessToken(jwtService.generateAccessToken(userDetails.getUsername()));
-            responseDTO.setRefreshToken(jwtService.generateRefreshToken(userDetails.getUsername()));
-            return responseDTO;
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getLogin(),
+                        loginRequest.getPassword()));
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        LoginResponseDTO responseDTO = new LoginResponseDTO();
+        responseDTO.setAccessToken(jwtService.generateAccessToken(userDetails.getUsername()));
+        responseDTO.setRefreshToken(jwtService.generateRefreshToken(userDetails.getUsername()));
+        return responseDTO;
     }
 
     public String refresh(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")){
-         throw new AuthHeaderNotFound("AuthHeader Not Found");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new AuthHeaderNotFound("AuthHeader Not Found");
         }
         String refreshToken = authHeader.substring(7);
-        if (jwtService.isTokenExpired(refreshToken)){
+        if (jwtService.isTokenExpired(refreshToken)) {
             throw new TokenExpiredException(jwtService.getTokenExpiredMessage(refreshToken));
         }
         String login = jwtService.extractRefreshTokenLogin(refreshToken);
@@ -63,10 +63,10 @@ public class AuthService {
 
     public UserDTO register(RegisterDTO dto) {
         Optional<User> optional = userRepository.findByLogin(dto.login());
-        if (optional.isPresent()){
+        if (optional.isPresent()) {
             throw new IllegalStateException("Username is already existing");
         }
-        User user = new User(dto.login(),passwordEncoder.encode(dto.password()),UserRole.PLAYER);
+        User user = new User(dto.login(), passwordEncoder.encode(dto.password()), UserRole.PLAYER);
         userRepository.save(user);
         return userMapper.mapEntity(user);
     }

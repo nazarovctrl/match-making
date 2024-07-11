@@ -9,7 +9,6 @@ import uz.ccrew.matchmaking.enums.UserRole;
 import uz.ccrew.matchmaking.repository.UserRepository;
 
 
-
 @Service
 public class UserService {
     @Autowired
@@ -17,15 +16,17 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User getByLogin(String login){
+    public User getByLogin(String login) {
         return userRepository.findByLogin(login).get();
     }
+
     @SneakyThrows
-    public User getById(Integer id){
-        return userRepository.findById(id).orElseThrow(()-> new Exception("User nor found"));
+    public User getById(Integer id) {
+        return userRepository.findById(id).orElseThrow(() -> new Exception("User nor found"));
     }
+
     public User create(User user) {
-        if (userRepository.findByLogin(user.getLogin()).isPresent()){ // есть ли такой пользователь в базе
+        if (userRepository.findByLogin(user.getLogin()).isPresent()) { // есть ли такой пользователь в базе
             throw new IllegalStateException("User is already existing");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -33,7 +34,6 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
-
 
 
 }

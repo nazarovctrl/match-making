@@ -45,9 +45,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     private ResponseEntity<Response<?>> forbiddenHandler(RuntimeException e) {
         return GoodResponse.error(HttpStatus.FORBIDDEN, 0, e.getMessage());
     }
+
     @ExceptionHandler({IllegalStateException.class, TokenExpiredException.class, AuthHeaderNotFound.class})
-    private ResponseEntity<Response<?>> exceptionHandler(RuntimeException e){
-        return GoodResponse.error(HttpStatus.BAD_REQUEST,0,e.getMessage());
+    private ResponseEntity<Response<?>> exceptionHandler(RuntimeException e) {
+        return GoodResponse.error(HttpStatus.BAD_REQUEST, 0, e.getMessage());
     }
 
 }

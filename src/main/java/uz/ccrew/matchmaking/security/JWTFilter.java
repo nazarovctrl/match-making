@@ -33,22 +33,22 @@ public class JWTFilter extends OncePerRequestFilter {
         final String bearerToken = request.getHeader("Authorization");
 
         if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request, response);
             return;
         }
 
         final String token = bearerToken.substring(7);
 
-        if (!jwtService.isTokenExpired(token)){
-            exceptionResolver.resolveException(request,response,null,new TokenExpiredException(jwtService.getTokenExpiredMessage(token)));
+        if (!jwtService.isTokenExpired(token)) {
+            exceptionResolver.resolveException(request, response, null, new TokenExpiredException(jwtService.getTokenExpiredMessage(token)));
             return;
         }
 
         String login = jwtService.extractAccessTokenLogin(token);
-        if (login != null && SecurityContextHolder.getContext() != null){
-            UserDetails userDetails =  userDetailsService.loadUserByUsername(login);
-            UsernamePasswordAuthenticationToken authentication =  new UsernamePasswordAuthenticationToken(userDetails,
-                    null,userDetails.getAuthorities());
+        if (login != null && SecurityContextHolder.getContext() != null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                    null, userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource()
                     .buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);

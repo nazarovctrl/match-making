@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
-
 @Data
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
@@ -18,7 +17,6 @@ public class UserDetailsImpl implements UserDetails {
     private final String login;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
-
 
 
     @Override

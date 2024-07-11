@@ -5,7 +5,7 @@ import uz.ccrew.matchmaking.dto.UserDTO;
 import uz.ccrew.matchmaking.entity.User;
 
 @Component
-public class UserMapper implements Mapper<UserDTO, User>{
+public class UserMapper implements Mapper<UserDTO, User> {
     @Override
     public User mapDTO(UserDTO dto) {
         return User.builder()

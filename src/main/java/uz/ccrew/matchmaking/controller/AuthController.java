@@ -27,19 +27,19 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Login User")
-    public ResponseEntity<Response<LoginResponseDTO>> login(@RequestBody @Valid LoginDTO loginRequest){
+    public ResponseEntity<Response<LoginResponseDTO>> login(@RequestBody @Valid LoginDTO loginRequest) {
         return GoodResponse.ok(authService.login(loginRequest));
     }
 
     @PostMapping("/register")
     @Operation(summary = "Register User")
-    public ResponseEntity<Response<UserDTO>> registerDTO(@RequestBody @Valid RegisterDTO dto){
+    public ResponseEntity<Response<UserDTO>> registerDTO(@RequestBody @Valid RegisterDTO dto) {
         return GoodResponse.ok(authService.register(dto));
     }
 
     @PostMapping("/refresh")
     @Operation(summary = "Refresh JWTToken")
-    public ResponseEntity<Response<String>> refresh(HttpServletRequest request){
+    public ResponseEntity<Response<String>> refresh(HttpServletRequest request) {
         return GoodResponse.ok(authService.refresh(request));
     }
 
