@@ -8,7 +8,6 @@ import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
 import uz.ccrew.matchmaking.repository.UserRepository;
 
-
 @Service
 public class UserService {
     @Autowired
@@ -34,6 +33,4 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
-
-
 }

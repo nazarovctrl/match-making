@@ -40,6 +40,7 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getLogin(),
                         loginRequest.getPassword()));
+
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         LoginResponseDTO responseDTO = new LoginResponseDTO();
         responseDTO.setAccessToken(jwtService.generateAccessToken(userDetails.getUsername()));
