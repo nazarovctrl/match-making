@@ -16,15 +16,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User getByLogin(String login) {
-        return userRepository.findByLogin(login).get();
-    }
-
-    @Override
-    public User getById(Integer id) throws Exception {
-        return userRepository.findById(id).orElseThrow(() -> new Exception("User nor found"));
-    }
-
     @Override
     public User create(User user) {
         if (userRepository.findByLogin(user.getLogin()).isPresent()) {
