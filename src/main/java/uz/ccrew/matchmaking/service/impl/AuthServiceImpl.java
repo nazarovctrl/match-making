@@ -37,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsService userDetailsService;
     private final UserMapper userMapper;
 
+    @Override
     public LoginResponseDTO login(final LoginDTO loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -49,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
         return responseDTO;
     }
 
+    @Override
     public String refresh(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -63,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
         return jwtService.generateAccessToken(refreshToken);
     }
 
+    @Override
     public UserDTO register(RegisterDTO dto) {
         Optional<User> optional = userRepository.findByLogin(dto.login());
         if (optional.isPresent()) {

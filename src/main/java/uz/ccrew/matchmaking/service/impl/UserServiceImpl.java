@@ -23,10 +23,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @SneakyThrows
+    @Override
     public User getById(Integer id) {
         return userRepository.findById(id).orElseThrow(() -> new Exception("User nor found"));
     }
 
+    @Override
     public User create(User user) {
         if (userRepository.findByLogin(user.getLogin()).isPresent()) {
             throw new IllegalStateException("User is already existing");
