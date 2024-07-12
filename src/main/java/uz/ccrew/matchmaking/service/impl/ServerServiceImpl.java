@@ -31,11 +31,11 @@ public class ServerServiceImpl implements ServerService {
                 .build();
         userRepository.save(user);
 
-        Server server = mapper.mapDTO(dto);
+        Server server = mapper.toEntity(dto);
 
         server.setUser(user);
         repository.save(server);
 
-        return mapper.mapEntity(server);
+        return mapper.toDTO(server);
     }
 }

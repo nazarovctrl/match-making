@@ -75,6 +75,6 @@ public class AuthServiceImpl implements AuthService {
         }
         User user = User.builder().login(dto.login()).password(passwordEncoder.encode(dto.password())).role(UserRole.PLAYER).build();
         userRepository.save(user);
-        return userMapper.mapEntity(user);
+        return userMapper.toDTO(user);
     }
 }
