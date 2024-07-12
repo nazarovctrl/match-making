@@ -1,7 +1,9 @@
 package uz.ccrew.matchmaking.service;
 
-import uz.ccrew.matchmaking.entity.User;
+import uz.ccrew.matchmaking.dto.UserDTO;
 
 public interface UserService {
-    User create(User user);
+    UserDTO get();
+
+    UserDTO getById(Integer userId);
 }
