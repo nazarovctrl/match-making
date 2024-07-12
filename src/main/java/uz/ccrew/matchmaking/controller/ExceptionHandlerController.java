@@ -3,6 +3,7 @@ package uz.ccrew.matchmaking.controller;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.exp.AlreadyExistException;
+import uz.ccrew.matchmaking.exp.Unauthorized;
 import uz.ccrew.matchmaking.exp.AuthHeaderNotFound;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.security.authentication.BadCredentialsException;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -50,5 +52,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler({AlreadyExistException.class, TokenExpiredException.class, AuthHeaderNotFound.class})
     private ResponseEntity<Response<?>> exceptionHandler(RuntimeException e) {
         return ResponseMaker.error(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler({BadCredentialsException.class, Unauthorized.class})
+    private ResponseEntity<Response<?>> unAuthorizedExceptionHandler(RuntimeException e) {
+        return ResponseMaker.error(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 }

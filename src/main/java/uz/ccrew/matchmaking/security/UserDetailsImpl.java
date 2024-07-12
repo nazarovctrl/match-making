@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
-    private Integer id;
+    private final Integer id;
     private final String login;
     private final String password;
     private final UserRole role;

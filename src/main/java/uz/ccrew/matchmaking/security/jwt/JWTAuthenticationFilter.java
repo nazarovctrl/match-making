@@ -3,7 +3,6 @@ package uz.ccrew.matchmaking.security.jwt;
 import uz.ccrew.matchmaking.exp.TokenExpiredException;
 import uz.ccrew.matchmaking.security.UserDetailsService;
 
-import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +17,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.security.authentication.BadCredentialsException;
+
+import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
@@ -37,23 +39,27 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        final String token = bearerToken.substring(7);
+        try {
+            final String token = bearerToken.substring(7);
 
-        if (!jwtService.isTokenExpired(token)) {
-            exceptionResolver.resolveException(request, response, null, new TokenExpiredException(jwtService.getTokenExpiredMessage(token)));
-            return;
-        }
+            if (!jwtService.isTokenExpired(token)) {
+                exceptionResolver.resolveException(request, response, null, new TokenExpiredException(jwtService.getTokenExpiredMessage(token)));
+                return;
+            }
 
-        String login = jwtService.extractAccessTokenLogin(token);
-        if (login != null && SecurityContextHolder.getContext() != null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(login);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-                    null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource()
-                    .buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String login = jwtService.extractAccessTokenLogin(token);
+            if (login != null && SecurityContextHolder.getContext() != null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                        null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource()
+                        .buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            exceptionResolver.resolveException(request, response, null, new BadCredentialsException("Bad credentials"));
         }
-        filterChain.doFilter(request, response);
     }
 
     @Override
