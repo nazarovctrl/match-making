@@ -1,4 +1,4 @@
-package uz.ccrew.matchmaking.security;
+package uz.ccrew.matchmaking.security.user;
 
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.repository.UserRepository;

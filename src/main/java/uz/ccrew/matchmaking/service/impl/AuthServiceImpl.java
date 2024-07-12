@@ -12,7 +12,7 @@ import uz.ccrew.matchmaking.exp.TokenExpiredException;
 import uz.ccrew.matchmaking.mapper.UserMapper;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.security.jwt.JWTService;
-import uz.ccrew.matchmaking.security.UserDetailsImpl;
+import uz.ccrew.matchmaking.security.user.UserDetailsImpl;
 import uz.ccrew.matchmaking.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
