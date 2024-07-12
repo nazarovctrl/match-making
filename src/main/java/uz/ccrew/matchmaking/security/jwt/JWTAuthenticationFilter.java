@@ -1,7 +1,7 @@
 package uz.ccrew.matchmaking.security.jwt;
 
 import uz.ccrew.matchmaking.exp.TokenExpiredException;
-import uz.ccrew.matchmaking.security.UserDetailsService;
+import uz.ccrew.matchmaking.security.user.UserDetailsService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

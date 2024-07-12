@@ -1,6 +1,6 @@
 package uz.ccrew.matchmaking.config;
 
-import uz.ccrew.matchmaking.security.UserDetailsImpl;
+import uz.ccrew.matchmaking.security.user.UserDetailsImpl;
 import uz.ccrew.matchmaking.util.AuthUtil;
 
 import org.springframework.data.domain.AuditorAware;

@@ -1,4 +1,4 @@
-package uz.ccrew.matchmaking.security;
+package uz.ccrew.matchmaking.security.user;
 
 import uz.ccrew.matchmaking.enums.UserRole;
 
