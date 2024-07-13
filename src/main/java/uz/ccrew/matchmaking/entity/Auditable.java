@@ -1,6 +1,5 @@
 package uz.ccrew.matchmaking.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -20,7 +19,6 @@ public abstract class Auditable {
     protected Integer createdBy;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
     protected LocalDateTime createdDate;
 
     @LastModifiedBy

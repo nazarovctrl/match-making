@@ -1,5 +1,6 @@
 package uz.ccrew.matchmaking.service.impl;
 
+import org.springframework.data.domain.*;
 import uz.ccrew.matchmaking.dto.user.UserDTO;
 import uz.ccrew.matchmaking.dto.user.UserUpdateDTO;
 import uz.ccrew.matchmaking.entity.User;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +56,30 @@ public class UserServiceImpl implements UserService {
         return userMapper.mapEntity(user);
     }
 
+    @Override
+    public void delete() {
+        User user = authUtil.loadLoggedUser();
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void deleteById(Integer userId) {
+        User user = userRepository.loadById(userId);
+        userRepository.delete(user);
+    }
+
+    @Override
+    public Page<UserDTO> getList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+        Page<User> pageObj = userRepository.findAll(pageable);
+
+        List<User> userList = pageObj.getContent();
+        List<UserDTO> dtoList = userList.stream().map(userMapper::mapEntity).toList();
+
+        return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
+    }
+
     private void update(User user, UserUpdateDTO dto) {
         boolean different = false;
 
@@ -72,12 +98,11 @@ public class UserServiceImpl implements UserService {
 
         if (dto.role() != null && !user.getRole().equals(dto.role())) {
             user.setRole(dto.role());
-            different = true;
         }
 
         if (different) {
             user.setCredentialsModifiedDate(new Date());
-            userRepository.save(user);
         }
+        userRepository.save(user);
     }
 }

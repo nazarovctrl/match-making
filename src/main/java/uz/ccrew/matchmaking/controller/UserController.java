@@ -9,6 +9,7 @@ import uz.ccrew.matchmaking.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,6 +47,28 @@ public class UserController {
     @Operation(summary = "Update user by id for Administrator")
     public ResponseEntity<Response<UserDTO>> updateById(@PathVariable("userId") Integer userId, @RequestBody UserUpdateDTO dto) {
         UserDTO result = userService.updateById(userId, dto);
+        return ResponseMaker.ok(result);
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "Delete user")
+    public ResponseEntity<Response<?>> delete() {
+        userService.delete();
+        return ResponseMaker.okMessage("User deleted");
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    @Operation(summary = "Delete user")
+    public ResponseEntity<Response<?>> deleteById(@PathVariable("userId") Integer userId) {
+        userService.deleteById(userId);
+        return ResponseMaker.okMessage("User deleted");
+    }
+
+    @GetMapping("get/list")
+    @Operation(summary = "User list")
+    public ResponseEntity<Response<Page<UserDTO>>> getList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                           @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
+        Page<UserDTO> result = userService.getList(page,size);
         return ResponseMaker.ok(result);
     }
 }
