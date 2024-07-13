@@ -18,7 +18,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.security.authentication.BadCredentialsException;
 
-
 @ControllerAdvice
 @RequiredArgsConstructor
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
