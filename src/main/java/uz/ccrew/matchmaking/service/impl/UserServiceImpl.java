@@ -1,6 +1,5 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import org.springframework.data.domain.*;
 import uz.ccrew.matchmaking.dto.user.UserDTO;
 import uz.ccrew.matchmaking.dto.user.UserUpdateDTO;
 import uz.ccrew.matchmaking.entity.User;
@@ -12,6 +11,7 @@ import uz.ccrew.matchmaking.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.*;
 
 import java.util.Date;
 import java.util.List;
