@@ -3,6 +3,7 @@ package uz.ccrew.matchmaking.service.impl;
 import uz.ccrew.matchmaking.dto.user.UserDTO;
 import uz.ccrew.matchmaking.dto.user.UserUpdateDTO;
 import uz.ccrew.matchmaking.entity.User;
+import uz.ccrew.matchmaking.exp.AlreadyExistException;
 import uz.ccrew.matchmaking.mapper.UserMapper;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +85,15 @@ public class UserServiceImpl implements UserService {
     private void update(User user, UserUpdateDTO dto) {
         boolean different = false;
 
+        if (dto.login() != null && !user.getLogin().equals(dto.login())) {
+            Optional<User> optional = userRepository.findByLogin(dto.login());
+            if (optional.isPresent()) {
+                throw new AlreadyExistException("Login is already existing");
+            }
+            user.setLogin(dto.login());
+            different = true;
+        }
+
         if (dto.password() != null) {
             String password = passwordEncoder.encode(dto.password());
             if (!user.getPassword().equals(password)) {
@@ -91,10 +102,6 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        if (dto.login() != null && !user.getLogin().equals(dto.login())) {
-            user.setLogin(dto.login());
-            different = true;
-        }
 
         if (dto.role() != null && !user.getRole().equals(dto.role())) {
             user.setRole(dto.role());
