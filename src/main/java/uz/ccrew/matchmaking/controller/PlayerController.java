@@ -2,8 +2,8 @@ package uz.ccrew.matchmaking.controller;
 
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
+import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
 import uz.ccrew.matchmaking.dto.player.PlayerDTO;
-import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.service.PlayerService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,15 +22,15 @@ public class PlayerController {
 
     @PostMapping("/create")
     @Operation(summary = "Create Player")
-    public ResponseEntity<Response<PlayerDTO>> createPlayer(PlayerDTO playerDTO) {
-        PlayerDTO result = playerService.createPlayer(playerDTO);
+    public ResponseEntity<Response<PlayerDTO>> createPlayer(PlayerCreateDTO playerCreateDTO) {
+        PlayerDTO result = playerService.createPlayer(playerCreateDTO);
         return ResponseMaker.ok(result);
     }
 
-    @GetMapping("/{nickname}")
-    @Operation(summary = "Get Player by Nickname")
-    public ResponseEntity<Response<PlayerDTO>> getPlayerByNickname(@PathVariable String nickname) {
-        PlayerDTO result = playerService.getPlayerByNickname(nickname);
+    @GetMapping("{nickname}")
+    @Operation(summary = "Get Players by Nickname")
+    public ResponseEntity<Response<List<PlayerDTO>>> getPlayerByNicknameLike(@PathVariable String nickname) {
+        List<PlayerDTO> result = playerService.getPlayersByNicknameLike(nickname);
         return ResponseMaker.ok(result);
     }
 
@@ -55,7 +55,7 @@ public class PlayerController {
         return ResponseMaker.ok(result);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @Operation(summary = "Get Player by id")
     public ResponseEntity<Response<PlayerDTO>> getPlayerById(@PathVariable Integer id) {
         PlayerDTO result = playerService.getPlayerById(id);
