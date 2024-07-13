@@ -1,17 +1,20 @@
 package uz.ccrew.matchmaking.service;
 
+import uz.ccrew.matchmaking.dto.player.PlayerDTO;
 import uz.ccrew.matchmaking.entity.Player;
 
 import java.util.List;
 
 public interface PlayerService {
-    Player createPlayer(Player player);
+    PlayerDTO createPlayer(PlayerDTO playerDTO);
 
-    Player updatePlayer(Player player);
+    PlayerDTO updatePlayer(PlayerDTO playerDTO);
 
-    void deletePlayer(Player player);
+    void deletePlayer();
 
-    Player getPlayerByNickname(String nickname);
+    PlayerDTO getPlayerByNickname(String nickname);
 
-    List<Player> getAllPlayers();
+    PlayerDTO getPlayerById(Integer id);
+
+    List<PlayerDTO> getAllPlayers();
 }

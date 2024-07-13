@@ -2,11 +2,8 @@ package uz.ccrew.matchmaking.controller;
 
 import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.Response;
-import uz.ccrew.matchmaking.exp.AlreadyExistException;
-import uz.ccrew.matchmaking.exp.Unauthorized;
-import uz.ccrew.matchmaking.exp.AuthHeaderNotFound;
+import uz.ccrew.matchmaking.exp.*;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import jakarta.validation.ConstraintViolationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +46,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return ResponseMaker.error(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
-    @ExceptionHandler({AlreadyExistException.class, TokenExpiredException.class, AuthHeaderNotFound.class})
+    @ExceptionHandler({AlreadyExistException.class, TokenExpiredException.class, AuthHeaderNotFound.class, NotFoundException.class})
     private ResponseEntity<Response<?>> exceptionHandler(RuntimeException e) {
         return ResponseMaker.error(HttpStatus.BAD_REQUEST, e.getMessage());
     }

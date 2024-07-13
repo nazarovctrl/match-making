@@ -16,9 +16,7 @@ import jakarta.persistence.*;
 @Data
 public class Player extends Auditable {
     @Id
-    private Integer id;
     @OneToOne
-    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
     @Column(unique = true, nullable = false, length = 32)

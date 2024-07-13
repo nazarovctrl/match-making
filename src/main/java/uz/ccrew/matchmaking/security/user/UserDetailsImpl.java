@@ -1,36 +1,34 @@
 package uz.ccrew.matchmaking.security.user;
 
-import uz.ccrew.matchmaking.enums.UserRole;
+import uz.ccrew.matchmaking.entity.User;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
 import java.util.Collection;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
-    private final Integer id;
-    private final String login;
-    private final String password;
-    private final UserRole role;
+    private User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return login;
+        return user.getLogin();
     }
 
     @Override

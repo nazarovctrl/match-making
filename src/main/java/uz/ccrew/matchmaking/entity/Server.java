@@ -2,7 +2,6 @@ package uz.ccrew.matchmaking.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
 
 @Entity
@@ -19,7 +18,6 @@ public class Server extends Auditable {
     @OneToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
-
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)

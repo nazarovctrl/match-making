@@ -1,16 +1,15 @@
 package uz.ccrew.matchmaking.controller;
 
 import uz.ccrew.matchmaking.dto.ResponseMaker;
-import uz.ccrew.matchmaking.dto.RegisterDTO;
+import uz.ccrew.matchmaking.dto.auth.RegisterDTO;
 import uz.ccrew.matchmaking.dto.Response;
-import uz.ccrew.matchmaking.dto.UserDTO;
+import uz.ccrew.matchmaking.dto.user.UserDTO;
 import uz.ccrew.matchmaking.dto.auth.LoginDTO;
 import uz.ccrew.matchmaking.dto.auth.LoginResponseDTO;
 import uz.ccrew.matchmaking.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +39,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     @Operation(summary = "Refresh JWTToken")
-    public ResponseEntity<Response<String>> refresh(HttpServletRequest request) {
-        return ResponseMaker.ok(authService.refresh(request));
+    public ResponseEntity<Response<String>> refresh() {
+        return ResponseMaker.ok(authService.refresh());
     }
 }
