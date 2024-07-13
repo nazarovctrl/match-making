@@ -9,9 +9,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("server")
+@SecurityRequirement(name = "Bearer Authentication")
+@Tag(name = "Server Controller", description = "Server API")
 public class ServerController {
     //server qoshish ochirish imkoniyati faqat adminstrator uchun
 
