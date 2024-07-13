@@ -1,6 +1,6 @@
 package uz.ccrew.matchmaking.security.jwt;
 
-import uz.ccrew.matchmaking.exp.TokenExpiredException;
+import uz.ccrew.matchmaking.exp.unauthorized.TokenExpiredException;
 import uz.ccrew.matchmaking.security.user.UserDetailsImpl;
 import uz.ccrew.matchmaking.security.user.UserDetailsService;
 
