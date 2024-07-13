@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     public UserDTO register(RegisterDTO dto) {
         Optional<User> optional = userRepository.findByLogin(dto.login());
         if (optional.isPresent()) {
-            throw new AlreadyExistException("Username is already existing");
+            throw new AlreadyExistException("Login is already existing");
         }
         User user = User.builder()
                 .login(dto.login())
