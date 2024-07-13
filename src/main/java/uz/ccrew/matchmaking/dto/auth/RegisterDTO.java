@@ -1,4 +1,4 @@
-package uz.ccrew.matchmaking.dto;
+package uz.ccrew.matchmaking.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 

@@ -1,6 +1,6 @@
 package uz.ccrew.matchmaking.config;
 
-import uz.ccrew.matchmaking.security.user.UserDetailsImpl;
+import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.util.AuthUtil;
 
 import org.springframework.data.domain.AuditorAware;
@@ -19,8 +19,8 @@ public class AuditorAwareImpl implements AuditorAware<Integer> {
     @Override
     public Optional<Integer> getCurrentAuditor() {
         try {
-            Optional<UserDetailsImpl> optional = authUtil.takeLoggedUser();
-            return optional.map(UserDetailsImpl::getId);
+            Optional<User> optional = authUtil.takeLoggedUser();
+            return optional.map(User::getId);
         } catch (Exception e) {
             return Optional.empty();
         }

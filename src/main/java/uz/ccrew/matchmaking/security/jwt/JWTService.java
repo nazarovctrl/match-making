@@ -18,14 +18,14 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
-    @Value("${security.access-token.secret-key}")
+    @Value("${security.token.access.secret-key}")
     private String ACCESS_TOKEN_SECRET_KEY;
-    @Value("${security.refresh-token.secret-key}")
+    @Value("${security.token.refresh.secret-key}")
     private String REFRESH_TOKEN_SECRET_KEY;
 
-    @Value("${security.access-token.time}")
+    @Value("${security.token.access.time}")
     private int ACCESS_TOKEN_TIME;
-    @Value("${security.refresh-token.time}")
+    @Value("${security.token.refresh.time}")
     private int REFRESH_TOKEN_TIME;
 
     public String extractAccessTokenLogin(String accessToken) {
@@ -54,7 +54,7 @@ public class JWTService {
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -64,6 +64,11 @@ public class JWTService {
         DecodedJWT decodedJWT = JWT.decode(token);
         Date expiresAt = decodedJWT.getExpiresAt();
         return expiresAt.before(new Date());
+    }
+
+    public Date getGeneratedTime(String token) {
+        DecodedJWT decodedJWT = JWT.decode(token);
+        return decodedJWT.getIssuedAt();
     }
 
     public String getTokenExpiredMessage(String token) {

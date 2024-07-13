@@ -71,7 +71,8 @@ public class SecurityConfig {
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth.requestMatchers(SWAGGER_WHITELIST).permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("api/v1/user/**").hasAnyAuthority(UserRole.all())
+                        .requestMatchers("api/v1/user/*").hasAnyAuthority(UserRole.all())
+                        .requestMatchers("api/v1/user/**").hasAuthority(UserRole.ADMINISTRATOR.name())
                         .requestMatchers("/api/v1/server/create", "/api/v1/server/edit", "api/v1/server/delete", "api/v1/server/list", "/api/v1/server/get/*").hasAuthority(UserRole.ADMINISTRATOR.name())
                         .requestMatchers("/api/v1/server/ready").hasAuthority(UserRole.SERVER.name())
                         .anyRequest().authenticated());
