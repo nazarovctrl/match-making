@@ -1,5 +1,6 @@
 package uz.ccrew.matchmaking.util;
 
+import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.exp.Unauthorized;
 import uz.ccrew.matchmaking.security.user.UserDetailsImpl;
 
@@ -11,24 +12,26 @@ import java.util.Optional;
 
 @Component
 public class AuthUtil {
-    private UserDetailsImpl getLoggedUser() {
+
+    private User getLoggedUser() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (!authentication.isAuthenticated()) {
                 return null;
             }
-            return (UserDetailsImpl) authentication.getPrincipal();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            return userDetails.getUser();
         } catch (Exception e) {
             return null;
         }
     }
 
-    public Optional<UserDetailsImpl> takeLoggedUser() {
+    public Optional<User> takeLoggedUser() {
         return Optional.ofNullable(getLoggedUser());
     }
 
-    public UserDetailsImpl loadLoggedUser() {
-        Optional<UserDetailsImpl> optional = takeLoggedUser();
+    public User loadLoggedUser() {
+        Optional<User> optional = takeLoggedUser();
         if (optional.isEmpty()) {
             throw new Unauthorized();
         }

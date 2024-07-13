@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
@@ -25,4 +27,7 @@ public class User extends Auditable {
     @Enumerated(EnumType.STRING)
     @Column
     private UserRole role;
+
+    @Column(nullable = false, columnDefinition = "timestamp default current_date")
+    private Date credentialsModifiedDate;
 }

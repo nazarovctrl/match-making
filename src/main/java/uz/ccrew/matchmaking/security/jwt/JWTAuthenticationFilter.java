@@ -1,6 +1,7 @@
 package uz.ccrew.matchmaking.security.jwt;
 
 import uz.ccrew.matchmaking.exp.TokenExpiredException;
+import uz.ccrew.matchmaking.security.user.UserDetailsImpl;
 import uz.ccrew.matchmaking.security.user.UserDetailsService;
 
 import jakarta.servlet.FilterChain;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -47,24 +47,34 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String login = jwtService.extractAccessTokenLogin(token);
-            if (login != null && SecurityContextHolder.getContext() != null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(login);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource()
-                        .buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            String login;
+            if (request.getServletPath().equals("/api/v1/auth/refresh")) {
+                login = jwtService.extractRefreshTokenLogin(token);
+            } else {
+                login = jwtService.extractAccessTokenLogin(token);
             }
+
+            if (login == null || SecurityContextHolder.getContext() == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(login);
+
+            if (!userDetails.getUser().getCredentialsModifiedDate().before(jwtService.getGeneratedTime(token))) {
+                exceptionResolver.resolveException(request, response, null, new BadCredentialsException("Bad credentials"));
+                return;
+            }
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             exceptionResolver.resolveException(request, response, null, new BadCredentialsException("Bad credentials"));
         }
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals("/api/v1/auth/refresh");
     }
 }
 
