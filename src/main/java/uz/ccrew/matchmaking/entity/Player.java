@@ -8,7 +8,10 @@ import jakarta.persistence.*;
 @Table(name = "players")
 public class Player extends Auditable {
     @Id
+    @Column(name = "user_id")
+    private Integer userId;
     @OneToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
     @Column(unique = true, nullable = false, length = 32)
     private String nickname;
