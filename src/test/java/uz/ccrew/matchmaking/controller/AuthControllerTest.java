@@ -42,7 +42,6 @@ public class AuthControllerTest {
         authService.register(registerDTO);
     }
 
-
     @AfterEach
     void tearDown() {
         userRepository.deleteAll();
@@ -61,7 +60,6 @@ public class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.role").value(UserRole.PLAYER.name()));
     }
 
-
     @Test
     void login() throws Exception {
         LoginDTO loginDTO = new LoginDTO("Azimjon", "200622az");
@@ -73,7 +71,6 @@ public class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.accessToken").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.refreshToken").isNotEmpty());
     }
-
 
     @Test
     void refresh() throws Exception {

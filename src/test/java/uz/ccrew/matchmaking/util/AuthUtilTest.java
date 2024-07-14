@@ -45,7 +45,6 @@ class AuthUtilTest {
         SecurityContextHolder.getContext().setAuthentication(null);
     }
 
-
     void setAuthentication(String login) {
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(login);
 

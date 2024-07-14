@@ -52,5 +52,4 @@ class UserRepositoryTest {
         User result = optional.get();
         assertEquals(login, result.getLogin());
     }
-
 }

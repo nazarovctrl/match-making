@@ -44,7 +44,6 @@ class UserDetailsImplTest {
         assertEquals(UserRole.PLAYER.name(), grantedAuthority.getAuthority());
     }
 
-
     @Test
     void getPassword() {
         assertEquals("200622az", userDetails.getPassword());

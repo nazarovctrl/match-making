@@ -161,8 +161,6 @@ public class UserControllerTest {
 
     @Test
     void getUserList() throws Exception {
-
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/user/get/list")
                         .param("page", String.valueOf(0))
                         .param("size", String.valueOf(10))
