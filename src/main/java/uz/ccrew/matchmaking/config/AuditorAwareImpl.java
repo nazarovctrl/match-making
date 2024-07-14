@@ -18,11 +18,7 @@ public class AuditorAwareImpl implements AuditorAware<Integer> {
 
     @Override
     public Optional<Integer> getCurrentAuditor() {
-        try {
-            Optional<User> optional = authUtil.takeLoggedUser();
-            return optional.map(User::getId);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        Optional<User> optional = authUtil.takeLoggedUser();
+        return optional.map(User::getId);
     }
 }

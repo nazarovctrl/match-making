@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.data.domain.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -108,7 +109,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (different) {
-            user.setCredentialsModifiedDate(new Date());
+            user.setCredentialsModifiedDate(LocalDateTime.now());
         }
         userRepository.save(user);
     }

@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,9 +69,9 @@ public class JWTService {
         return expiresAt.before(new Date());
     }
 
-    public Date getGeneratedTime(String token) {
+    public LocalDateTime getGeneratedTime(String token) {
         DecodedJWT decodedJWT = JWT.decode(token);
-        return decodedJWT.getIssuedAt();
+        return LocalDateTime.ofInstant(decodedJWT.getIssuedAt().toInstant(), ZoneId.systemDefault());
     }
 
     public String getTokenExpiredMessage(String token) {

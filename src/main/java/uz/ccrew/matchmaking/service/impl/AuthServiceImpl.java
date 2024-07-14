@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -45,7 +46,6 @@ public class AuthServiceImpl implements AuthService {
                 .login(dto.login())
                 .password(passwordEncoder.encode(dto.password()))
                 .role(UserRole.PLAYER)
-                .credentialsModifiedDate(new Date())
                 .build();
 
         userRepository.save(user);

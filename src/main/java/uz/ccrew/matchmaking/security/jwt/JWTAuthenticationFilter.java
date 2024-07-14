@@ -2,7 +2,7 @@ package uz.ccrew.matchmaking.security.jwt;
 
 import uz.ccrew.matchmaking.exp.unauthorized.TokenExpiredException;
 import uz.ccrew.matchmaking.security.user.UserDetailsImpl;
-import uz.ccrew.matchmaking.security.user.UserDetailsService;
+import uz.ccrew.matchmaking.security.user.UserDetailsServiceImpl;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,6 +20,8 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Component
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private HandlerExceptionResolver exceptionResolver;
     private final JWTService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -42,13 +44,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         try {
             final String token = bearerToken.substring(7);
 
-            if (jwtService.isTokenExpired(token)) {
+             if (jwtService.isTokenExpired(token)) {
                 exceptionResolver.resolveException(request, response, null, new TokenExpiredException(jwtService.getTokenExpiredMessage(token)));
                 return;
             }
 
             String login;
-            if (request.getServletPath().equals("/api/v1/auth/refresh")) {
+            if (request.getRequestURI().equals("/api/v1/auth/refresh")) {
                 login = jwtService.extractRefreshTokenLogin(token);
             } else {
                 login = jwtService.extractAccessTokenLogin(token);
@@ -60,8 +62,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             }
 
             UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(login);
+            LocalDateTime modifiedDate = userDetails.getUser().getCredentialsModifiedDate();
+            modifiedDate = modifiedDate.minusNanos(modifiedDate.getNano() + 1);
 
-            if (!userDetails.getUser().getCredentialsModifiedDate().before(jwtService.getGeneratedTime(token))) {
+            if (!modifiedDate.isBefore(jwtService.getGeneratedTime(token))) {
                 exceptionResolver.resolveException(request, response, null, new BadCredentialsException("Bad credentials"));
                 return;
             }
