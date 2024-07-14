@@ -1,6 +1,7 @@
 package uz.ccrew.matchmaking.config;
 
 import uz.ccrew.matchmaking.dto.auth.RegisterDTO;
+import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.security.user.UserDetailsServiceImpl;
 import uz.ccrew.matchmaking.service.AuthService;
 
@@ -23,9 +24,10 @@ class AuditorAwareImplTest {
     private AuditorAwareImpl auditorAware;
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
-
     @Autowired
     private AuthService authService;
+    @Autowired
+    private UserRepository userRepository;
 
     void register(String login) {
         RegisterDTO registerDTO = new RegisterDTO(login, "200622az");
@@ -55,5 +57,6 @@ class AuditorAwareImplTest {
         assertNotNull(id);
 
         SecurityContextHolder.getContext().setAuthentication(null);
+        userRepository.deleteAll();
     }
 }
