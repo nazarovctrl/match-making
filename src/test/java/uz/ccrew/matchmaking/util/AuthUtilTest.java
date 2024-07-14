@@ -7,7 +7,6 @@ import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.service.AuthService;
 import uz.ccrew.matchmaking.security.user.UserDetailsServiceImpl;
 
-import org.springframework.security.core.Authentication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
