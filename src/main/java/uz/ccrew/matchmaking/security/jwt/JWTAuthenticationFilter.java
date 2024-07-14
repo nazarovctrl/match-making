@@ -44,7 +44,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         try {
             final String token = bearerToken.substring(7);
 
-             if (jwtService.isTokenExpired(token)) {
+            if (jwtService.isTokenExpired(token)) {
                 exceptionResolver.resolveException(request, response, null, new TokenExpiredException(jwtService.getTokenExpiredMessage(token)));
                 return;
             }
