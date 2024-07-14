@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 class UserRepositoryTest {
-
     @Autowired
     private UserRepository userRepository;
     private Integer USER_ID;

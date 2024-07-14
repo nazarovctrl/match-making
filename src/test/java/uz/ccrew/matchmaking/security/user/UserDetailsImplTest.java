@@ -16,10 +16,8 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @ActiveProfiles("test")
 class UserDetailsImplTest {
-
     @Mock
     private User mockUser;
-
     private UserDetailsImpl userDetails;
 
     @BeforeEach

@@ -25,7 +25,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @SpringBootTest
 @ActiveProfiles("test")
 class UserServiceImplTest {
@@ -37,11 +36,14 @@ class UserServiceImplTest {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+    private Integer USER_ID;
 
     @BeforeEach
     void setUp() {
         User user = User.builder().login("Azimjon").password(passwordEncoder.encode("200622az")).build();
         userRepository.save(user);
+
+        USER_ID = user.getId();
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getLogin());
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -63,8 +65,7 @@ class UserServiceImplTest {
 
     @Test
     void getById() {
-        User user = userRepository.findAll().stream().findFirst().get();
-        UserDTO result = userService.getById(user.getId());
+        UserDTO result = userService.getById(USER_ID);
         assertNotNull(result);
     }
 
@@ -82,9 +83,7 @@ class UserServiceImplTest {
     void updateById() {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO("Nazarov", "200622Az", UserRole.SERVER);
 
-        User user = userRepository.findAll().stream().findFirst().get();
-
-        UserDTO update = userService.updateById(user.getId(), userUpdateDTO);
+        UserDTO update = userService.updateById(USER_ID, userUpdateDTO);
 
         assertEquals(update.login(), userUpdateDTO.login());
         assertEquals(update.role(), userUpdateDTO.role());
@@ -113,8 +112,7 @@ class UserServiceImplTest {
     void deleteById() {
         int expected = userRepository.findAll().size() - 1;
 
-        User user = userRepository.findAll().stream().findFirst().get();
-        userService.deleteById(user.getId());
+        userService.deleteById(USER_ID);
 
         int actual = userRepository.findAll().size();
         assertEquals(expected, actual);

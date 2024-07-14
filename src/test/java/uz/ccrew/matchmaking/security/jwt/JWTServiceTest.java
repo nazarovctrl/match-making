@@ -14,7 +14,6 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -22,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JWTServiceTest {
     @Value("${security.token.access.secret-key}")
     private String ACCESS_TOKEN_SECRET_KEY;
-
     @Autowired
     private JWTService jwtService;
 

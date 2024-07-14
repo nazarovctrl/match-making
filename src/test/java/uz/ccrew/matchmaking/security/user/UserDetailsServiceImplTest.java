@@ -17,12 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 class UserDetailsServiceImplTest {
-
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private AuthService authService;
-
     @Autowired
     private UserRepository userRepository;
 

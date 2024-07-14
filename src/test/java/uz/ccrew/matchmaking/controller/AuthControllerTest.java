@@ -25,14 +25,12 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class AuthControllerTest {
-
     @Autowired
     private AuthService authService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private MockMvc mockMvc;
-
     private ObjectMapper objectMapper;
 
     @BeforeEach
