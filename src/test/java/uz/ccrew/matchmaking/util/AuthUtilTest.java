@@ -3,11 +3,14 @@ package uz.ccrew.matchmaking.util;
 import uz.ccrew.matchmaking.dto.auth.RegisterDTO;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.exp.unauthorized.Unauthorized;
+import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.service.AuthService;
 import uz.ccrew.matchmaking.security.user.UserDetailsServiceImpl;
 
 import org.springframework.security.core.Authentication;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,11 +33,20 @@ class AuthUtilTest {
 
     @Autowired
     private AuthService authService;
+    @Autowired
+    private UserRepository userRepository;
 
-    void register(String login) {
-        RegisterDTO registerDTO = new RegisterDTO(login, "200622az");
+    @BeforeEach
+    void setUp() {
+        RegisterDTO registerDTO = new RegisterDTO("Azimjon", "200622az");
         authService.register(registerDTO);
     }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
+
 
     void setAuthentication(String login) {
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(login);
@@ -49,7 +61,6 @@ class AuthUtilTest {
         assertTrue(optional.isEmpty());
 
         String login = "Azimjon";
-        register(login);
         setAuthentication(login);
 
         optional = authUtil.takeLoggedUser();

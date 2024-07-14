@@ -51,6 +51,8 @@ class UserServiceImplTest {
     @AfterEach
     void tearDown() {
         userRepository.deleteAll();
+
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 
     @Test

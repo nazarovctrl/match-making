@@ -11,6 +11,9 @@ import uz.ccrew.matchmaking.mapper.UserMapper;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.security.user.UserDetailsServiceImpl;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,10 +38,23 @@ class AuthServiceImplTest {
     private UserMapper userMapper;
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void setUp() {
+        User user = User.builder().login("Azimjon").password(passwordEncoder.encode("200622az")).build();
+        userRepository.save(user);
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
 
     @Test
     void register() {
-        RegisterDTO registerDTO = new RegisterDTO("Azimjon", "200622az");
+        RegisterDTO registerDTO = new RegisterDTO("Nazarov", "200622az");
         AtomicReference<UserDTO> userDTOAtomic = new AtomicReference<>();
         assertDoesNotThrow(() -> userDTOAtomic.set(authService.register(registerDTO)));
 
