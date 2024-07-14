@@ -30,7 +30,6 @@ class AuthUtilTest {
     private AuthUtil authUtil;
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
-
     @Autowired
     private AuthService authService;
     @Autowired
@@ -45,6 +44,7 @@ class AuthUtilTest {
     @AfterEach
     void tearDown() {
         userRepository.deleteAll();
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 
 
@@ -73,9 +73,6 @@ class AuthUtilTest {
 
     @Test
     void loadLoggedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        authentication.setAuthenticated(false);
-
         assertThrows(Unauthorized.class, () -> authUtil.loadLoggedUser());
 
         String login = "Azimjon";

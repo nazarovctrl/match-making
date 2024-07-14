@@ -53,5 +53,7 @@ class AuditorAwareImplTest {
 
         Integer id = currentAuditor.get();
         assertNotNull(id);
+
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 }

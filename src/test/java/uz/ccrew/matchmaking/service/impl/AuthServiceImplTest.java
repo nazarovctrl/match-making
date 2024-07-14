@@ -105,5 +105,7 @@ class AuthServiceImplTest {
 
         String accessToken = authService.refresh();
         assertNotNull(accessToken);
+
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 }
