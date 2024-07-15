@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
-@RequestMapping("/api/v2/player")
+@RequestMapping("/api/v1/player")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Player Controller", description = "Player API")
@@ -26,14 +26,14 @@ public class PlayerController {
 
     @PostMapping("/create")
     @Operation(summary = "Create Player")
-    public ResponseEntity<Response<PlayerDTO>> createPlayer(@RequestBody @Valid PlayerCreateDTO playerCreateDTO) {
+    public ResponseEntity<Response<PlayerDTO>> create(@RequestBody @Valid PlayerCreateDTO playerCreateDTO) {
         PlayerDTO result = playerService.create(playerCreateDTO);
         return ResponseMaker.ok(result);
     }
 
     @GetMapping("/{nickname}")
     @Operation(summary = "Get Players by Nickname")
-    public ResponseEntity<Response<Page<PlayerDTO>>> getPlayerByNicknameLike(@PathVariable("nickname") String nickname,
+    public ResponseEntity<Response<Page<PlayerDTO>>> getByNicknameLike(@PathVariable("nickname") String nickname,
                                                                              @RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                                              @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
         Page<PlayerDTO> result = playerService.getByNicknameLike(nickname,page,size);
@@ -42,21 +42,21 @@ public class PlayerController {
 
     @PutMapping("/update")
     @Operation(summary = "Update Player")
-    public ResponseEntity<Response<PlayerDTO>> updatePlayer(@RequestBody @Valid PlayerUpdateDTO playerUpdateDTO) {
+    public ResponseEntity<Response<PlayerDTO>> update(@RequestBody @Valid PlayerUpdateDTO playerUpdateDTO) {
         PlayerDTO result = playerService.update(playerUpdateDTO);
         return ResponseMaker.ok(result);
     }
 
     @DeleteMapping("/delete")
     @Operation(summary = "Delete Player")
-    public ResponseEntity<Response<?>> deletePlayer() {
+    public ResponseEntity<Response<?>> delete() {
         playerService.delete();
         return ResponseMaker.okMessage("Player deleted");
     }
 
     @GetMapping("/get/list")
     @Operation(summary = "Get all players")
-    public ResponseEntity<Response<Page<PlayerDTO>>> getAllPlayers(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+    public ResponseEntity<Response<Page<PlayerDTO>>> getAll(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                                    @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
         Page<PlayerDTO> result = playerService.getAll(page,size);
         return ResponseMaker.ok(result);
@@ -64,7 +64,7 @@ public class PlayerController {
 
     @GetMapping("/byId/{id}")
     @Operation(summary = "Get Player by id")
-    public ResponseEntity<Response<PlayerDTO>> getPlayerById(@PathVariable("id") Integer id) {
+    public ResponseEntity<Response<PlayerDTO>> getById(@PathVariable("id") Integer id) {
         PlayerDTO result = playerService.getById(id);
         return ResponseMaker.ok(result);
     }
