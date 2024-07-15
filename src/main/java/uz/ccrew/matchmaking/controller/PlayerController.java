@@ -33,14 +33,14 @@ public class PlayerController {
 
     @GetMapping("{nickname}")
     @Operation(summary = "Get Players by Nickname")
-    public ResponseEntity<Response<Page<PlayerDTO>>> getPlayerByNicknameLike(@Valid @PathVariable String nickname,
+    public ResponseEntity<Response<Page<PlayerDTO>>> getPlayerByNicknameLike(@PathVariable String nickname,
                                                                              @RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                                              @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
         Page<PlayerDTO> result = playerService.getPlayersByNicknameLike(nickname,page,size);
         return ResponseMaker.ok(result);
     }
 
-    @PutMapping("updatePlayer")
+    @PutMapping("update")
     @Operation(summary = "Update Player")
     public ResponseEntity<Response<PlayerDTO>> updatePlayer(@Valid @RequestBody PlayerUpdateDTO playerUpdateDTO) {
         PlayerDTO result = playerService.updatePlayer(playerUpdateDTO);

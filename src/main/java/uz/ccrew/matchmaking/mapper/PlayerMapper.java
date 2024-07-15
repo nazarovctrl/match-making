@@ -2,13 +2,10 @@ package uz.ccrew.matchmaking.mapper;
 
 import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
 import uz.ccrew.matchmaking.dto.player.PlayerDTO;
-import uz.ccrew.matchmaking.dto.player.PlayerUpdateDTO;
 import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.enums.Rank;
 
 import org.springframework.stereotype.Component;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class PlayerMapper implements Mapper<PlayerDTO, Player> {
@@ -37,17 +34,4 @@ public class PlayerMapper implements Mapper<PlayerDTO, Player> {
                 .points(player.getPoints())
                 .build();
     }
-
-    public List<PlayerDTO> toDTOList(List<Player> players) {
-        return players.stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    public PlayerDTO toDTO(PlayerUpdateDTO dto){
-        return PlayerDTO.builder()
-                .nickname(dto.nickname())
-                .build();
-    }
-
 }

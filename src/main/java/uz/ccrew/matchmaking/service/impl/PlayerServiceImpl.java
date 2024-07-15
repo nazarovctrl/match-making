@@ -1,10 +1,9 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import org.springframework.data.domain.*;
+
 import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
 import uz.ccrew.matchmaking.dto.player.PlayerDTO;
 import uz.ccrew.matchmaking.dto.player.PlayerUpdateDTO;
-import uz.ccrew.matchmaking.dto.user.UserDTO;
 import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.mapper.PlayerMapper;
@@ -12,6 +11,7 @@ import uz.ccrew.matchmaking.repository.PlayerRepository;
 import uz.ccrew.matchmaking.service.PlayerService;
 import uz.ccrew.matchmaking.util.AuthUtil;
 
+import org.springframework.data.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -40,11 +40,13 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.save(player);
         return playerMapper.toDTO(player);
     }
+
     @Override
     public void deletePlayer() {
         User user = authUtil.loadLoggedUser();
         playerRepository.deleteById(user.getId());
     }
+
     @Override
     public Page<PlayerDTO> getPlayersByNicknameLike(String nickname, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("userId").descending());
@@ -52,7 +54,6 @@ public class PlayerServiceImpl implements PlayerService {
         List<PlayerDTO> dtoList = pageObj.getContent().stream().map(playerMapper::toDTO).toList();
         return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }
-
 
     @Override
     public PlayerDTO getPlayerById(Integer id) {
