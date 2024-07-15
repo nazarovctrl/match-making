@@ -25,7 +25,7 @@ public class PlayerController {
 
     @PostMapping("/create")
     @Operation(summary = "Create Player")
-    public ResponseEntity<Response<PlayerDTO>> createPlayer(@Valid PlayerCreateDTO playerCreateDTO) {
+    public ResponseEntity<Response<PlayerDTO>> createPlayer(@Valid @RequestBody PlayerCreateDTO playerCreateDTO) {
         PlayerDTO result = playerService.createPlayer(playerCreateDTO);
         return ResponseMaker.ok(result);
     }
@@ -39,7 +39,7 @@ public class PlayerController {
 
     @PutMapping("updatePlayer")
     @Operation(summary = "Update Player")
-    public ResponseEntity<Response<PlayerDTO>> updatePlayer(@Valid PlayerUpdateDTO playerUpdateDTO) {
+    public ResponseEntity<Response<PlayerDTO>> updatePlayer(@Valid @RequestBody PlayerUpdateDTO playerUpdateDTO) {
         PlayerDTO result = playerService.updatePlayer(playerUpdateDTO);
         return ResponseMaker.ok(result);
     }
