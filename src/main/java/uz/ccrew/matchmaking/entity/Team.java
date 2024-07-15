@@ -11,15 +11,23 @@ import java.util.List;
 @Table(name = "teams")
 public class Team extends Auditable {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @Enumerated(EnumType.STRING)
     @Column
     private TeamType type;
     @Enumerated(EnumType.STRING)
     @Column
     private MatchMode matchMode;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(
+            name = "team_players",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<Player> players;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Player leader;
+    @Column(columnDefinition = "bool default true")
+    private Boolean isActive = true;
 }

@@ -34,4 +34,7 @@ public class User extends Auditable {
     @Builder.Default
     @Column(nullable = false, columnDefinition = "timestamp default CURRENT_TIMESTAMP")
     private LocalDateTime credentialsModifiedDate = LocalDateTime.now();
+
+    @OneToOne
+    private Player player;
 }
