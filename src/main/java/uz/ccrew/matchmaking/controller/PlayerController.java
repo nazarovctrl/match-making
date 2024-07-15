@@ -33,7 +33,7 @@ public class PlayerController {
 
     @GetMapping("/{nickname}")
     @Operation(summary = "Get Players by Nickname")
-    public ResponseEntity<Response<Page<PlayerDTO>>> getPlayerByNicknameLike(@PathVariable String nickname,
+    public ResponseEntity<Response<Page<PlayerDTO>>> getPlayerByNicknameLike(@PathVariable("nickname") String nickname,
                                                                              @RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                                              @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
         Page<PlayerDTO> result = playerService.getByNicknameLike(nickname,page,size);
@@ -64,7 +64,7 @@ public class PlayerController {
 
     @GetMapping("/byId/{id}")
     @Operation(summary = "Get Player by id")
-    public ResponseEntity<Response<PlayerDTO>> getPlayerById(@PathVariable Integer id) {
+    public ResponseEntity<Response<PlayerDTO>> getPlayerById(@PathVariable("id") Integer id) {
         PlayerDTO result = playerService.getById(id);
         return ResponseMaker.ok(result);
     }
