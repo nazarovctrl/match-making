@@ -66,7 +66,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Page<PlayerDTO> getAll(int page, int size) {
+    public Page<PlayerDTO> getList(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("points").descending());
 
         Page<Player> pageObj = playerRepository.findAll(pageable);

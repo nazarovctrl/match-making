@@ -18,5 +18,5 @@ public interface PlayerService {
 
     PlayerDTO getById(Integer id);
 
-    Page<PlayerDTO> getAll(int page, int size);
+    Page<PlayerDTO> getList(int page, int size);
 }
