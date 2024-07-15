@@ -8,15 +8,15 @@ import uz.ccrew.matchmaking.dto.player.PlayerUpdateDTO;
 import org.springframework.data.domain.Page;
 
 public interface PlayerService {
-    PlayerDTO createPlayer(PlayerCreateDTO playerDTO);
+    PlayerDTO create(PlayerCreateDTO playerDTO);
 
-    PlayerDTO updatePlayer(PlayerUpdateDTO playerUpdateDTO);
+    PlayerDTO update(PlayerUpdateDTO playerUpdateDTO);
 
-    void deletePlayer();
+    void delete();
 
-    Page<PlayerDTO> getPlayersByNicknameLike(String nickname,int page, int size);
+    Page<PlayerDTO> getByNicknameLike(String nickname, int page, int size);
 
-    PlayerDTO getPlayerById(Integer id);
+    PlayerDTO getById(Integer id);
 
-    Page<PlayerDTO> getAllPlayers(int page, int size);
+    Page<PlayerDTO> getAll(int page, int size);
 }
