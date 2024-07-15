@@ -73,8 +73,7 @@ public class PlayerServiceImpl implements PlayerService {
         Page<Player> pageObj = playerRepository.findAll(pageable);
 
         List<Player> playerList = pageObj.getContent();
-        List<PlayerDTO> dtoList =
-                playerList.stream().map(playerMapper::toDTO).toList();
+        List<PlayerDTO> dtoList = playerList.stream().map(playerMapper::toDTO).toList();
 
         return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }
