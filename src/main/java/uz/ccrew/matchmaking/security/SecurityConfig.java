@@ -56,7 +56,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setHideUserNotFoundExceptions(false);
+        provider.setHideUserNotFoundExceptions(true);
         return provider;
     }
 
@@ -70,10 +70,11 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth.requestMatchers(SWAGGER_WHITELIST).permitAll()
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/auth/register", "api/v1/auth/login").permitAll()
+                        .requestMatchers("/api/v1/auth/refresh").hasAnyAuthority(UserRole.all())
                         .requestMatchers("api/v1/user/*").hasAnyAuthority(UserRole.all())
                         .requestMatchers("api/v1/user/**").hasAuthority(UserRole.ADMINISTRATOR.name())
-                        .requestMatchers("/api/v1/server/create", "/api/v1/server/edit", "api/v1/server/delete", "api/v1/server/list", "/api/v1/server/get/*").hasAuthority(UserRole.ADMINISTRATOR.name())
+                        .requestMatchers("/api/v1/server/**").hasAuthority(UserRole.ADMINISTRATOR.name())
                         .requestMatchers("/api/v1/server/ready").hasAuthority(UserRole.SERVER.name())
                         .requestMatchers("/api/v2/players/**").hasAuthority(UserRole.PLAYER.name())
                         .anyRequest().authenticated());

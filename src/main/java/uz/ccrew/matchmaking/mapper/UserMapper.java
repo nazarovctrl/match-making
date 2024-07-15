@@ -19,7 +19,7 @@ public class UserMapper implements Mapper<UserDTO, User> {
         return UserDTO.builder()
                 .id(entity.getId())
                 .login(entity.getLogin())
-                .userRole(entity.getRole())
+                .role(entity.getRole())
                 .build();
     }
 }

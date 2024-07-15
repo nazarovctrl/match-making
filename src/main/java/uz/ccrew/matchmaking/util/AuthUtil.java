@@ -1,7 +1,7 @@
 package uz.ccrew.matchmaking.util;
 
 import uz.ccrew.matchmaking.entity.User;
-import uz.ccrew.matchmaking.exp.Unauthorized;
+import uz.ccrew.matchmaking.exp.unauthorized.Unauthorized;
 import uz.ccrew.matchmaking.security.user.UserDetailsImpl;
 
 import org.springframework.security.core.Authentication;

@@ -8,6 +8,7 @@ import uz.ccrew.matchmaking.dto.auth.LoginDTO;
 import uz.ccrew.matchmaking.dto.auth.LoginResponseDTO;
 import uz.ccrew.matchmaking.service.AuthService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -21,15 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@Tag(name = "Auth Controller", description = "Auth API")
+@Tag(name = "Auth Controller", description = "Authorization API")
 public class AuthController {
     private final AuthService authService;
-
-    @PostMapping("/login")
-    @Operation(summary = "Login User")
-    public ResponseEntity<Response<LoginResponseDTO>> login(@RequestBody @Valid LoginDTO loginRequest) {
-        return ResponseMaker.ok(authService.login(loginRequest));
-    }
 
     @PostMapping("/register")
     @Operation(summary = "Register User")
@@ -37,8 +32,15 @@ public class AuthController {
         return ResponseMaker.ok(authService.register(dto));
     }
 
+    @PostMapping("/login")
+    @Operation(summary = "Login User")
+    public ResponseEntity<Response<LoginResponseDTO>> login(@RequestBody @Valid LoginDTO loginRequest) {
+        return ResponseMaker.ok(authService.login(loginRequest));
+    }
+
     @PostMapping("/refresh")
-    @Operation(summary = "Refresh JWTToken")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Refresh Access token")
     public ResponseEntity<Response<String>> refresh() {
         return ResponseMaker.ok(authService.refresh());
     }

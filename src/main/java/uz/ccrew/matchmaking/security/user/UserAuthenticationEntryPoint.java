@@ -14,6 +14,6 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getOutputStream().println("{ \"errors\": [\"" + authException.getMessage() + "\"] }");
+        response.getOutputStream().print("{ \"errors\": [\"" + authException.getMessage() + "\"] }");
     }
 }

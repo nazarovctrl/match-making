@@ -4,7 +4,6 @@ import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.exp.*;
 
-import jakarta.validation.ConstraintViolationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import lombok.RequiredArgsConstructor;
 import io.jsonwebtoken.security.SignatureException;
@@ -33,26 +32,23 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(r);
     }
 
-    @ExceptionHandler({ConstraintViolationException.class})
-    private ResponseEntity<Response<?>> handle(ConstraintViolationException e) {
-        String message = e.getMessage();
-        int index = message.indexOf(": ");
-        message = message.substring(index + 1);
-        return ResponseMaker.badRequest(message);
+    @ExceptionHandler({BasicException.class})
+    private ResponseEntity<Response<?>> basicHandler(BasicException e) {
+        return ResponseMaker.error(e.getStatus(), e.getMessage());
     }
 
-    @ExceptionHandler({JWTDecodeException.class, SignatureException.class})
+    @ExceptionHandler({BadCredentialsException.class})
     private ResponseEntity<Response<?>> forbiddenHandler(RuntimeException e) {
         return ResponseMaker.error(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
-    @ExceptionHandler({AlreadyExistException.class, TokenExpiredException.class, AuthHeaderNotFound.class, NotFoundException.class})
-    private ResponseEntity<Response<?>> exceptionHandler(RuntimeException e) {
-        return ResponseMaker.error(HttpStatus.BAD_REQUEST, e.getMessage());
+    @ExceptionHandler({JWTDecodeException.class, SignatureException.class})
+    private ResponseEntity<Response<?>> unauthorizedHandler(RuntimeException e) {
+        return ResponseMaker.error(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 
-    @ExceptionHandler({BadCredentialsException.class, Unauthorized.class})
-    private ResponseEntity<Response<?>> unAuthorizedExceptionHandler(RuntimeException e) {
-        return ResponseMaker.error(HttpStatus.UNAUTHORIZED, e.getMessage());
+    @ExceptionHandler({Exception.class})
+    private ResponseEntity<Response<?>> handle(Exception e) {
+        return ResponseMaker.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }

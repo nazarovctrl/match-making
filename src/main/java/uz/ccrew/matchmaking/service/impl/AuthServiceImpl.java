@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -39,13 +40,12 @@ public class AuthServiceImpl implements AuthService {
     public UserDTO register(RegisterDTO dto) {
         Optional<User> optional = userRepository.findByLogin(dto.login());
         if (optional.isPresent()) {
-            throw new AlreadyExistException("Username is already existing");
+            throw new AlreadyExistException("Login is already existing");
         }
         User user = User.builder()
                 .login(dto.login())
                 .password(passwordEncoder.encode(dto.password()))
                 .role(UserRole.PLAYER)
-                .credentialsModifiedDate(new Date())
                 .build();
 
         userRepository.save(user);

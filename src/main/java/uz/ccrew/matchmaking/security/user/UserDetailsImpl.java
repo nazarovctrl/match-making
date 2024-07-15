@@ -6,13 +6,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
+@Getter
 public class UserDetailsImpl implements UserDetails {
     private User user;
 
