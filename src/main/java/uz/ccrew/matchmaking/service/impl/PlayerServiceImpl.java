@@ -54,8 +54,7 @@ public class PlayerServiceImpl implements PlayerService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("points").descending());
 
         Page<Player> pageObj = playerRepository.findByNicknameLike(nickname, pageable);
-        List<PlayerDTO> dtoList =
-                pageObj.getContent().stream().map(playerMapper::toDTO).toList();
+        List<PlayerDTO> dtoList = pageObj.getContent().stream().map(playerMapper::toDTO).toList();
 
         return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }
