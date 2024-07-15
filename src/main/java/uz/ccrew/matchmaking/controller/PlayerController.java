@@ -1,11 +1,14 @@
 package uz.ccrew.matchmaking.controller;
 
+
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
 import uz.ccrew.matchmaking.dto.player.PlayerDTO;
+import uz.ccrew.matchmaking.dto.player.PlayerUpdateDTO;
 import uz.ccrew.matchmaking.service.PlayerService;
 
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,22 +25,22 @@ public class PlayerController {
 
     @PostMapping("/create")
     @Operation(summary = "Create Player")
-    public ResponseEntity<Response<PlayerDTO>> createPlayer(PlayerCreateDTO playerCreateDTO) {
+    public ResponseEntity<Response<PlayerDTO>> createPlayer(@Valid PlayerCreateDTO playerCreateDTO) {
         PlayerDTO result = playerService.createPlayer(playerCreateDTO);
         return ResponseMaker.ok(result);
     }
 
     @GetMapping("{nickname}")
     @Operation(summary = "Get Players by Nickname")
-    public ResponseEntity<Response<List<PlayerDTO>>> getPlayerByNicknameLike(@PathVariable String nickname) {
+    public ResponseEntity<Response<List<PlayerDTO>>> getPlayerByNicknameLike(@Valid @PathVariable String nickname) {
         List<PlayerDTO> result = playerService.getPlayersByNicknameLike(nickname);
         return ResponseMaker.ok(result);
     }
 
     @PutMapping("updatePlayer")
     @Operation(summary = "Update Player")
-    public ResponseEntity<Response<PlayerDTO>> updatePlayer(PlayerDTO playerDTO) {
-        PlayerDTO result = playerService.updatePlayer(playerDTO);
+    public ResponseEntity<Response<PlayerDTO>> updatePlayer(@Valid PlayerUpdateDTO playerUpdateDTO) {
+        PlayerDTO result = playerService.updatePlayer(playerUpdateDTO);
         return ResponseMaker.ok(result);
     }
 
@@ -55,11 +58,10 @@ public class PlayerController {
         return ResponseMaker.ok(result);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("byId/{id}")
     @Operation(summary = "Get Player by id")
     public ResponseEntity<Response<PlayerDTO>> getPlayerById(@PathVariable Integer id) {
         PlayerDTO result = playerService.getPlayerById(id);
         return ResponseMaker.ok(result);
     }
-
 }

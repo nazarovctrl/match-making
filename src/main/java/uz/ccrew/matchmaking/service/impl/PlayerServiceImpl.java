@@ -2,17 +2,16 @@ package uz.ccrew.matchmaking.service.impl;
 
 import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
 import uz.ccrew.matchmaking.dto.player.PlayerDTO;
+import uz.ccrew.matchmaking.dto.player.PlayerUpdateDTO;
 import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.entity.User;
-import uz.ccrew.matchmaking.exp.PlayerNotFoundException;
 import uz.ccrew.matchmaking.mapper.PlayerMapper;
 import uz.ccrew.matchmaking.repository.PlayerRepository;
 import uz.ccrew.matchmaking.service.PlayerService;
+import uz.ccrew.matchmaking.util.AuthUtil;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.ccrew.matchmaking.util.AuthUtil;
-
 import java.util.List;
 
 @Service
@@ -32,8 +31,9 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerDTO updatePlayer(PlayerDTO playerDTO) {
+    public PlayerDTO updatePlayer(PlayerUpdateDTO playerUpdateDTO) {
         User user = authUtil.loadLoggedUser();
+        PlayerDTO playerDTO = playerMapper.toDTO(playerUpdateDTO);
         Player player = playerMapper.toEntity(playerDTO);
         player.setUser(user);
         playerRepository.save(player);
