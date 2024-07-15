@@ -1,6 +1,5 @@
 package uz.ccrew.matchmaking.controller;
 
-
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
@@ -8,17 +7,19 @@ import uz.ccrew.matchmaking.dto.player.PlayerDTO;
 import uz.ccrew.matchmaking.dto.player.PlayerUpdateDTO;
 import uz.ccrew.matchmaking.service.PlayerService;
 
+import org.springframework.data.domain.Page;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
-@RequestMapping("/api/v2/players")
+@RequestMapping("/api/v2/player")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Player Controller", description = "Player API")
 public class PlayerController {
     private final PlayerService playerService;
@@ -32,8 +33,10 @@ public class PlayerController {
 
     @GetMapping("{nickname}")
     @Operation(summary = "Get Players by Nickname")
-    public ResponseEntity<Response<List<PlayerDTO>>> getPlayerByNicknameLike(@Valid @PathVariable String nickname) {
-        List<PlayerDTO> result = playerService.getPlayersByNicknameLike(nickname);
+    public ResponseEntity<Response<Page<PlayerDTO>>> getPlayerByNicknameLike(@Valid @PathVariable String nickname,
+                                                                             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                                             @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
+        Page<PlayerDTO> result = playerService.getPlayersByNicknameLike(nickname,page,size);
         return ResponseMaker.ok(result);
     }
 
@@ -53,8 +56,9 @@ public class PlayerController {
 
     @GetMapping("/all")
     @Operation(summary = "Get all players")
-    public ResponseEntity<Response<List<PlayerDTO>>> getAllPlayers() {
-        List<PlayerDTO> result = playerService.getAllPlayers();
+    public ResponseEntity<Response<Page<PlayerDTO>>> getAllPlayers(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                                   @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
+        Page<PlayerDTO> result = playerService.getAllPlayers(page,size);
         return ResponseMaker.ok(result);
     }
 

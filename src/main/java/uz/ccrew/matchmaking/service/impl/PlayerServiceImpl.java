@@ -1,8 +1,10 @@
 package uz.ccrew.matchmaking.service.impl;
 
+import org.springframework.data.domain.*;
 import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
 import uz.ccrew.matchmaking.dto.player.PlayerDTO;
 import uz.ccrew.matchmaking.dto.player.PlayerUpdateDTO;
+import uz.ccrew.matchmaking.dto.user.UserDTO;
 import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.mapper.PlayerMapper;
@@ -25,17 +27,16 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerDTO createPlayer(PlayerCreateDTO playerCreateDTO) {
         User user = authUtil.loadLoggedUser();
         Player player = playerMapper.toEntity(playerCreateDTO);
-        player.setUser(user);
+        player.setUserId(user.getId());
         playerRepository.save(player);
         return playerMapper.toDTO(player);
     }
 
     @Override
-    public PlayerDTO updatePlayer(PlayerUpdateDTO playerUpdateDTO) {
+    public PlayerDTO updatePlayer(PlayerUpdateDTO playerUpdateDTO){
         User user = authUtil.loadLoggedUser();
-        PlayerDTO playerDTO = playerMapper.toDTO(playerUpdateDTO);
-        Player player = playerMapper.toEntity(playerDTO);
-        player.setUser(user);
+        Player player = playerRepository.loadById(user.getId());
+        player.setNickname(playerUpdateDTO.nickname());
         playerRepository.save(player);
         return playerMapper.toDTO(player);
     }
@@ -45,10 +46,13 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.deleteById(user.getId());
     }
     @Override
-    public List<PlayerDTO> getPlayersByNicknameLike(String nickname) {
-        List<Player> players = playerRepository.findByNicknameLike(nickname);
-        return playerMapper.toDTOList(players);
+    public Page<PlayerDTO> getPlayersByNicknameLike(String nickname, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("userId").descending());
+        Page<Player> pageObj = playerRepository.findByNicknameLike(nickname, pageable);
+        List<PlayerDTO> dtoList = pageObj.getContent().stream().map(playerMapper::toDTO).toList();
+        return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }
+
 
     @Override
     public PlayerDTO getPlayerById(Integer id) {
@@ -57,8 +61,14 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<PlayerDTO> getAllPlayers() {
-        List<Player> list = playerRepository.findAll();
-        return playerMapper.toDTOList(list);
+    public Page<PlayerDTO> getAllPlayers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("userId").descending());
+
+        Page<Player> pageObj = playerRepository.findAll(pageable);
+
+        List<Player> playerList = pageObj.getContent();
+        List<PlayerDTO> dtoList = playerList.stream().map(playerMapper::toDTO).toList();
+
+        return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }
 }
