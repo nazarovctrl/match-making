@@ -69,7 +69,7 @@ class AuthServiceImplTest {
         User user = atomicReference.get();
         assertNotNull(user.getCredentialsModifiedDate());
 
-        UserDTO userDTO = userMapper.mapEntity(user);
+        UserDTO userDTO = userMapper.toDTO(user);
         assertEquals(result, userDTO);
     }
 

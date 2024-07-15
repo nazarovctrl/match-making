@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         Page<User> pageObj = userRepository.findAll(pageable);
 
         List<User> userList = pageObj.getContent();
-        List<UserDTO> dtoList = userList.stream().map(userMapper::mapEntity).toList();
+        List<UserDTO> dtoList = userList.stream().map(userMapper::toDTO).toList();
 
         return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }
