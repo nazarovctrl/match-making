@@ -77,6 +77,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/server/**").hasAuthority(UserRole.ADMINISTRATOR.name())
                         .requestMatchers("/api/v1/server/ready").hasAuthority(UserRole.SERVER.name())
                         .requestMatchers("/api/v1/player/**").hasAuthority(UserRole.PLAYER.name())
+                        .requestMatchers("/api/v1/server/delete").hasAuthority(UserRole.ADMINISTRATOR.name())
+                        .requestMatchers("/api/v1/server/**").hasAuthority(UserRole.SERVER.name())
                         .anyRequest().authenticated());
         return httpSecurity.build();
     }
