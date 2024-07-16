@@ -22,7 +22,6 @@ public class Server extends Auditable {
     @Builder.Default
     private Boolean isBusy = false;
     @OneToOne
-    @MapsId
     @JoinColumn(name = "server_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "servers_f1"))
     private User user;
 }
