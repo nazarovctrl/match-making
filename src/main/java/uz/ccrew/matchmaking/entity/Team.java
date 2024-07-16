@@ -1,25 +1,25 @@
 package uz.ccrew.matchmaking.entity;
 
-import uz.ccrew.matchmaking.enums.MatchMode;
-import uz.ccrew.matchmaking.enums.TeamType;
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "teams")
-public class Team extends Auditable {
+public class Team {
     @Id
-    private String id;
-    @Enumerated(EnumType.STRING)
-    @Column
-    private TeamType type;
-    @Enumerated(EnumType.STRING)
-    @Column
-    private MatchMode matchMode;
-    @ManyToMany
-    private List<Player> players;
+    @UuidGenerator
+    private UUID id;
+    @Column(nullable = false)
+    private Integer number;
     @ManyToOne
-    private Player leader;
+    @JoinColumn(name = "match_id", foreignKey = @ForeignKey(name = "teams_f1"))
+    private Match match;
+
+//    @OneToMany(cascade = CascadeType.REMOVE)
+//    @JoinTable(name = "team_players",
+//            joinColumns = @JoinColumn(name = "team_id", foreignKey = @ForeignKey(name = "team_players_f1")),
+//            inverseJoinColumns = @JoinColumn(name = "player_id", foreignKey = @ForeignKey(name = "team_players_f2")))
+//    private List<Player> players;
 }

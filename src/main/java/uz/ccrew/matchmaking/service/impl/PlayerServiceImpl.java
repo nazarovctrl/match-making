@@ -34,7 +34,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerDTO update(PlayerUpdateDTO playerUpdateDTO){
+    public PlayerDTO update(PlayerUpdateDTO playerUpdateDTO) {
         User user = authUtil.loadLoggedUser();
 
         Player player = playerRepository.loadById(user.getId());
@@ -54,7 +54,7 @@ public class PlayerServiceImpl implements PlayerService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("points").descending());
 
         Page<Player> pageObj = playerRepository.findByNicknameLike(nickname, pageable);
-        List<PlayerDTO> dtoList = pageObj.getContent().stream().map(playerMapper::toDTO).toList();
+        List<PlayerDTO> dtoList = playerMapper.toDTOList(pageObj.getContent());
 
         return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }
@@ -72,7 +72,7 @@ public class PlayerServiceImpl implements PlayerService {
         Page<Player> pageObj = playerRepository.findAll(pageable);
 
         List<Player> playerList = pageObj.getContent();
-        List<PlayerDTO> dtoList = playerList.stream().map(playerMapper::toDTO).toList();
+        List<PlayerDTO> dtoList = playerMapper.toDTOList(playerList);
 
         return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }
