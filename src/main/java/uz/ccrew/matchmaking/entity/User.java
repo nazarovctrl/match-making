@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -34,7 +33,4 @@ public class User extends Auditable {
     @Builder.Default
     @Column(nullable = false, columnDefinition = "timestamp default CURRENT_TIMESTAMP")
     private LocalDateTime credentialsModifiedDate = LocalDateTime.now();
-
-    @OneToOne
-    private Player player;
 }

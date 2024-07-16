@@ -1,29 +1,28 @@
 package uz.ccrew.matchmaking.entity;
 
 import uz.ccrew.matchmaking.enums.MatchMode;
-import uz.ccrew.matchmaking.enums.Rank;
 import uz.ccrew.matchmaking.enums.TeamType;
+
+import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
-@Table(name = "matches")
-public class Match extends Auditable {
+@Table(name = "lobbies")
+public class Lobby extends Auditable {
     @Id
+    @UuidGenerator
     private String id;
-    @Enumerated(EnumType.STRING)
-    @Column
-    private MatchMode mode;
     @Enumerated(EnumType.STRING)
     @Column
     private TeamType teamType;
     @Enumerated(EnumType.STRING)
     @Column
-    private Rank rank;
+    private MatchMode matchMode;
     @OneToMany
-    private List<Team> teams;
-    @Column(nullable = false)
-    private Boolean isStarted = false;
+    private List<Player> players;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    private Player leader;
 }
