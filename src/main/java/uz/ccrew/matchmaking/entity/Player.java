@@ -28,7 +28,6 @@ public class Player extends Auditable {
 
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "player_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "players_f1"))
     private User user;
 }
