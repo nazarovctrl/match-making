@@ -24,6 +24,6 @@ public class Server extends Auditable {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "server_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "server_f1"))
+    @JoinColumn(name = "server_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "servers_f1"))
     private User user;
 }

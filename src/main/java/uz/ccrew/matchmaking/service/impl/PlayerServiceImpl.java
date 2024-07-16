@@ -28,7 +28,7 @@ public class PlayerServiceImpl implements PlayerService {
         User user = authUtil.loadLoggedUser();
 
         Player player = playerMapper.toEntity(playerCreateDTO);
-        player.setUserId(user.getId());
+        player.setPlayerId(user.getId());
         playerRepository.save(player);
         return playerMapper.toDTO(player);
     }
