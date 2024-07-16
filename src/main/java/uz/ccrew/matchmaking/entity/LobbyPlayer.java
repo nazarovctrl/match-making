@@ -1,6 +1,7 @@
 package uz.ccrew.matchmaking.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -10,6 +11,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "lobby_players")
+@NoArgsConstructor
+@Setter
+@Getter
 public class LobbyPlayer {
     @EmbeddedId
     private LobbyPlayerId id;
@@ -29,9 +33,17 @@ public class LobbyPlayer {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Player player;
 
+    public LobbyPlayer(Lobby lobby, Player player, boolean isLeader) {
+        id = new LobbyPlayerId(lobby.getId(), player.getPlayerId());
+        this.lobby = lobby;
+        this.player = player;
+        this.isLeader = isLeader;
+    }
 
     @Embeddable
-    class LobbyPlayerId implements Serializable {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class LobbyPlayerId implements Serializable {
         private UUID lobbyId;
         private Integer playerId;
 
