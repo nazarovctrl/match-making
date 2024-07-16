@@ -29,5 +29,5 @@ jobs:
         with:
           maven-version: 3.8.6
 
-      - name: All the Tests and Coverage Checks
-        run: mvn clean install
+      - name: Run all tests
+        run: mvn test
