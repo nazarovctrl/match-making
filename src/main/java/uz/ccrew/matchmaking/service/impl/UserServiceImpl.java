@@ -30,13 +30,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO get() {
         User user = authUtil.loadLoggedUser();
-        return userMapper.mapEntity(user);
+        return userMapper.toDTO(user);
     }
 
     @Override
     public UserDTO getById(Integer userId) {
         User user = userRepository.loadById(userId);
-        return userMapper.mapEntity(user);
+        return userMapper.toDTO(user);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
         update(user, dto);
 
-        return userMapper.mapEntity(user);
+        return userMapper.toDTO(user);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
         update(user, dto);
 
-        return userMapper.mapEntity(user);
+        return userMapper.toDTO(user);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         Page<User> pageObj = userRepository.findAll(pageable);
 
         List<User> userList = pageObj.getContent();
-        List<UserDTO> dtoList = userList.stream().map(userMapper::mapEntity).toList();
+        List<UserDTO> dtoList = userList.stream().map(userMapper::toDTO).toList();
 
         return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }

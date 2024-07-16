@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         userRepository.save(user);
-        return userMapper.mapEntity(user);
+        return userMapper.toDTO(user);
     }
 
     @Override

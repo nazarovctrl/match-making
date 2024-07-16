@@ -3,9 +3,15 @@ package uz.ccrew.matchmaking.entity;
 import uz.ccrew.matchmaking.enums.Rank;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "players")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Player extends Auditable {
     @Id
     @Column(name = "user_id")
@@ -17,7 +23,9 @@ public class Player extends Auditable {
     private String nickname;
     @Enumerated(EnumType.STRING)
     @Column
-    private Rank rank;
+    @Builder.Default
+    private Rank rank = Rank.BRONZE;
     @Column(nullable = false)
+    @Builder.Default
     private Integer points = 0;
 }

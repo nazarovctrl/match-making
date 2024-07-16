@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ServiceMapper implements Mapper<ServerDTO, Server> {
 
     @Override
-    public Server mapDTO(ServerDTO dto) {
+    public Server toEntity(ServerDTO dto) {
         return Server.builder()
                 .name(dto.name())
                 .location(dto.location())
@@ -17,7 +17,7 @@ public class ServiceMapper implements Mapper<ServerDTO, Server> {
     }
 
     @Override
-    public ServerDTO mapEntity(Server server) {
+    public ServerDTO toDTO(Server server) {
         return ServerDTO.builder()
                 .name(server.getName())
                 .location(server.getLocation())
