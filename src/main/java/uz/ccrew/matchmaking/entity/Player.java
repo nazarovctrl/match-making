@@ -16,9 +16,6 @@ public class Player extends Auditable {
     @Id
     @Column(name = "user_id")
     private Integer userId;
-    @OneToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User user;
     @Column(unique = true, nullable = false, length = 32)
     private String nickname;
     @Enumerated(EnumType.STRING)
@@ -28,4 +25,10 @@ public class Player extends Auditable {
     @Column(nullable = false)
     @Builder.Default
     private Integer points = 0;
+
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "players_f1"))
+    private User user;
 }
