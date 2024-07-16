@@ -1,7 +1,13 @@
 package uz.ccrew.matchmaking.mapper;
 
-public interface Mapper<D, E> {
-    E toEntity(D d);
+import java.util.List;
+
+public interface Mapper<C, D, E> {
+    E toEntity(C c);
 
     D toDTO(E e);
+
+    default List<D> toDTOList(List<E> eList) {
+        return eList.stream().map(this::toDTO).toList();
+    }
 }

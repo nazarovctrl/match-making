@@ -2,10 +2,7 @@ package uz.ccrew.matchmaking.entity;
 
 import uz.ccrew.matchmaking.enums.UserRole;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -13,7 +10,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class User extends Auditable {

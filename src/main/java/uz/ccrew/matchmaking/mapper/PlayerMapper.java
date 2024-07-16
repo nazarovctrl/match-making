@@ -8,16 +8,8 @@ import uz.ccrew.matchmaking.enums.Rank;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PlayerMapper implements Mapper<PlayerDTO, Player> {
+public class PlayerMapper implements Mapper<PlayerCreateDTO, PlayerDTO, Player> {
     @Override
-    public Player toEntity(PlayerDTO dto) {
-        return Player.builder()
-                .nickname(dto.nickname())
-                .rank(dto.rank())
-                .points(dto.points())
-                .build();
-    }
-
     public Player toEntity(PlayerCreateDTO dto) {
         return Player.builder()
                 .nickname(dto.nickname())
@@ -29,6 +21,7 @@ public class PlayerMapper implements Mapper<PlayerDTO, Player> {
     @Override
     public PlayerDTO toDTO(Player player) {
         return PlayerDTO.builder()
+                .id(player.getUserId())
                 .nickname(player.getNickname())
                 .rank(player.getRank())
                 .points(player.getPoints())

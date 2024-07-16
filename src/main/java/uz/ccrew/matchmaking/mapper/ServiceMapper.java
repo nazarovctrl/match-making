@@ -6,7 +6,7 @@ import uz.ccrew.matchmaking.entity.Server;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceMapper implements Mapper<ServerDTO, Server> {
+public class ServiceMapper implements Mapper<ServerDTO, ServerDTO, Server> {
 
     @Override
     public Server toEntity(ServerDTO dto) {

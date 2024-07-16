@@ -6,7 +6,7 @@ import uz.ccrew.matchmaking.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserMapper implements Mapper<UserDTO, User> {
+public class UserMapper implements Mapper<UserDTO, UserDTO, User> {
     @Override
     public User toEntity(UserDTO dto) {
         return User.builder()
