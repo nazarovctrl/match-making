@@ -14,8 +14,8 @@ import lombok.*;
 @Setter
 public class Player extends Auditable {
     @Id
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "player_id")
+    private Integer playerId;
     @Column(unique = true, nullable = false, length = 32)
     private String nickname;
     @Enumerated(EnumType.STRING)
@@ -29,6 +29,6 @@ public class Player extends Auditable {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "players_f1"))
+    @JoinColumn(name = "player_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "players_f1"))
     private User user;
 }
