@@ -34,7 +34,7 @@ public class LobbyPlayer {
     private Player player;
 
     public LobbyPlayer(Lobby lobby, Player player, boolean isLeader) {
-        id = new LobbyPlayerId(lobby.getLobbyId(), player.getPlayerId());
+        id = new LobbyPlayerId(lobby.getId(), player.getPlayerId());
         this.lobby = lobby;
         this.player = player;
         this.isLeader = isLeader;

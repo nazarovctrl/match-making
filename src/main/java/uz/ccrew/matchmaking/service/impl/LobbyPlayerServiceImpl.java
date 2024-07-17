@@ -34,7 +34,7 @@ public class LobbyPlayerServiceImpl implements LobbyPlayerService {
 
         Optional<LobbyPlayer> optional = lobbyPlayerRepository.findByPlayer(player);
         if (optional.isPresent()) {
-            if (optional.get().getLobby().getLobbyId().toString().equals(lobbyId)) {
+            if (optional.get().getLobby().getId().toString().equals(lobbyId)) {
                 throw new AlreadyExistException("You are already joined to this lobby");
             }
             throw new AlreadyExistException("You need to leave from current lobby");
@@ -51,11 +51,11 @@ public class LobbyPlayerServiceImpl implements LobbyPlayerService {
         LobbyPlayer lobbyPlayer = lobbyPlayerRepository.loadByPlayer(player);
         Lobby lobby = lobbyPlayer.getLobby();
 
-        lobbyPlayerRepository.deleteByLobbyIdAndPlayerId(lobby.getLobbyId(), player.getPlayerId());
+        lobbyPlayerRepository.deleteByLobbyIdAndPlayerId(lobby.getId(), player.getPlayerId());
 
-        LobbyPlayer nextLobbyLeader = lobbyPlayerRepository.findFirstByLobby_Id(lobby.getLobbyId());
+        LobbyPlayer nextLobbyLeader = lobbyPlayerRepository.findFirstByLobby_Id(lobby.getId());
         if (nextLobbyLeader == null) {
-            lobbyRepository.deleteById(lobby.getLobbyId());
+            lobbyRepository.deleteById(lobby.getId());
         } else if (lobbyPlayer.getIsLeader()) {
             nextLobbyLeader.setIsLeader(true);
             lobbyPlayerRepository.save(nextLobbyLeader);
@@ -76,6 +76,6 @@ public class LobbyPlayerServiceImpl implements LobbyPlayerService {
             throw new BadRequestException("You can't kick your self");
         }
 
-        lobbyPlayerRepository.deleteByLobbyIdAndPlayerId(lobbyLeader.getLobby().getLobbyId(), playerToKick.getPlayerId());
+        lobbyPlayerRepository.deleteByLobbyIdAndPlayerId(lobbyLeader.getLobby().getId(), playerToKick.getPlayerId());
     }
 }

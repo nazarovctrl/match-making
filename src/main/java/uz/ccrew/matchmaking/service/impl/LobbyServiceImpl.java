@@ -73,11 +73,11 @@ public class LobbyServiceImpl implements LobbyService {
         LobbyPlayer lobbyPlayer = lobbyPlayerRepository.loadByPlayer(player);
         Lobby lobby = lobbyPlayer.getLobby();
 
-        List<LobbyPlayer> playerList = lobbyPlayerRepository.findByLobby_Id(lobby.getLobbyId());
+        List<LobbyPlayer> playerList = lobbyPlayerRepository.findByLobby_Id(lobby.getId());
         List<LobbyPlayerDTO> playerDTOList = lobbyPlayerMapper.toDTOList(playerList);
 
         return LobbyDTO.builder()
-                .lobbyId(lobby.getLobbyId().toString())
+                .lobbyId(lobby.getId().toString())
                 .matchMode(lobby.getMatchMode())
                 .teamType(lobby.getTeamType())
                 .players(playerDTOList).build();

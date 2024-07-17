@@ -19,7 +19,7 @@ import java.util.UUID;
 public class Lobby extends Auditable {
     @Id
     @UuidGenerator
-    private UUID lobbyId;
+    private UUID id;
     @Enumerated(EnumType.STRING)
     @Column
     private TeamType teamType;
