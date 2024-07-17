@@ -21,7 +21,7 @@ public class PlayerMapper implements Mapper<PlayerCreateDTO, PlayerDTO, Player> 
     @Override
     public PlayerDTO toDTO(Player player) {
         return PlayerDTO.builder()
-                .id(player.getPlayerId())
+                .playerId(player.getPlayerId())
                 .nickname(player.getNickname())
                 .rank(player.getRank())
                 .points(player.getPoints())
