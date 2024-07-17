@@ -85,7 +85,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public void cahngeBusy(Boolean busy) {
+    public void changeBusy(Boolean busy) {
         Server server = serverRepository.findById(authUtil.loadLoggedUser().getId())
                 .orElseThrow(() -> new NotFoundException("Server not found"));
         server.setIsBusy(busy);

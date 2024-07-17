@@ -1,6 +1,5 @@
 package uz.ccrew.matchmaking.controller;
 
-import org.springframework.data.domain.Page;
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.server.ServerCreateDTO;
@@ -8,6 +7,7 @@ import uz.ccrew.matchmaking.dto.server.ServerDTO;
 import uz.ccrew.matchmaking.dto.server.ServerUpdateDTO;
 import uz.ccrew.matchmaking.service.ServerService;
 
+import org.springframework.data.domain.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
@@ -63,7 +63,7 @@ public class ServerController {
     @PatchMapping("/serverStatus/{status}")
     @Operation(summary = "Make server busy or idle. For only Server role")
     public ResponseEntity<Response<?>> changeBusy(@PathVariable("status") Boolean status) {
-        serverService.cahngeBusy(status);
+        serverService.changeBusy(status);
         return ResponseMaker.okMessage("The server status changed");
     }
 }
