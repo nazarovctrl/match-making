@@ -50,7 +50,7 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public ServerDTO update(ServerUpdateDTO dto,Integer id) {
-        Server server = serverRepository.findById(id).orElseThrow(()->new NotFoundException("Server not found for update"));
+        Server server = serverRepository.loadById(id);
 
         server.setName(dto.name());
         server.setLocation(dto.location());
@@ -68,8 +68,8 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public ServerDTO getById(Integer id) {
-        ServerDTO dto =  serverMapper.toDTO(serverRepository.loadById(id));
-        return dto;
+        Server server =  serverRepository.loadById(id);
+        return serverMapper.toDTO(server);
     }
 
     @Override
