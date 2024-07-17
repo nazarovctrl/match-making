@@ -1,11 +1,10 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import uz.ccrew.matchmaking.dto.lobby.LobbyPlayerDTO;
+import uz.ccrew.matchmaking.entity.Lobby;
 import uz.ccrew.matchmaking.entity.LobbyPlayer;
 import uz.ccrew.matchmaking.entity.Player;
+import uz.ccrew.matchmaking.exp.AlreadyExistException;
 import uz.ccrew.matchmaking.exp.BadRequestException;
-import uz.ccrew.matchmaking.exp.NotFoundException;
-import uz.ccrew.matchmaking.mapper.LobbyPlayerMapper;
 import uz.ccrew.matchmaking.repository.LobbyPlayerRepository;
 import uz.ccrew.matchmaking.repository.LobbyRepository;
 import uz.ccrew.matchmaking.repository.PlayerRepository;
@@ -16,7 +15,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,53 +24,58 @@ public class LobbyPlayerServiceImpl implements LobbyPlayerService {
     private final LobbyPlayerRepository lobbyPlayerRepository;
     private final LobbyRepository lobbyRepository;
     private final PlayerUtil playerUtil;
-    private final LobbyPlayerMapper lobbyPlayerMapper;
     private final PlayerRepository playerRepository;
+
+    @Override
+    public void join(String lobbyId) {
+        Lobby lobby = lobbyRepository.loadById(UUID.fromString(lobbyId)); //TODO check players count
+
+        Player player = playerUtil.loadPLayer();
+
+        Optional<LobbyPlayer> optional = lobbyPlayerRepository.findByPlayer(player);
+        if (optional.isPresent()) {
+            if (optional.get().getLobby().getLobbyId().toString().equals(lobbyId)) {
+                throw new AlreadyExistException("You are already joined to this lobby");
+            }
+            throw new AlreadyExistException("You need to leave from current lobby");
+        }
+        LobbyPlayer lobbyPlayer = new LobbyPlayer(lobby, player, false);
+        lobbyPlayerRepository.save(lobbyPlayer);
+    }
 
     @Transactional
     @Override
     public void leave() {
         Player player = playerUtil.loadPLayer();
 
-        Optional<LobbyPlayer> optional = lobbyPlayerRepository.findByPlayer(player);
-        if (optional.isEmpty()) {
-            throw new NotFoundException("You are not in lobby to leave");
-        }
+        LobbyPlayer lobbyPlayer = lobbyPlayerRepository.loadByPlayer(player);
+        Lobby lobby = lobbyPlayer.getLobby();
 
-        LobbyPlayer lobbyPlayer = optional.get();
-        lobbyPlayerRepository.deleteByPlayerId(player.getPlayerId());
+        lobbyPlayerRepository.deleteByLobbyIdAndPlayerId(lobby.getLobbyId(), player.getPlayerId());
 
-        int count = lobbyPlayerRepository.countById(lobbyPlayer.getId());
-        if (count == 0) {
-            lobbyRepository.deleteById(lobbyPlayer.getLobby().getId());
+        LobbyPlayer nextLobbyLeader = lobbyPlayerRepository.findFirstByLobby_Id(lobby.getLobbyId());
+        if (nextLobbyLeader == null) {
+            lobbyRepository.deleteById(lobby.getLobbyId());
+        } else if (lobbyPlayer.getIsLeader()) {
+            nextLobbyLeader.setIsLeader(true);
+            lobbyPlayerRepository.save(nextLobbyLeader);
         }
     }
 
     @Override
     public void kick(Integer playerId) {
         Player playerToKick = playerRepository.loadById(playerId);
+        Player leader = playerUtil.loadPLayer();
 
-        Player player = playerUtil.loadPLayer();
-        if (player.getPlayerId().equals(playerId)) {
-            throw new BadRequestException("You can't kick your self");
-        }
-
-        Optional<LobbyPlayer> optional = lobbyPlayerRepository.findByPlayer(player);
-        if (optional.isEmpty()) {
-            throw new NotFoundException("You are not in lobby to kick");
-        }
-        LobbyPlayer lobbyPlayer = optional.get();
-        if (!lobbyPlayer.getIsLeader()) {
+        LobbyPlayer lobbyLeader = lobbyPlayerRepository.loadByPlayer(leader);
+        if (!lobbyLeader.getIsLeader()) {
             throw new BadRequestException("You can't kick from the lobby. Because you are not leader");
         }
 
-        lobbyPlayerRepository.deleteByPlayerId(playerToKick.getPlayerId());
-    }
+        if (leader.getPlayerId().equals(playerId)) {
+            throw new BadRequestException("You can't kick your self");
+        }
 
-    @Override
-    public List<LobbyPlayerDTO> getPlayers(String lobbyId) {
-        List<LobbyPlayer> list = lobbyPlayerRepository.findByLobby_Id(UUID.fromString(lobbyId));
-
-        return lobbyPlayerMapper.toDTOList(list);
+        lobbyPlayerRepository.deleteByLobbyIdAndPlayerId(lobbyLeader.getLobby().getLobbyId(), playerToKick.getPlayerId());
     }
 }

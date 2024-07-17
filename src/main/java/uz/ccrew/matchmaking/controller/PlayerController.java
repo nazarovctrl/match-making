@@ -34,9 +34,9 @@ public class PlayerController {
     @GetMapping("/{nickname}")
     @Operation(summary = "Get Players by Nickname")
     public ResponseEntity<Response<Page<PlayerDTO>>> getByNicknameLike(@PathVariable("nickname") String nickname,
-                                                                             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                                                                             @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
-        Page<PlayerDTO> result = playerService.getByNicknameLike(nickname,page,size);
+                                                                       @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                                       @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
+        Page<PlayerDTO> result = playerService.getByNicknameLike(nickname, page, size);
         return ResponseMaker.ok(result);
     }
 
@@ -57,8 +57,8 @@ public class PlayerController {
     @GetMapping("/get/list")
     @Operation(summary = "Get all players")
     public ResponseEntity<Response<Page<PlayerDTO>>> getList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                                                                   @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
-        Page<PlayerDTO> result = playerService.getList(page,size);
+                                                             @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
+        Page<PlayerDTO> result = playerService.getList(page, size);
         return ResponseMaker.ok(result);
     }
 

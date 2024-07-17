@@ -1,6 +1,5 @@
 package uz.ccrew.matchmaking.controller;
 
-import org.springframework.web.bind.annotation.*;
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.lobby.LobbyCreateDTO;
@@ -13,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/lobby")
@@ -24,14 +24,6 @@ public class LobbyController {
     public LobbyController(LobbyService lobbyService) {
         this.lobbyService = lobbyService;
     }
-    // lobby ochish yokida lobby ga id si boyicha qoshilish imkoniyati player uchun
-
-    /* API list    all for Player
-      1. create lobby
-      2. edit lobby
-      3. join to lobby
-      5. kick from lobby
-     */
 
     @PostMapping("/create")
     @Operation(summary = "Create lobby")
@@ -40,10 +32,17 @@ public class LobbyController {
         return ResponseMaker.ok(result);
     }
 
-    @PutMapping("/update}")
+    @PutMapping("/update")
     @Operation(summary = "Update lobby")
     public ResponseEntity<Response<LobbyDTO>> update(@RequestBody LobbyUpdateDTO dto) {
         LobbyDTO result = lobbyService.update(dto);
+        return ResponseMaker.ok(result);
+    }
+
+    @GetMapping("/get")
+    @Operation(summary = "Get lobby and all players")
+    public ResponseEntity<Response<LobbyDTO>> get() {
+        LobbyDTO result = lobbyService.get();
         return ResponseMaker.ok(result);
     }
 }

@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "lobby_players")
+@Table(name = "lobby_players", uniqueConstraints = @UniqueConstraint(name = "lobby_players_u1", columnNames = {"lobby_id", "is_leader"}))
 @NoArgsConstructor
 @Setter
 @Getter
@@ -34,7 +34,7 @@ public class LobbyPlayer {
     private Player player;
 
     public LobbyPlayer(Lobby lobby, Player player, boolean isLeader) {
-        id = new LobbyPlayerId(lobby.getId(), player.getPlayerId());
+        id = new LobbyPlayerId(lobby.getLobbyId(), player.getPlayerId());
         this.lobby = lobby;
         this.player = player;
         this.isLeader = isLeader;

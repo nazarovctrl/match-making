@@ -20,7 +20,8 @@ public class LobbyMapper implements Mapper<LobbyCreateDTO, LobbyDTO, Lobby> {
 
     @Override
     public LobbyDTO toDTO(Lobby lobby) {
-        return LobbyDTO.builder().id(lobby.getId().toString())
+        return LobbyDTO.builder()
+                .lobbyId(lobby.getLobbyId().toString())
                 .matchMode(lobby.getMatchMode())
                 .teamType(lobby.getTeamType())
                 .build();

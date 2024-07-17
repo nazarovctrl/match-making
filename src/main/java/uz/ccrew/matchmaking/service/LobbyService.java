@@ -9,4 +9,6 @@ public interface LobbyService {
     LobbyDTO create(LobbyCreateDTO dto);
 
     LobbyDTO update(LobbyUpdateDTO dto);
+
+    LobbyDTO get();
 }

@@ -1,14 +1,10 @@
 package uz.ccrew.matchmaking.service;
 
-import uz.ccrew.matchmaking.dto.lobby.LobbyPlayerDTO;
-
-import java.util.List;
-
 public interface LobbyPlayerService {
 
-    void leave();
+    void join(String lobbyId);
 
-    List<LobbyPlayerDTO> getPlayers(String lobbyId);
+    void leave();
 
     void kick(Integer playerId);
 }

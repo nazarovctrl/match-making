@@ -13,7 +13,7 @@ import jakarta.persistence.*;
 public class Match extends Auditable {
     @Id
     @UuidGenerator
-    private String id;
+    private String matchId;
     @Enumerated(EnumType.STRING)
     @Column
     private MatchMode mode;
