@@ -31,16 +31,16 @@ public class ServerController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("byId/{id}")
+    @GetMapping("/get/{id}")
     @Operation(summary = "Find server by id")
     public ResponseEntity<ServerDTO> findById(@PathVariable("id") Integer id) {
-        ServerDTO serverDTO = serverService.findById(id);
+        ServerDTO serverDTO = serverService.getById(id);
         return ResponseEntity.ok(serverDTO);
     }
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Update server")
-    public ResponseEntity<ServerDTO> update(@RequestBody @Valid ServerUpdateDTO dto, @PathVariable("id") Integer id) {
+    public ResponseEntity<ServerDTO> update(@PathVariable("id") Integer id, @RequestBody @Valid ServerUpdateDTO dto) {
         ServerDTO result = serverService.update(dto,id);
         return ResponseEntity.ok(result);
     }
@@ -52,11 +52,18 @@ public class ServerController {
         return ResponseMaker.okMessage("Server deleted");
     }
 
-    @GetMapping("/get/list")
+    @GetMapping("/list")
     @Operation(summary = "Get all servers")
     public ResponseEntity<Response<Page<ServerDTO>>> getList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                              @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
         Page<ServerDTO> result = serverService.getList(page,size);
         return ResponseMaker.ok(result);
+    }
+
+    @PatchMapping("/serverStatus/{status}")
+    @Operation(summary = "Make server busy or idle. For only Server role")
+    public ResponseEntity<Response<?>> changeServerBusy(@PathVariable("status") Boolean status) {
+        serverService.makeBusy(status);
+        return ResponseMaker.okMessage("The server status changed");
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uz.ccrew.matchmaking.util.AuthUtil;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class ServerServiceImpl implements ServerService {
     private final ServerMapper serverMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final AuthUtil authUtil;
 
     @Transactional
     @Override
@@ -46,7 +48,6 @@ public class ServerServiceImpl implements ServerService {
         return serverMapper.toDTO(server);
     }
 
-    @Transactional
     @Override
     public ServerDTO update(ServerUpdateDTO dto,Integer id) {
         Server server = serverRepository.findById(id).orElseThrow(()->new NotFoundException("Server not found for update"));
@@ -59,7 +60,6 @@ public class ServerServiceImpl implements ServerService {
         return serverMapper.toDTO(server);
     }
 
-    @Transactional
     @Override
     public void delete(Integer id) {
         Server server = serverRepository.loadById(id);
@@ -67,8 +67,9 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public ServerDTO findById(Integer id) {
-        return serverMapper.toDTO(serverRepository.findById(id).orElseThrow(() -> new NotFoundException("Server not found")));
+    public ServerDTO getById(Integer id) {
+        ServerDTO dto =  serverMapper.toDTO(serverRepository.loadById(id));
+        return dto;
     }
 
     @Override
@@ -81,5 +82,13 @@ public class ServerServiceImpl implements ServerService {
         List<ServerDTO> dtoList = serverMapper.toDTOList(playerList);
 
         return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
+    }
+
+    @Override
+    public void makeBusy(Boolean busy) {
+        Server server = serverRepository.findById(authUtil.loadLoggedUser().getId())
+                .orElseThrow(() -> new NotFoundException("Server not found"));
+        server.setIsBusy(busy);
+        serverRepository.save(server);
     }
 }

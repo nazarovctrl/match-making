@@ -10,6 +10,7 @@ public interface ServerService {
     ServerDTO create(ServerCreateDTO dto);
     ServerDTO update(ServerUpdateDTO dto,Integer id);
     void delete(Integer id);
-    ServerDTO findById(Integer id);
+    ServerDTO getById(Integer id);
     Page<ServerDTO> getList(int page, int size);
+    void makeBusy(Boolean busy);
 }

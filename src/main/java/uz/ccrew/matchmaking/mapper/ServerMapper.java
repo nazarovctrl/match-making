@@ -7,16 +7,7 @@ import uz.ccrew.matchmaking.entity.Server;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServerMapper implements Mapper<ServerDTO, ServerDTO, Server> {
-
-    @Override
-    public Server toEntity(ServerDTO dto) {
-        return Server.builder()
-                .name(dto.name())
-                .location(dto.location())
-                .build();
-    }
-
+public class ServerMapper implements Mapper<ServerCreateDTO, ServerDTO, Server> {
     public Server toEntity(ServerCreateDTO dto) {
         return Server.builder()
                 .name(dto.name())
