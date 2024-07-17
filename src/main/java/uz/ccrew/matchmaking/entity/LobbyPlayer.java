@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "lobby_players", uniqueConstraints = @UniqueConstraint(name = "lobby_players_u1", columnNames = {"lobby_id", "is_leader"}))
+@Table(name = "lobby_players")
 @NoArgsConstructor
 @Setter
 @Getter

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Lobby Controller", description = "Lobby API")
 public class LobbyController {
+    //TODO add API to change leader
     private final LobbyService lobbyService;
 
     public LobbyController(LobbyService lobbyService) {
