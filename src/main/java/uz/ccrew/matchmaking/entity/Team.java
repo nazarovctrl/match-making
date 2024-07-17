@@ -10,7 +10,7 @@ import java.util.UUID;
 public class Team {
     @Id
     @UuidGenerator
-    private UUID id;
+    private UUID teamId;
     @Column(nullable = false)
     private Integer number;
     @ManyToOne
