@@ -1,21 +1,25 @@
 package uz.ccrew.matchmaking.service.impl;
 
-
+import uz.ccrew.matchmaking.dto.server.ServerCreateDTO;
 import uz.ccrew.matchmaking.dto.server.ServerDTO;
+import uz.ccrew.matchmaking.dto.server.ServerUpdateDTO;
 import uz.ccrew.matchmaking.entity.Server;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
+import uz.ccrew.matchmaking.exp.NotFoundException;
 import uz.ccrew.matchmaking.mapper.ServerMapper;
 import uz.ccrew.matchmaking.repository.ServerRepository;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.service.ServerService;
-import uz.ccrew.matchmaking.util.AuthUtil;
 
+import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +28,10 @@ public class ServerServiceImpl implements ServerService {
     private final ServerMapper serverMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final AuthUtil authUtil;
 
     @Transactional
     @Override
-    public ServerDTO create(ServerDTO dto) {
+    public ServerDTO create(ServerCreateDTO dto) {
         User user = User.builder()
                 .login(dto.login())
                 .password(passwordEncoder.encode(dto.password()))
@@ -37,29 +40,26 @@ public class ServerServiceImpl implements ServerService {
         userRepository.save(user);
 
         Server server = serverMapper.toEntity(dto);
-
-        server.setUser(user);
+        server.setServerId(user.getId());
         serverRepository.save(server);
 
         return serverMapper.toDTO(server);
     }
 
+    @Transactional
     @Override
-    public ServerDTO update(ServerDTO dto) {
-        User user = User.builder()
-                .login(dto.login())
-                .password(passwordEncoder.encode(dto.password()))
-                .build();
-        userRepository.save(user);
+    public ServerDTO update(ServerUpdateDTO dto,Integer id) {
+        Server server = serverRepository.findById(id).orElseThrow(()->new NotFoundException("Server not found for update"));
 
-        Server server = serverMapper.toEntity(dto);
-
-        server.setUser(user);
+        server.setName(dto.name());
+        server.setLocation(dto.location());
+        server.setServerId(server.getServerId());
         serverRepository.save(server);
 
         return serverMapper.toDTO(server);
     }
 
+    @Transactional
     @Override
     public void delete(Integer id) {
         Server server = serverRepository.loadById(id);
@@ -68,6 +68,18 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public ServerDTO findById(Integer id) {
-        return serverMapper.toDTO(serverRepository.findById(id).get());
+        return serverMapper.toDTO(serverRepository.findById(id).orElseThrow(() -> new NotFoundException("Server not found")));
+    }
+
+    @Override
+    public Page<ServerDTO> getList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("serverId").descending());
+
+        Page<Server> pageObj = serverRepository.findAll(pageable);
+
+        List<Server> playerList = pageObj.getContent();
+        List<ServerDTO> dtoList = serverMapper.toDTOList(playerList);
+
+        return new PageImpl<>(dtoList, pageable, pageObj.getTotalElements());
     }
 }

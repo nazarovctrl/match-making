@@ -23,11 +23,10 @@ public class LobbyServiceImpl implements LobbyService {
     public LobbyDTO create(LobbyCreateDTO dto) {
         Player player = playerUtil.loadPLayer();
 
-        //check player to member of another lobby
+
 
         Lobby lobby = lobbyMapper.toEntity(dto);
-//        lobby.setLeader(player);
-//        lobby.addPlayers(player);
+
 
         lobbyRepository.save(lobby);
         return lobbyMapper.toDTO(lobby);
