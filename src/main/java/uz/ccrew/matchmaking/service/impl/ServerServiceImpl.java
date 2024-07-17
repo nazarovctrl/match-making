@@ -11,6 +11,7 @@ import uz.ccrew.matchmaking.mapper.ServerMapper;
 import uz.ccrew.matchmaking.repository.ServerRepository;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.service.ServerService;
+import uz.ccrew.matchmaking.util.AuthUtil;
 
 import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.ccrew.matchmaking.util.AuthUtil;
 
 import java.util.List;
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ServerMapper implements Mapper<ServerCreateDTO, ServerDTO, Server> {
+    @Override
     public Server toEntity(ServerCreateDTO dto) {
         return Server.builder()
                 .name(dto.name())
