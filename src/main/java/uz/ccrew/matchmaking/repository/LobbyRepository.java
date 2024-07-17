@@ -1,10 +1,10 @@
 package uz.ccrew.matchmaking.repository;
 
+import uz.ccrew.matchmaking.entity.Lobby;
+
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import uz.ccrew.matchmaking.entity.Lobby;
-
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;

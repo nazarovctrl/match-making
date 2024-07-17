@@ -1,9 +1,10 @@
 package uz.ccrew.matchmaking.mapper;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import uz.ccrew.matchmaking.dto.lobby.LobbyPlayerDTO;
 import uz.ccrew.matchmaking.entity.LobbyPlayer;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
