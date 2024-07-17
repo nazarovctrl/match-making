@@ -12,5 +12,5 @@ public interface ServerService {
     void delete(Integer id);
     ServerDTO getById(Integer id);
     Page<ServerDTO> getList(int page, int size);
-    void makeBusy(Boolean busy);
+    void cahngeBusy(Boolean busy);
 }
