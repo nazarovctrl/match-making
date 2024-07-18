@@ -28,7 +28,7 @@ public class Match extends Auditable {
     @JoinColumn(name = "server_id", foreignKey = @ForeignKey(name = "match_teams_f1"))
     private Server server;
     @Column(nullable = false)
-    private Boolean isStarted = false;
+    private Boolean isStarted;
 
 //    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
 //    @JoinTable(name = "match_teams",
