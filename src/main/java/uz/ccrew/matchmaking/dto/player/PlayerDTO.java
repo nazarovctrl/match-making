@@ -5,5 +5,5 @@ import uz.ccrew.matchmaking.enums.Rank;
 import lombok.Builder;
 
 @Builder
-public record PlayerDTO(Integer id, String nickname, Rank rank, Integer points) {
+public record PlayerDTO(Integer playerId, String nickname, Rank rank, Integer points) {
 }
