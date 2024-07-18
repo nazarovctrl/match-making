@@ -5,11 +5,12 @@ import uz.ccrew.matchmaking.enums.Rank;
 import uz.ccrew.matchmaking.enums.TeamType;
 
 import org.hibernate.annotations.UuidGenerator;
-
+import org.hibernate.annotations.Check;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "matches")
+@Check(name = "matches_c1", constraints = "(is_started = true and server_id is not null) or (is_started = false and server_id is null)")
 public class Match extends Auditable {
     @Id
     @UuidGenerator
@@ -24,7 +25,7 @@ public class Match extends Auditable {
     @Column
     private Rank rank;
     @ManyToOne
-    @JoinColumn(name = "server_id",foreignKey = @ForeignKey(name = "match_teams_f1"))
+    @JoinColumn(name = "server_id", foreignKey = @ForeignKey(name = "match_teams_f1"))
     private Server server;
     @Column(nullable = false)
     private Boolean isStarted = false;

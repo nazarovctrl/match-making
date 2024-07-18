@@ -6,7 +6,6 @@ import uz.ccrew.matchmaking.dto.server.ServerUpdateDTO;
 import uz.ccrew.matchmaking.entity.Server;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
-import uz.ccrew.matchmaking.exp.NotFoundException;
 import uz.ccrew.matchmaking.mapper.ServerMapper;
 import uz.ccrew.matchmaking.repository.ServerRepository;
 import uz.ccrew.matchmaking.repository.UserRepository;
@@ -34,6 +33,7 @@ public class ServerServiceImpl implements ServerService {
     @Transactional
     @Override
     public ServerDTO create(ServerCreateDTO dto) {
+        //TODO check login to exists
         User user = User.builder()
                 .login(dto.login())
                 .password(passwordEncoder.encode(dto.password()))
@@ -49,7 +49,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public ServerDTO update(Integer id,ServerUpdateDTO dto) {
+    public ServerDTO update(Integer id, ServerUpdateDTO dto) {
         Server server = serverRepository.loadById(id);
         server.setName(dto.name());
         server.setLocation(dto.location());
@@ -62,11 +62,12 @@ public class ServerServiceImpl implements ServerService {
     public void delete(Integer id) {
         Server server = serverRepository.loadById(id);
         serverRepository.delete(server);
+        //TODO delete user
     }
 
     @Override
     public ServerDTO getById(Integer id) {
-        Server server =  serverRepository.loadById(id);
+        Server server = serverRepository.loadById(id);
         return serverMapper.toDTO(server);
     }
 
