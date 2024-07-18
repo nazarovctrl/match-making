@@ -1,15 +1,15 @@
 package uz.ccrew.matchmaking.mapper;
 
+import uz.ccrew.matchmaking.dto.server.ServerCreateDTO;
 import uz.ccrew.matchmaking.dto.server.ServerDTO;
 import uz.ccrew.matchmaking.entity.Server;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceMapper implements Mapper<ServerDTO, ServerDTO, Server> {
-
+public class ServerMapper implements Mapper<ServerCreateDTO, ServerDTO, Server> {
     @Override
-    public Server toEntity(ServerDTO dto) {
+    public Server toEntity(ServerCreateDTO dto) {
         return Server.builder()
                 .name(dto.name())
                 .location(dto.location())
@@ -19,6 +19,7 @@ public class ServiceMapper implements Mapper<ServerDTO, ServerDTO, Server> {
     @Override
     public ServerDTO toDTO(Server server) {
         return ServerDTO.builder()
+                .id(server.getServerId())
                 .name(server.getName())
                 .location(server.getLocation())
                 .isBusy(server.getIsBusy())
