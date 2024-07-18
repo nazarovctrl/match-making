@@ -51,10 +51,8 @@ public class ServerServiceImpl implements ServerService {
     @Override
     public ServerDTO update(ServerUpdateDTO dto,Integer id) {
         Server server = serverRepository.loadById(id);
-
         server.setName(dto.name());
         server.setLocation(dto.location());
-        server.setServerId(server.getServerId());
         serverRepository.save(server);
 
         return serverMapper.toDTO(server);
