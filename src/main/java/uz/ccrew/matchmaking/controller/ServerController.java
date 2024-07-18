@@ -60,10 +60,10 @@ public class ServerController {
         return ResponseMaker.ok(result);
     }
 
-    @PatchMapping("/change-busy/{status}")
+    @PatchMapping("/change-busy/{isBusy}")
     @Operation(summary = "Make server busy or idle. For only Server role")
-    public ResponseEntity<Response<?>> changeBusy(@PathVariable("status") Boolean status) {
-        serverService.changeBusy(status);
-        return ResponseMaker.okMessage("The server status changed");
+    public ResponseEntity<Response<?>> changeBusy(@PathVariable("isBusy") Boolean isBusy) {
+        serverService.changeBusy(isBusy);
+        return ResponseMaker.okMessage("The server's busy state has changed");
     }
 }
