@@ -7,14 +7,20 @@ import uz.ccrew.matchmaking.enums.TeamType;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.Check;
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "matches")
 @Check(name = "matches_c1", constraints = "(is_started = true and server_id is not null) or (is_started = false and server_id is null)")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Match extends Auditable {
     @Id
     @UuidGenerator
-    private String matchId;
+    private UUID matchId;
     @Enumerated(EnumType.STRING)
     @Column
     private MatchMode mode;
@@ -30,6 +36,12 @@ public class Match extends Auditable {
     @Column(nullable = false)
     private Boolean isStarted;
 
+    public Match(MatchMode mode, TeamType teamType, Rank rank) {
+        this.mode = mode;
+        this.teamType = teamType;
+        this.rank = rank;
+        this.isStarted = false;
+    }
 //    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
 //    @JoinTable(name = "match_teams",
 //            inverseJoinColumns = @JoinColumn(name = "team_id", foreignKey = @ForeignKey(name = "match_teams_f1")),
