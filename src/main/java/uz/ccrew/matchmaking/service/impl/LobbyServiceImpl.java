@@ -63,7 +63,6 @@ public class LobbyServiceImpl implements LobbyService {
         lobby.setTeamType(dto.teamType()); //TODO if team type changes to small team check lobby-players count
         lobby.setMatchMode(dto.matchMode());
 
-
         lobbyRepository.save(lobby);
         return lobbyMapper.toDTO(lobby);
     }
