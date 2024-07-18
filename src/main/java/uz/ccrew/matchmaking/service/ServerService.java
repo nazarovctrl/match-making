@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 
 public interface ServerService {
     ServerDTO create(ServerCreateDTO dto);
-    ServerDTO update(ServerUpdateDTO dto,Integer id);
+    ServerDTO update(Integer id,ServerUpdateDTO dto);
     void delete(Integer id);
     ServerDTO getById(Integer id);
     Page<ServerDTO> getList(int page, int size);

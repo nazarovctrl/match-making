@@ -49,7 +49,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public ServerDTO update(ServerUpdateDTO dto,Integer id) {
+    public ServerDTO update(Integer id,ServerUpdateDTO dto) {
         Server server = serverRepository.loadById(id);
         server.setName(dto.name());
         server.setLocation(dto.location());

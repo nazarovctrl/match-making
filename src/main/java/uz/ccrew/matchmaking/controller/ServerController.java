@@ -41,7 +41,7 @@ public class ServerController {
     @PutMapping("/update/{id}")
     @Operation(summary = "Update server")
     public ResponseEntity<ServerDTO> update(@PathVariable("id") Integer id, @RequestBody @Valid ServerUpdateDTO dto) {
-        ServerDTO result = serverService.update(dto,id);
+        ServerDTO result = serverService.update(id,dto);
         return ResponseEntity.ok(result);
     }
 
