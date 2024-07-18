@@ -75,10 +75,10 @@ public class SecurityConfig {
                         .requestMatchers("api/v1/user/*").hasAnyAuthority(UserRole.all())
                         .requestMatchers("api/v1/user/**").hasAuthority(UserRole.ADMINISTRATOR.name())
                         .requestMatchers("/api/v1/player/**").hasAuthority(UserRole.PLAYER.name())
+                        .requestMatchers("/api/v1/player/**", "/api/v1/lobby/**", "/api/v1/lobby-player/**").hasAuthority(UserRole.PLAYER.name())
                         .requestMatchers("/api/v1/server/change-busy/*").hasAuthority(UserRole.SERVER.name())
                         .requestMatchers("/api/v1/server/list","/api/v1/server/get/","/api/v1/server/update/"
                                 ,"/api/v1/server/create","/api/v1/server/delete/").hasAuthority(UserRole.ADMINISTRATOR.name())
-                        .requestMatchers("/api/v1/player/**", "/api/v1/lobby/**", "/api/v1/lobby-player/**").hasAuthority(UserRole.PLAYER.name())
                         .anyRequest().authenticated());
         return httpSecurity.build();
     }
