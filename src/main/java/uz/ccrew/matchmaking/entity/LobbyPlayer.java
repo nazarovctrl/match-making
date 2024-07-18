@@ -23,13 +23,13 @@ public class LobbyPlayer {
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @MapsId("lobbyId")
-    @JoinColumn(name = "lobby_id", foreignKey = @ForeignKey(name = "lobby_players_f1"))
+    @JoinColumn(name = "lobby_id", foreignKey = @ForeignKey(name = "lobby_players_f1"), nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Lobby lobby;
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @MapsId("playerId")
-    @JoinColumn(name = "player_id", foreignKey = @ForeignKey(name = "lobby_players_f2"))
+    @JoinColumn(name = "player_id", foreignKey = @ForeignKey(name = "lobby_players_f2"), nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Player player;
 

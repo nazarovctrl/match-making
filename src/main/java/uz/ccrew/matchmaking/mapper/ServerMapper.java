@@ -13,6 +13,7 @@ public class ServerMapper implements Mapper<ServerCreateDTO, ServerDTO, Server> 
         return Server.builder()
                 .name(dto.name())
                 .location(dto.location())
+                .isBusy(false)
                 .build();
     }
 

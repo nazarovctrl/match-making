@@ -21,10 +21,10 @@ public class Lobby extends Auditable {
     @UuidGenerator
     private UUID id;
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(nullable = false)
     private TeamType teamType;
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(nullable = false)
     private MatchMode matchMode;
 
 //    @OneToMany(cascade = CascadeType.REMOVE)

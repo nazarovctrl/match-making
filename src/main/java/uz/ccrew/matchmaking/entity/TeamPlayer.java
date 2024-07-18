@@ -1,6 +1,7 @@
 package uz.ccrew.matchmaking.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "team_players")
+@Check(name = "team_players_c1", constraints = "number between 1 and 4")
 public class TeamPlayer {
     @EmbeddedId
     private TeamPlayerId id;
@@ -19,15 +21,14 @@ public class TeamPlayer {
 
     @ManyToOne
     @MapsId("teamId")
-    @JoinColumn(name = "team_id", foreignKey = @ForeignKey(name = "team_players_f1"))
+    @JoinColumn(name = "team_id", foreignKey = @ForeignKey(name = "team_players_f1"), nullable = false)
     private Team team;
 
     @OneToOne
     @MapsId("playerId")
-    @JoinColumn(name = "player_id", foreignKey = @ForeignKey(name = "team_players_f2"))
+    @JoinColumn(name = "player_id", foreignKey = @ForeignKey(name = "team_players_f2"), nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Player player;
-
 
     @Embeddable
     class TeamPlayerId implements Serializable {

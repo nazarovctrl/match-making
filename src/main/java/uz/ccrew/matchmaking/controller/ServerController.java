@@ -41,7 +41,7 @@ public class ServerController {
     @PutMapping("/update/{id}")
     @Operation(summary = "Update server")
     public ResponseEntity<ServerDTO> update(@PathVariable("id") Integer id, @RequestBody @Valid ServerUpdateDTO dto) {
-        ServerDTO result = serverService.update(id,dto);
+        ServerDTO result = serverService.update(id, dto);
         return ResponseEntity.ok(result);
     }
 
@@ -56,7 +56,7 @@ public class ServerController {
     @Operation(summary = "Get all servers")
     public ResponseEntity<Response<Page<ServerDTO>>> getList(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
                                                              @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
-        Page<ServerDTO> result = serverService.getList(page,size);
+        Page<ServerDTO> result = serverService.getList(page, size);
         return ResponseMaker.ok(result);
     }
 
