@@ -5,10 +5,10 @@ import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.enums.Rank;
 import uz.ccrew.matchmaking.enums.TeamType;
 
-import org.hibernate.annotations.UuidGenerator;
-import org.hibernate.annotations.Check;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 

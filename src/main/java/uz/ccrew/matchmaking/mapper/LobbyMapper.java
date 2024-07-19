@@ -1,9 +1,9 @@
 package uz.ccrew.matchmaking.mapper;
 
-import uz.ccrew.matchmaking.dto.lobby.LobbyCreateDTO;
-import uz.ccrew.matchmaking.dto.lobby.LobbyDTO;
 import uz.ccrew.matchmaking.entity.Lobby;
 import uz.ccrew.matchmaking.enums.LobbyStatus;
+import uz.ccrew.matchmaking.dto.lobby.LobbyDTO;
+import uz.ccrew.matchmaking.dto.lobby.LobbyCreateDTO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

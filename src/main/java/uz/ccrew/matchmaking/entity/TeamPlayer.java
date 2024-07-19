@@ -1,8 +1,8 @@
 package uz.ccrew.matchmaking.entity;
 
 import lombok.Getter;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.OnDelete;

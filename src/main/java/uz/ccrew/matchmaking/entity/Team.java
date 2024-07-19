@@ -1,9 +1,9 @@
 package uz.ccrew.matchmaking.entity;
 
-import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.UuidGenerator;
 

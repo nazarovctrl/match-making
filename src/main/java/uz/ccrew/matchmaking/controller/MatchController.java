@@ -6,6 +6,7 @@ import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.service.MatchService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +33,14 @@ public class MatchController {
     }
 
     @PostMapping("/find")
+    @Operation(summary = "Find match")
     public ResponseEntity<Response<MatchDTO>> find() {
         MatchDTO result = matchService.find();
         return ResponseMaker.ok(result);
     }
 
     @GetMapping("/get/{matchId}")
+    @Operation(summary = "Get match by id")
     public ResponseEntity<Response<MatchDTO>> get(@PathVariable("matchId") String matchId) {
         MatchDTO result = matchService.get(matchId);
         return ResponseMaker.ok(result);

@@ -1,9 +1,9 @@
 package uz.ccrew.matchmaking.repository;
 
-import uz.ccrew.matchmaking.entity.Match;
-import uz.ccrew.matchmaking.enums.MatchMode;
 import uz.ccrew.matchmaking.enums.Rank;
+import uz.ccrew.matchmaking.entity.Match;
 import uz.ccrew.matchmaking.enums.TeamType;
+import uz.ccrew.matchmaking.enums.MatchMode;
 
 import org.springframework.data.jpa.repository.Query;
 
