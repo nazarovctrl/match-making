@@ -32,17 +32,18 @@ public class Match extends Auditable {
     @Column
     private Rank rank;
     @ManyToOne
-    @JoinColumn(name = "server_id", foreignKey = @ForeignKey(name = "match_teams_f1"))
+    @JoinColumn(name = "server_id", foreignKey = @ForeignKey(name = "match_teams_f1"), nullable = false)
     private Server server;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MatchStatus status;
 
-    public Match(MatchMode mode, TeamType teamType, Rank rank) {
+    public Match(MatchMode mode, TeamType teamType, Rank rank, Server server) {
         this.mode = mode;
         this.teamType = teamType;
         this.rank = rank;
         this.status = MatchStatus.CREATED;
+        this.server = server;
     }
 //    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
 //    @JoinTable(name = "match_teams",

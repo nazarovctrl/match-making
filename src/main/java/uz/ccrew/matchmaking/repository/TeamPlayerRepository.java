@@ -1,8 +1,9 @@
 package uz.ccrew.matchmaking.repository;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import uz.ccrew.matchmaking.entity.TeamPlayer;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.UUID;
 

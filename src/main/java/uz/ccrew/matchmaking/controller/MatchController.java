@@ -1,14 +1,13 @@
 package uz.ccrew.matchmaking.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.service.MatchService;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,30 +1,32 @@
 package uz.ccrew.matchmaking.service.impl;
 
 import uz.ccrew.matchmaking.entity.Lobby;
-import uz.ccrew.matchmaking.entity.LobbyPlayer;
 import uz.ccrew.matchmaking.entity.Player;
-import uz.ccrew.matchmaking.exp.AlreadyExistException;
-import uz.ccrew.matchmaking.exp.BadRequestException;
-import uz.ccrew.matchmaking.repository.LobbyPlayerRepository;
-import uz.ccrew.matchmaking.repository.LobbyRepository;
-import uz.ccrew.matchmaking.repository.PlayerRepository;
-import uz.ccrew.matchmaking.service.LobbyPlayerService;
 import uz.ccrew.matchmaking.util.PlayerUtil;
+import uz.ccrew.matchmaking.entity.LobbyPlayer;
+import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
+import uz.ccrew.matchmaking.exp.BadRequestException;
+import uz.ccrew.matchmaking.exp.AlreadyExistException;
+import uz.ccrew.matchmaking.repository.LobbyRepository;
+import uz.ccrew.matchmaking.service.LobbyPlayerService;
+import uz.ccrew.matchmaking.repository.PlayerRepository;
+import uz.ccrew.matchmaking.repository.LobbyPlayerRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class LobbyPlayerServiceImpl implements LobbyPlayerService {
-    private final LobbyPlayerRepository lobbyPlayerRepository;
-    private final LobbyRepository lobbyRepository;
     private final PlayerUtil playerUtil;
+    private final LobbyRepository lobbyRepository;
+    private final LobbyPlayerUtil lobbyPlayerUtil;
     private final PlayerRepository playerRepository;
+    private final LobbyPlayerRepository lobbyPlayerRepository;
 
     @Override
     public void join(String lobbyId) {
@@ -68,14 +70,11 @@ public class LobbyPlayerServiceImpl implements LobbyPlayerService {
     public void kick(Integer playerId) {
         //TODO add check for lobby status == PREPARING
         Player playerToKick = playerRepository.loadById(playerId);
-        Player leader = playerUtil.loadPLayer();
 
-        LobbyPlayer lobbyLeader = lobbyPlayerRepository.loadByPlayer(leader);
-        if (!lobbyLeader.getIsLeader()) {
-            throw new BadRequestException("You can't kick from the lobby. Because you are not leader");
-        }
+        LobbyPlayer lobbyLeader = lobbyPlayerUtil.loadLobbyPlayer();
+        lobbyPlayerUtil.checkToLeader(lobbyLeader);
 
-        if (leader.getPlayerId().equals(playerId)) {
+        if (lobbyLeader.getPlayer().getPlayerId().equals(playerId)) {
             throw new BadRequestException("You can't kick your self");
         }
 
