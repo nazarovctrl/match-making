@@ -6,7 +6,6 @@ import uz.ccrew.matchmaking.dto.server.ServerUpdateDTO;
 import uz.ccrew.matchmaking.entity.Server;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
-import uz.ccrew.matchmaking.exp.NotFoundException;
 import uz.ccrew.matchmaking.mapper.ServerMapper;
 import uz.ccrew.matchmaking.repository.ServerRepository;
 import uz.ccrew.matchmaking.repository.UserRepository;
