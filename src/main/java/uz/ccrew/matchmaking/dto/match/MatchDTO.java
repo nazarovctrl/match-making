@@ -6,6 +6,12 @@ import uz.ccrew.matchmaking.enums.TeamType;
 
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder
-public record MatchDTO(String matchId, MatchStatus status, MatchMode mode, TeamType teamType) {
+public record MatchDTO(String matchId,
+                       MatchStatus status,
+                       MatchMode mode,
+                       TeamType teamType,
+                       List<TeamDTO> teams) {
 }

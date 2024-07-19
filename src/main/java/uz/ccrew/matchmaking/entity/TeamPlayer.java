@@ -1,8 +1,9 @@
 package uz.ccrew.matchmaking.entity;
 
-import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Table(name = "team_players")
 @Check(name = "team_players_c1", constraints = "number between 1 and 4")
 @NoArgsConstructor
+@Getter
 public class TeamPlayer {
     @EmbeddedId
     private TeamPlayerId id;

@@ -5,18 +5,22 @@ import uz.ccrew.matchmaking.repository.*;
 import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.enums.MatchMode;
 import uz.ccrew.matchmaking.enums.MatchStatus;
+import uz.ccrew.matchmaking.dto.match.TeamDTO;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.mapper.MatchMapper;
 import uz.ccrew.matchmaking.service.MatchService;
 import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
+import uz.ccrew.matchmaking.mapper.TeamPlayerMapper;
 import uz.ccrew.matchmaking.exp.ServerUnavailableException;
 
 import lombok.RequiredArgsConstructor;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ public class MatchServiceImpl implements MatchService {
     private final ServerRepository serverRepository;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
+    private final TeamPlayerMapper teamPlayerMapper;
 
     @Transactional
     @Override
@@ -76,6 +81,31 @@ public class MatchServiceImpl implements MatchService {
         return matchMapper.toDTO(match);
     }
 
+    @Override
+    public MatchDTO get(String matchId) {
+        //TODO check user to exists in the match
+        //TODO use caching
+        Match match = matchRepository.loadById(UUID.fromString(matchId));
+
+        List<Team> teams = teamRepository.findByMatch_MatchId(match.getMatchId());
+        List<TeamDTO> teamDTOList = new ArrayList<>();
+        for (Team team : teams) {
+            List<TeamPlayer> teamPlayers = teamPlayerRepository.findByTeam(team);
+            TeamDTO build = TeamDTO.builder()
+                    .teamId(team.getTeamId().toString())
+                    .number(team.getNumber())
+                    .players(teamPlayerMapper.toDTOList(teamPlayers)).build();
+            teamDTOList.add(build);
+        }
+
+        return MatchDTO.builder()
+                .matchId(matchId)
+                .mode(match.getMode())
+                .teamType(match.getTeamType())
+                .status(match.getStatus())
+                .teams(teamDTOList).build();
+    }
+
     private void checkMatchToPrepare(Match match, MatchMode mode, TeamType teamType) {
         Integer teamCount = teamRepository.countByMatch_MatchId(match.getMatchId());
         if (teamCount == null || teamCount < mode.getTeamCount()) {
@@ -87,7 +117,7 @@ public class MatchServiceImpl implements MatchService {
             return;
         }
 
-        //TODO send notification to match players and change their lobby status t
+        //TODO send notification to match players and change their lobby status to WAITING
         match.setStatus(MatchStatus.PREPARED);
         matchRepository.save(match);
     }

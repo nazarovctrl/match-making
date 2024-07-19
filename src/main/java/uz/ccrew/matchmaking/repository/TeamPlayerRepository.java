@@ -1,10 +1,12 @@
 package uz.ccrew.matchmaking.repository;
 
+import uz.ccrew.matchmaking.entity.Team;
 import uz.ccrew.matchmaking.entity.TeamPlayer;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -25,4 +27,6 @@ public interface TeamPlayerRepository extends BasicRepository<TeamPlayer, TeamPl
             having count(w.team.teamId) < ?2
             """)
     Boolean existNotFullTeam(UUID matchId, Integer maxPLayersCount);
+
+    List<TeamPlayer> findByTeam(Team team);
 }

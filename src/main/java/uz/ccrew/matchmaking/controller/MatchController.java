@@ -8,9 +8,7 @@ import uz.ccrew.matchmaking.service.MatchService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/match")
@@ -36,6 +34,12 @@ public class MatchController {
     @PostMapping("/find")
     public ResponseEntity<Response<MatchDTO>> find() {
         MatchDTO result = matchService.find();
+        return ResponseMaker.ok(result);
+    }
+
+    @GetMapping("/get/{matchId}")
+    public ResponseEntity<Response<MatchDTO>> get(@PathVariable("matchId") String matchId) {
+        MatchDTO result = matchService.get(matchId);
         return ResponseMaker.ok(result);
     }
 }
