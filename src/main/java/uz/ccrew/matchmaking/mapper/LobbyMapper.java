@@ -3,6 +3,7 @@ package uz.ccrew.matchmaking.mapper;
 import uz.ccrew.matchmaking.dto.lobby.LobbyCreateDTO;
 import uz.ccrew.matchmaking.dto.lobby.LobbyDTO;
 import uz.ccrew.matchmaking.entity.Lobby;
+import uz.ccrew.matchmaking.enums.LobbyStatus;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ public class LobbyMapper implements Mapper<LobbyCreateDTO, LobbyDTO, Lobby> {
         return Lobby.builder()
                 .matchMode(createDTO.matchMode())
                 .teamType(createDTO.teamType())
+                .status(LobbyStatus.PREPARING)
                 .build();
     }
 

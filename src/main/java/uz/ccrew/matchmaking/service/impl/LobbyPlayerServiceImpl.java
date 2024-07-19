@@ -28,6 +28,7 @@ public class LobbyPlayerServiceImpl implements LobbyPlayerService {
 
     @Override
     public void join(String lobbyId) {
+        //TODO add check for lobby status == PREPARING
         Lobby lobby = lobbyRepository.loadById(UUID.fromString(lobbyId)); //TODO check players count
 
         Player player = playerUtil.loadPLayer();
@@ -46,6 +47,7 @@ public class LobbyPlayerServiceImpl implements LobbyPlayerService {
     @Transactional
     @Override
     public void leave() {
+        //TODO add check for lobby status == PREPARING
         Player player = playerUtil.loadPLayer();
 
         LobbyPlayer lobbyPlayer = lobbyPlayerRepository.loadByPlayer(player);
@@ -64,6 +66,7 @@ public class LobbyPlayerServiceImpl implements LobbyPlayerService {
 
     @Override
     public void kick(Integer playerId) {
+        //TODO add check for lobby status == PREPARING
         Player playerToKick = playerRepository.loadById(playerId);
         Player leader = playerUtil.loadPLayer();
 

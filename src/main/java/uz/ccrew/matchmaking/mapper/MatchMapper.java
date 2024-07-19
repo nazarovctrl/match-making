@@ -1,8 +1,9 @@
 package uz.ccrew.matchmaking.mapper;
 
-import org.springframework.stereotype.Component;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.entity.Match;
+
+import org.springframework.stereotype.Component;
 
 @Component
 public class MatchMapper implements Mapper<Object, MatchDTO, Match> {
@@ -15,7 +16,7 @@ public class MatchMapper implements Mapper<Object, MatchDTO, Match> {
     public MatchDTO toDTO(Match match) {
         return MatchDTO.builder()
                 .matchId(match.getMatchId().toString())
-                .isStarted(match.getIsStarted())
+                .status(match.getStatus())
                 .mode(match.getMode())
                 .teamType(match.getTeamType()).build();
     }

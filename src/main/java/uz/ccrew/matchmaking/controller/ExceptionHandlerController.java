@@ -49,6 +49,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({Exception.class})
     private ResponseEntity<Response<?>> handle(Exception e) {
+        e.printStackTrace();
         return ResponseMaker.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }

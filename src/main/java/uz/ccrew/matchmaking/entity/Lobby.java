@@ -1,5 +1,6 @@
 package uz.ccrew.matchmaking.entity;
 
+import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.enums.MatchMode;
 import uz.ccrew.matchmaking.enums.TeamType;
 
@@ -26,6 +27,9 @@ public class Lobby extends Auditable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MatchMode matchMode;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LobbyStatus status;
 
 //    @OneToMany(cascade = CascadeType.REMOVE)
 //    @JoinTable(name = "lobby_players",

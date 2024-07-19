@@ -2,12 +2,10 @@ package uz.ccrew.matchmaking.service.impl;
 
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.entity.*;
+import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.exp.BadRequestException;
 import uz.ccrew.matchmaking.mapper.MatchMapper;
-import uz.ccrew.matchmaking.repository.LobbyPlayerRepository;
-import uz.ccrew.matchmaking.repository.MatchRepository;
-import uz.ccrew.matchmaking.repository.TeamPlayerRepository;
-import uz.ccrew.matchmaking.repository.TeamRepository;
+import uz.ccrew.matchmaking.repository.*;
 import uz.ccrew.matchmaking.service.MatchService;
 import uz.ccrew.matchmaking.util.PlayerUtil;
 
@@ -30,13 +28,10 @@ public class MatchServiceImpl implements MatchService {
 
     @Transactional
     @Override
-    public MatchDTO find() {
+    public MatchDTO find() { //TODO optimize
         Player player = playerUtil.loadPLayer();
-        Optional<LobbyPlayer> optionalLobbyPlayer = lobbyPlayerRepository.findByPlayer(player);
-        if (optionalLobbyPlayer.isEmpty()) {
-            throw new RuntimeException();
-        }
-        LobbyPlayer lobbyPlayer = optionalLobbyPlayer.get();
+        LobbyPlayer lobbyPlayer = lobbyPlayerRepository.loadByPlayer(player);
+
         if (!lobbyPlayer.getIsLeader()) {
             throw new BadRequestException("You are not leader");
         }
@@ -55,6 +50,8 @@ public class MatchServiceImpl implements MatchService {
             if (teamOptional.isPresent()) {
                 team = teamOptional.get();
                 matchOptional = Optional.of(team.getMatch());
+            } else {
+                matchOptional = matchRepository.findMatchForFullTeam(player.getRank(), lobby.getMatchMode(), lobby.getTeamType(), lobby.getMatchMode().getMaxTeamCount());
             }
         }
 
@@ -62,6 +59,7 @@ public class MatchServiceImpl implements MatchService {
         if (matchOptional.isPresent()) {
             match = matchOptional.get();
         } else {
+            //TODO check to exists available servers to provide match
             match = new Match(lobby.getMatchMode(), lobby.getTeamType(), player.getRank());
             matchRepository.save(match);
         }
@@ -71,9 +69,24 @@ public class MatchServiceImpl implements MatchService {
             teamRepository.save(team);
         }
 
+        boolean matchFull;
+        Integer count = teamRepository.countByMatch_MatchId(match.getMatchId());
+        if (count == null || count.equals(lobby.getMatchMode().getMaxTeamCount())) {
+            matchFull = true;
+        } else {
+            matchFull = false;
+        }
+
         for (LobbyPlayer lp : lobbyPlayers) {
             TeamPlayer teamPlayer = new TeamPlayer(team, lp.getPlayer());
             teamPlayerRepository.save(teamPlayer);
+        }
+        Boolean existsNotFullTeam = teamPlayerRepository.existNotFullTeam(match.getMatchId(), lobby.getTeamType().getMaxPlayersCount());
+
+        if (matchFull && (existsNotFullTeam == null || !existsNotFullTeam)) {
+            //TODO send notification to match players and change their lobby status t
+            match.setStatus(MatchStatus.PREPARED);
+            matchRepository.save(match);
         }
 
         return matchMapper.toDTO(match);

@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface MatchRepository extends BasicRepository<Match, UUID> {
     @Query(""" 
             select m from Match as m
-            where m.isStarted = false
+            where m.status = 'CREATED'
             and m.rank = ?1
             and m.mode = ?2
             and m.teamType = ?3
@@ -28,7 +28,7 @@ public interface MatchRepository extends BasicRepository<Match, UUID> {
             select t from Match as m
             join Team as t
             on t.match.matchId = m.matchId
-            where m.isStarted = false
+            where m.status = 'CREATED'
             and m.rank = ?1
             and m.mode = ?2
             and m.teamType = ?3

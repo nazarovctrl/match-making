@@ -7,4 +7,5 @@ import java.util.UUID;
 
 @RestController
 public interface TeamRepository extends BasicRepository<Team, UUID> {
+    Integer countByMatch_MatchId(UUID matchId);
 }

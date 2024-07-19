@@ -34,7 +34,7 @@ public class MatchController {
         this.matchService = matchService;
     }
 
-    @PostMapping("/find}")
+    @PostMapping("/find")
     public ResponseEntity<Response<MatchDTO>> find() {
         MatchDTO result = matchService.find();
         return ResponseMaker.ok(result);

@@ -1,6 +1,7 @@
 package uz.ccrew.matchmaking.entity;
 
 import uz.ccrew.matchmaking.enums.MatchMode;
+import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.enums.Rank;
 import uz.ccrew.matchmaking.enums.TeamType;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "matches")
-@Check(name = "matches_c1", constraints = "(is_started = true and server_id is not null) or (is_started = false and server_id is null)")
+@Check(name = "matches_c1", constraints = "(status in ('CREATED', 'PREPARED') and server_id is null) or (status in ('STARTED', 'FINISHED') and server_id is not null)")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -33,14 +34,15 @@ public class Match extends Auditable {
     @ManyToOne
     @JoinColumn(name = "server_id", foreignKey = @ForeignKey(name = "match_teams_f1"))
     private Server server;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Boolean isStarted;
+    private MatchStatus status;
 
     public Match(MatchMode mode, TeamType teamType, Rank rank) {
         this.mode = mode;
         this.teamType = teamType;
         this.rank = rank;
-        this.isStarted = false;
+        this.status = MatchStatus.CREATED;
     }
 //    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
 //    @JoinTable(name = "match_teams",
