@@ -1,9 +1,9 @@
 package uz.ccrew.matchmaking.entity;
 
-import uz.ccrew.matchmaking.enums.MatchMode;
-import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.enums.Rank;
 import uz.ccrew.matchmaking.enums.TeamType;
+import uz.ccrew.matchmaking.enums.MatchMode;
+import uz.ccrew.matchmaking.enums.MatchStatus;
 
 import lombok.*;
 import jakarta.persistence.*;

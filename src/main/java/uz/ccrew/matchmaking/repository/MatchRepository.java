@@ -5,11 +5,13 @@ import uz.ccrew.matchmaking.entity.Match;
 import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.enums.MatchMode;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface MatchRepository extends BasicRepository<Match, UUID> {
     @Query(""" 
             select m from Match as m
