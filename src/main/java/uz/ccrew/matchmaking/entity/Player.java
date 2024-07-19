@@ -20,14 +20,12 @@ public class Player extends Auditable {
     private String nickname;
     @Enumerated(EnumType.STRING)
     @Column
-    @Builder.Default
     private Rank rank = Rank.BRONZE;
     @Column(nullable = false)
-    @Builder.Default
-    private Integer points = 0;
+    private Integer points;
 
 
     @OneToOne
-    @JoinColumn(name = "player_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "players_f1"))
+    @JoinColumn(name = "player_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "players_f1"), nullable = false)
     private User user;
 }
