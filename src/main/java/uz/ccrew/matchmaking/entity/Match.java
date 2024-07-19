@@ -8,13 +8,15 @@ import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.Check;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "matches")
 @Check(name = "matches_c1", constraints = "(is_started = true and server_id is not null) or (is_started = false and server_id is null)")
 public class Match extends Auditable {
     @Id
     @UuidGenerator
-    private String matchId;
+    private UUID matchId;
     @Enumerated(EnumType.STRING)
     @Column
     private MatchMode mode;
