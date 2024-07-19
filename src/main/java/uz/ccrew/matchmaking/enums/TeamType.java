@@ -1,16 +1,15 @@
 package uz.ccrew.matchmaking.enums;
 
 public enum TeamType {
-    SOLO(1),
-    SQUAD(4);
+    SOLO(1), SQUAD(4);
 
-    private final int maxPlayersCount;
+    private final int playerCount;
 
-    TeamType(int maxPlayersCount) {
-        this.maxPlayersCount = maxPlayersCount;
+    TeamType(int playerCount) {
+        this.playerCount = playerCount;
     }
 
-    public int getMaxPlayersCount() {
-        return maxPlayersCount;
+    public int getPlayerCount() {
+        return playerCount;
     }
 }

@@ -1,24 +1,23 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import uz.ccrew.matchmaking.dto.server.ServerCreateDTO;
-import uz.ccrew.matchmaking.dto.server.ServerDTO;
-import uz.ccrew.matchmaking.dto.server.ServerUpdateDTO;
-import uz.ccrew.matchmaking.entity.Server;
 import uz.ccrew.matchmaking.entity.User;
+import uz.ccrew.matchmaking.entity.Server;
+import uz.ccrew.matchmaking.util.AuthUtil;
 import uz.ccrew.matchmaking.enums.UserRole;
 import uz.ccrew.matchmaking.exp.NotFoundException;
 import uz.ccrew.matchmaking.mapper.ServerMapper;
-import uz.ccrew.matchmaking.repository.ServerRepository;
-import uz.ccrew.matchmaking.repository.UserRepository;
+import uz.ccrew.matchmaking.dto.server.ServerDTO;
 import uz.ccrew.matchmaking.service.ServerService;
-import uz.ccrew.matchmaking.util.AuthUtil;
+import uz.ccrew.matchmaking.repository.UserRepository;
+import uz.ccrew.matchmaking.dto.server.ServerUpdateDTO;
+import uz.ccrew.matchmaking.dto.server.ServerCreateDTO;
+import uz.ccrew.matchmaking.repository.ServerRepository;
 
-import org.springframework.data.domain.*;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ServerServiceImpl implements ServerService {
     private final ServerRepository serverRepository;
     private final ServerMapper serverMapper;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final AuthUtil authUtil;
 
     @Transactional

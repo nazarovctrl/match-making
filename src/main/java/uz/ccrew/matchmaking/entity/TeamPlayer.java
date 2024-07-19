@@ -1,5 +1,8 @@
 package uz.ccrew.matchmaking.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.OnDelete;
@@ -12,11 +15,13 @@ import java.util.UUID;
 @Entity
 @Table(name = "team_players")
 @Check(name = "team_players_c1", constraints = "number between 1 and 4")
+@NoArgsConstructor
+@Getter
 public class TeamPlayer {
     @EmbeddedId
     private TeamPlayerId id;
 
-    @Column(nullable = false)
+    @Column
     private Integer number;
 
     @ManyToOne
@@ -30,8 +35,16 @@ public class TeamPlayer {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Player player;
 
+    public TeamPlayer(Team team, Player player) {
+        this.id = new TeamPlayerId(team.getTeamId(), player.getPlayerId());
+        this.team = team;
+        this.player = player;
+    }
+
     @Embeddable
-    class TeamPlayerId implements Serializable {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TeamPlayerId implements Serializable {
         private UUID teamId;
         private Integer playerId;
 

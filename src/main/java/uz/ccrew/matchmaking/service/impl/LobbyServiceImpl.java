@@ -59,7 +59,7 @@ public class LobbyServiceImpl implements LobbyService {
         if (!lobbyLeader.getIsLeader()) {
             throw new BadRequestException("You can't update lobby");
         }
-        Lobby lobby = lobbyLeader.getLobby();
+        Lobby lobby = lobbyLeader.getLobby(); //TODO add check for lobby status == PREPARING
         lobby.setTeamType(dto.teamType()); //TODO if team type changes to small team check lobby-players count
         lobby.setMatchMode(dto.matchMode());
 

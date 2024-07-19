@@ -1,17 +1,17 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
-import uz.ccrew.matchmaking.dto.player.PlayerDTO;
-import uz.ccrew.matchmaking.dto.player.PlayerUpdateDTO;
-import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.entity.User;
-import uz.ccrew.matchmaking.mapper.PlayerMapper;
-import uz.ccrew.matchmaking.repository.PlayerRepository;
-import uz.ccrew.matchmaking.service.PlayerService;
 import uz.ccrew.matchmaking.util.AuthUtil;
+import uz.ccrew.matchmaking.entity.Player;
+import uz.ccrew.matchmaking.mapper.PlayerMapper;
+import uz.ccrew.matchmaking.dto.player.PlayerDTO;
+import uz.ccrew.matchmaking.service.PlayerService;
+import uz.ccrew.matchmaking.dto.player.PlayerUpdateDTO;
+import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
+import uz.ccrew.matchmaking.repository.PlayerRepository;
 
-import org.springframework.data.domain.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
