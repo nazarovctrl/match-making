@@ -1,7 +1,10 @@
 package uz.ccrew.matchmaking.service;
 
-import java.util.UUID;
+import uz.ccrew.matchmaking.entity.Player;
+
+import java.util.List;
 
 public interface EloService {
-    public void updateRatings(UUID winnerId, UUID loserId);
+    public void updateRatings(Player winner, Player loser);
+    public void updateRatings(List<Player> winners,List<Player> losers);
 }

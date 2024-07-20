@@ -8,6 +8,7 @@ import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.dto.match.TeamDTO;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.mapper.MatchMapper;
+import uz.ccrew.matchmaking.service.EloService;
 import uz.ccrew.matchmaking.service.MatchService;
 import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
 import uz.ccrew.matchmaking.mapper.TeamPlayerMapper;
@@ -33,6 +34,7 @@ public class MatchServiceImpl implements MatchService {
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
     private final TeamPlayerMapper teamPlayerMapper;
+    private final EloService eloService;
 
     @Transactional
     @Override
@@ -120,5 +122,27 @@ public class MatchServiceImpl implements MatchService {
         //TODO send notification to match players and change their lobby status to WAITING
         match.setStatus(MatchStatus.PREPARED);
         matchRepository.save(match);
+    }
+
+    public void handleResultForSolo(String matchId,String teamID){
+        UUID matchUUID = UUID.fromString(matchId);
+        Match match = matchRepository.loadById(matchUUID);
+        List<Team> teams = teamRepository.findByMatch_MatchId(matchUUID);
+        List<Player> winners = new ArrayList<>();
+        List<Player> losers = new ArrayList<>();
+        for (Team team : teams) {
+            List<Player> players = teamPlayerRepository.findByTeamId(team.getTeamId());
+            if (team.getTeamId().toString().equals(teamID)) {
+                winners.addAll(players);
+            }else {
+                losers.addAll(players);
+            }
+        }
+
+        if (match.getTeamType().equals(TeamType.SQUAD)){
+            eloService.updateRatings(winners,losers);
+        }else {
+            eloService.updateRatings(winners.getFirst(),losers.getFirst());
+        }
     }
 }
