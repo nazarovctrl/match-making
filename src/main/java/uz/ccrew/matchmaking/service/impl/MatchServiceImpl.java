@@ -124,7 +124,7 @@ public class MatchServiceImpl implements MatchService {
         matchRepository.save(match);
     }
 
-    public void handleResultForSolo(String matchId,String teamID){
+    public void handleResult(String matchId,String teamID){
         UUID matchUUID = UUID.fromString(matchId);
         Match match = matchRepository.loadById(matchUUID);
         List<Team> teams = teamRepository.findByMatch_MatchId(matchUUID);
