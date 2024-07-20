@@ -4,7 +4,6 @@ import uz.ccrew.matchmaking.entity.*;
 import uz.ccrew.matchmaking.repository.*;
 import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.enums.MatchMode;
-import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.dto.match.TeamDTO;
 import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
@@ -29,17 +28,18 @@ import java.util.UUID;
 public class MatchServiceImpl implements MatchService {
     private final MatchMapper matchMapper;
     private final TeamRepository teamRepository;
+    private final LobbyRepository lobbyRepository;
     private final LobbyPlayerUtil lobbyPlayerUtil;
     private final MatchRepository matchRepository;
     private final ServerRepository serverRepository;
     private final TeamPlayerMapper teamPlayerMapper;
+    private final MatchAsyncService matchAsyncService;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
-    private final LobbyRepository lobbyRepository;
 
     @Transactional
     @Override
-    public MatchDTO find() {
+    public MatchDTO find() { //TODO send less query to database
         LobbyPlayer lobbyPlayer = lobbyPlayerUtil.loadLobbyPlayer();
         lobbyPlayerUtil.checkToLeader(lobbyPlayer);
 
@@ -85,8 +85,10 @@ public class MatchServiceImpl implements MatchService {
         List<TeamPlayer> teamPlayerList = lobbyPlayers.stream().map(lp -> new TeamPlayer(team, lp.getPlayer())).toList();
         teamPlayerRepository.saveAll(teamPlayerList);
 
-        //checking to start match
-        checkMatchToPrepare(match, mode, teamType);
+        lobby.setStatus(LobbyStatus.WAITING);
+        lobbyRepository.save(lobby);
+
+        matchAsyncService.checkMatchToStart(match, mode, teamType);
 
         return matchMapper.toDTO(match);
     }
@@ -96,16 +98,18 @@ public class MatchServiceImpl implements MatchService {
         //TODO check user to exists in the match
         //TODO use caching
         Match match = matchRepository.loadById(UUID.fromString(matchId));
-
         List<Team> teams = teamRepository.findByMatch_MatchId(match.getMatchId());
+
         List<TeamDTO> teamDTOList = new ArrayList<>();
         for (Team team : teams) {
             List<TeamPlayer> teamPlayers = teamPlayerRepository.findByTeam(team);
-            TeamDTO build = TeamDTO.builder()
+
+            TeamDTO teamDTO = TeamDTO.builder()
                     .teamId(team.getTeamId().toString())
                     .number(team.getNumber())
                     .players(teamPlayerMapper.toDTOList(teamPlayers)).build();
-            teamDTOList.add(build);
+
+            teamDTOList.add(teamDTO);
         }
 
         return MatchDTO.builder()
@@ -114,45 +118,5 @@ public class MatchServiceImpl implements MatchService {
                 .teamType(match.getTeamType())
                 .status(match.getStatus())
                 .teams(teamDTOList).build();
-    }
-
-    private void checkMatchToPrepare(Match match, MatchMode mode, TeamType teamType) {
-        Integer teamCount = teamRepository.countByMatch_MatchId(match.getMatchId());
-        if (teamCount == null || teamCount < mode.getTeamCount()) {
-            return;
-        }
-
-        Boolean existsNotFullTeam = teamPlayerRepository.existNotFullTeam(match.getMatchId(), teamType.getPlayerCount());
-        if (existsNotFullTeam != null && existsNotFullTeam) {
-            return;
-        }
-
-        //TODO send notification to match players and change their lobby status to WAITING
-        List<Lobby> lobbies = lobbyRepository.findByMatchId(match.getMatchId());
-        lobbies.forEach(lobby -> lobby.setStatus(LobbyStatus.IN_GAME));
-        lobbyRepository.saveAll(lobbies);
-
-        initializeNumber(match.getMatchId());
-
-        List<Player> players = teamPlayerRepository.findByMatchId(match.getMatchId());
-        players.forEach(player -> System.out.println(player.getNickname()));
-
-        match.setStatus(MatchStatus.STARTED);
-        matchRepository.save(match);
-    }
-
-    private void initializeNumber(UUID matchId) {
-        List<Team> teams = teamRepository.findByMatch_MatchId(matchId);
-        int teamNumber = 1;
-        for (Team team : teams) {
-            List<TeamPlayer> teamPlayers = teamPlayerRepository.findByTeam(team);
-            int playerNumber = 1;
-            for (TeamPlayer teamPlayer : teamPlayers) {
-                teamPlayer.setNumber(playerNumber++);
-            }
-            teamPlayerRepository.saveAll(teamPlayers);
-            team.setNumber(teamNumber++);
-        }
-        teamRepository.saveAll(teams);
     }
 }
