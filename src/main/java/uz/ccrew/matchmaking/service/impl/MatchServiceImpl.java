@@ -6,11 +6,13 @@ import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.enums.MatchMode;
 import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.dto.match.TeamDTO;
+import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.mapper.MatchMapper;
 import uz.ccrew.matchmaking.service.MatchService;
 import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
 import uz.ccrew.matchmaking.mapper.TeamPlayerMapper;
+import uz.ccrew.matchmaking.exp.BadRequestException;
 import uz.ccrew.matchmaking.exp.ServerUnavailableException;
 
 import lombok.RequiredArgsConstructor;
@@ -30,9 +32,10 @@ public class MatchServiceImpl implements MatchService {
     private final LobbyPlayerUtil lobbyPlayerUtil;
     private final MatchRepository matchRepository;
     private final ServerRepository serverRepository;
+    private final TeamPlayerMapper teamPlayerMapper;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
-    private final TeamPlayerMapper teamPlayerMapper;
+    private final LobbyRepository lobbyRepository;
 
     @Transactional
     @Override
@@ -40,8 +43,14 @@ public class MatchServiceImpl implements MatchService {
         LobbyPlayer lobbyPlayer = lobbyPlayerUtil.loadLobbyPlayer();
         lobbyPlayerUtil.checkToLeader(lobbyPlayer);
 
-        Player player = lobbyPlayer.getPlayer();
         Lobby lobby = lobbyPlayer.getLobby();
+        if (lobby.getStatus().equals(LobbyStatus.WAITING)) {
+            throw new BadRequestException("You are already in queue");
+        } else if (lobby.getStatus().equals(LobbyStatus.IN_GAME)) {
+            throw new BadRequestException("You are already in game");
+        }
+
+        Player player = lobbyPlayer.getPlayer();
         MatchMode mode = lobby.getMatchMode();
         TeamType teamType = lobby.getTeamType();
 
@@ -63,11 +72,12 @@ public class MatchServiceImpl implements MatchService {
         if (matchOptional.isPresent()) {
             match = matchOptional.get();
         } else {
-            Optional<Server> optional = serverRepository.findFirstByIsBusyIsFalseOrderByLastModifiedDate();
-            if (optional.isEmpty()) {
-                throw new ServerUnavailableException("There is no available server to play match");
-            }
-            match = new Match(mode, teamType, player.getRank(), optional.get());
+            Server server = serverRepository.findFirstByIsBusyIsFalseOrderByLastModifiedDate()
+                    .orElseThrow(() -> new ServerUnavailableException("There is no available server to play match"));
+            server.setIsBusy(true);
+            serverRepository.save(server);
+
+            match = new Match(mode, teamType, player.getRank(), server);
             matchRepository.save(match);
         }
 
@@ -118,7 +128,31 @@ public class MatchServiceImpl implements MatchService {
         }
 
         //TODO send notification to match players and change their lobby status to WAITING
-        match.setStatus(MatchStatus.PREPARED);
+        List<Lobby> lobbies = lobbyRepository.findByMatchId(match.getMatchId());
+        lobbies.forEach(lobby -> lobby.setStatus(LobbyStatus.IN_GAME));
+        lobbyRepository.saveAll(lobbies);
+
+        initializeNumber(match.getMatchId());
+
+        List<Player> players = teamPlayerRepository.findByMatchId(match.getMatchId());
+        players.forEach(player -> System.out.println(player.getNickname()));
+
+        match.setStatus(MatchStatus.STARTED);
         matchRepository.save(match);
+    }
+
+    private void initializeNumber(UUID matchId) {
+        List<Team> teams = teamRepository.findByMatch_MatchId(matchId);
+        int teamNumber = 1;
+        for (Team team : teams) {
+            List<TeamPlayer> teamPlayers = teamPlayerRepository.findByTeam(team);
+            int playerNumber = 1;
+            for (TeamPlayer teamPlayer : teamPlayers) {
+                teamPlayer.setNumber(playerNumber++);
+            }
+            teamPlayerRepository.saveAll(teamPlayers);
+            team.setNumber(teamNumber++);
+        }
+        teamRepository.saveAll(teams);
     }
 }

@@ -16,16 +16,17 @@ import java.util.UUID;
 public interface TeamRepository extends BasicRepository<Team, UUID> {
 
     @Query("""
-            select t
-              from Team as t
-             where t.match.status = 'CREATED'
-               and t.match.rank = ?1
-               and t.match.mode = ?2
-               and t.match.teamType = ?3
-               and (select count(p.id) + ?4
-                      from TeamPlayer p
-                     where p.team.teamId = t.teamId) <= ?5
-            """)
+        select t
+          from Team t
+          join fetch t.match m
+         where m.status = 'CREATED'
+           and m.rank = ?1
+           and m.mode = ?2
+           and m.teamType = ?3
+           and (select count(p.id) + ?4
+                  from TeamPlayer p
+                 where p.team.teamId = t.teamId) <= ?5
+        """)
     Optional<Team> findTeam(Rank rank, MatchMode matchMode, TeamType teamType, int playersCount, int maxPlayersCount);
 
     Integer countByMatch_MatchId(UUID matchId);
