@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public abstract class EloServiceImpl implements EloService {
+public class EloServiceImpl implements EloService {
     private final PlayerRepository playerRepository;
 
     @Override
