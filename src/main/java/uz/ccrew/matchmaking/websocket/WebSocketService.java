@@ -2,9 +2,9 @@ package uz.ccrew.matchmaking.websocket;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Map;

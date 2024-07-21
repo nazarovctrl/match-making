@@ -15,10 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.scheduling.annotation.Async;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +27,6 @@ public class MatchAsyncService {
     private final MatchRepository matchRepository;
     private final WebSocketService webSocketService;
     private final TeamPlayerRepository teamPlayerRepository;
-
 
     @Async
     public void checkMatchToStart(Match match, MatchMode mode, TeamType teamType) {
