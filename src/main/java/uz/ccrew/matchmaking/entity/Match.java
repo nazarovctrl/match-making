@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "matches")
-@Check(name = "matches_c1", constraints = "(status in ('CREATED', 'PREPARED') and server_id is null) or (status in ('STARTED', 'FINISHED') and server_id is not null)")
 @NoArgsConstructor
 @Getter
 @Setter

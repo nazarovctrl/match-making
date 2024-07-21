@@ -4,44 +4,51 @@ import uz.ccrew.matchmaking.entity.*;
 import uz.ccrew.matchmaking.repository.*;
 import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.enums.MatchMode;
-import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.dto.match.TeamDTO;
+import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.mapper.MatchMapper;
 import uz.ccrew.matchmaking.service.MatchService;
 import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
 import uz.ccrew.matchmaking.mapper.TeamPlayerMapper;
+import uz.ccrew.matchmaking.exp.BadRequestException;
 import uz.ccrew.matchmaking.exp.ServerUnavailableException;
 
 import lombok.RequiredArgsConstructor;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
     private final MatchMapper matchMapper;
     private final TeamRepository teamRepository;
+    private final LobbyRepository lobbyRepository;
     private final LobbyPlayerUtil lobbyPlayerUtil;
     private final MatchRepository matchRepository;
     private final ServerRepository serverRepository;
+    private final TeamPlayerMapper teamPlayerMapper;
+    private final MatchAsyncService matchAsyncService;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
-    private final TeamPlayerMapper teamPlayerMapper;
 
-    @Transactional
     @Override
-    public MatchDTO find() {
+    public MatchDTO find() { //TODO send less query to database
         LobbyPlayer lobbyPlayer = lobbyPlayerUtil.loadLobbyPlayer();
         lobbyPlayerUtil.checkToLeader(lobbyPlayer);
 
-        Player player = lobbyPlayer.getPlayer();
         Lobby lobby = lobbyPlayer.getLobby();
+        if (lobby.getStatus().equals(LobbyStatus.WAITING)) {
+            throw new BadRequestException("You are already in queue");
+        } else if (lobby.getStatus().equals(LobbyStatus.IN_GAME)) {
+            throw new BadRequestException("You are already in game");
+        }
+
+        Player player = lobbyPlayer.getPlayer();
         MatchMode mode = lobby.getMatchMode();
         TeamType teamType = lobby.getTeamType();
 
@@ -63,11 +70,7 @@ public class MatchServiceImpl implements MatchService {
         if (matchOptional.isPresent()) {
             match = matchOptional.get();
         } else {
-            Optional<Server> optional = serverRepository.findFirstByIsBusyIsFalseOrderByLastModifiedDate();
-            if (optional.isEmpty()) {
-                throw new ServerUnavailableException("There is no available server to play match");
-            }
-            match = new Match(mode, teamType, player.getRank(), optional.get());
+            match = new Match(mode, teamType, player.getRank(), getFreeServer());
             matchRepository.save(match);
         }
 
@@ -75,8 +78,10 @@ public class MatchServiceImpl implements MatchService {
         List<TeamPlayer> teamPlayerList = lobbyPlayers.stream().map(lp -> new TeamPlayer(team, lp.getPlayer())).toList();
         teamPlayerRepository.saveAll(teamPlayerList);
 
-        //checking to start match
-        checkMatchToPrepare(match, mode, teamType);
+        lobby.setStatus(LobbyStatus.WAITING);
+        lobbyRepository.save(lobby);
+
+        matchAsyncService.checkMatchToStart(match, mode, teamType);
 
         return matchMapper.toDTO(match);
     }
@@ -86,16 +91,18 @@ public class MatchServiceImpl implements MatchService {
         //TODO check user to exists in the match
         //TODO use caching
         Match match = matchRepository.loadById(UUID.fromString(matchId));
-
         List<Team> teams = teamRepository.findByMatch_MatchId(match.getMatchId());
+
         List<TeamDTO> teamDTOList = new ArrayList<>();
         for (Team team : teams) {
             List<TeamPlayer> teamPlayers = teamPlayerRepository.findByTeam(team);
-            TeamDTO build = TeamDTO.builder()
+
+            TeamDTO teamDTO = TeamDTO.builder()
                     .teamId(team.getTeamId().toString())
                     .number(team.getNumber())
                     .players(teamPlayerMapper.toDTOList(teamPlayers)).build();
-            teamDTOList.add(build);
+
+            teamDTOList.add(teamDTO);
         }
 
         return MatchDTO.builder()
@@ -106,19 +113,11 @@ public class MatchServiceImpl implements MatchService {
                 .teams(teamDTOList).build();
     }
 
-    private void checkMatchToPrepare(Match match, MatchMode mode, TeamType teamType) {
-        Integer teamCount = teamRepository.countByMatch_MatchId(match.getMatchId());
-        if (teamCount == null || teamCount < mode.getTeamCount()) {
-            return;
-        }
-
-        Boolean existsNotFullTeam = teamPlayerRepository.existNotFullTeam(match.getMatchId(), teamType.getPlayerCount());
-        if (existsNotFullTeam != null && existsNotFullTeam) {
-            return;
-        }
-
-        //TODO send notification to match players and change their lobby status to WAITING
-        match.setStatus(MatchStatus.PREPARED);
-        matchRepository.save(match);
+    private Server getFreeServer() {
+        Server server = serverRepository.findFirstByIsBusyIsFalseOrderByLastModifiedDate()
+                .orElseThrow(() -> new ServerUnavailableException("There is no available server to play match"));
+        server.setIsBusy(true);
+        serverRepository.save(server);
+        return server;
     }
 }

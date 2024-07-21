@@ -17,16 +17,18 @@ public interface TeamPlayerRepository extends BasicRepository<TeamPlayer, TeamPl
                          then true
                          else false
                    end
-            from TeamPlayer w
-            join Team t
-            on t.teamId = w.team.teamId
-            join Match m
-            on m.matchId = t.match.matchId
-            where  m.matchId = ?1
-            group by w.team.teamId
+              from TeamPlayer w
+             where w.team.match.matchId = ?1
+             group by w.team.teamId
             having count(w.team.teamId) < ?2
             """)
     Boolean existNotFullTeam(UUID matchId, Integer maxPLayersCount);
 
     List<TeamPlayer> findByTeam(Team team);
+
+    @Query("""
+             select tp.player.user.login from TeamPlayer  tp
+             where tp.team.match.matchId =?1
+            """)
+    List<String> findByMatchId(UUID matchId);
 }
