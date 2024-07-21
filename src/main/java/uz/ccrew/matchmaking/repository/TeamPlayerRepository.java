@@ -1,7 +1,6 @@
 package uz.ccrew.matchmaking.repository;
 
 import uz.ccrew.matchmaking.entity.Team;
-import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.entity.TeamPlayer;
 
 import org.springframework.stereotype.Repository;
@@ -28,8 +27,8 @@ public interface TeamPlayerRepository extends BasicRepository<TeamPlayer, TeamPl
     List<TeamPlayer> findByTeam(Team team);
 
     @Query("""
-             select tp.player from TeamPlayer  tp
+             select tp.player.user.login from TeamPlayer  tp
              where tp.team.match.matchId =?1
             """)
-    List<Player> findByMatchId(UUID matchId);
+    List<String> findByMatchId(UUID matchId);
 }

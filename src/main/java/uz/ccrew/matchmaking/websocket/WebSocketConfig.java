@@ -1,4 +1,4 @@
-package uz.ccrew.matchmaking.config;
+package uz.ccrew.matchmaking.websocket;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,7 +13,6 @@ import java.util.HashMap;
 public class WebSocketConfig implements WebSocketConfigurer {
     private final Map<String, WebSocketSession> sessions = new HashMap<>();
 
-
     @Bean("sessions")
     public Map<String, WebSocketSession> getSessions() {
         return sessions;
@@ -21,7 +20,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new CustomWebSocketHandler(sessions), "/ws/notifications");
+        registry.addHandler(new WebSocketHandler(sessions), "/ws/match-notify");
     }
-
 }

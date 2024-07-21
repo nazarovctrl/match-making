@@ -1,13 +1,13 @@
 package uz.ccrew.matchmaking.repository;
 
 import uz.ccrew.matchmaking.entity.Lobby;
+import uz.ccrew.matchmaking.enums.LobbyStatus;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.Modifying;
 
-import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -20,12 +20,16 @@ public interface LobbyRepository extends BasicRepository<Lobby, UUID> {
             """)
     void deleteById(UUID uuid);
 
+    @Modifying
+    @Transactional
     @Query("""
-            select distinct lp.lobby
-              from TeamPlayer tp
-              join LobbyPlayer lp
-                on lp.player = tp.player
-             where tp.team.match.matchId = ?1
+            update Lobby l
+               set l.status = ?2
+             where l.id in (select distinct lp.lobby.id
+                              from TeamPlayer tp
+                              join LobbyPlayer lp
+                                on lp.player.playerId = tp.player.playerId
+                             where tp.team.match.matchId = ?1)
             """)
-    List<Lobby> findByMatchId(UUID matchId);
+    void updateStatusByMatchId(UUID matchId, LobbyStatus status);
 }

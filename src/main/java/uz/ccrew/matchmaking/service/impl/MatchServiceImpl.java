@@ -15,13 +15,12 @@ import uz.ccrew.matchmaking.exp.BadRequestException;
 import uz.ccrew.matchmaking.exp.ServerUnavailableException;
 
 import lombok.RequiredArgsConstructor;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +36,6 @@ public class MatchServiceImpl implements MatchService {
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
 
-    @Transactional
     @Override
     public MatchDTO find() { //TODO send less query to database
         LobbyPlayer lobbyPlayer = lobbyPlayerUtil.loadLobbyPlayer();
@@ -72,12 +70,7 @@ public class MatchServiceImpl implements MatchService {
         if (matchOptional.isPresent()) {
             match = matchOptional.get();
         } else {
-            Server server = serverRepository.findFirstByIsBusyIsFalseOrderByLastModifiedDate()
-                    .orElseThrow(() -> new ServerUnavailableException("There is no available server to play match"));
-            server.setIsBusy(true);
-            serverRepository.save(server);
-
-            match = new Match(mode, teamType, player.getRank(), server);
+            match = new Match(mode, teamType, player.getRank(), getFreeServer());
             matchRepository.save(match);
         }
 
@@ -118,5 +111,13 @@ public class MatchServiceImpl implements MatchService {
                 .teamType(match.getTeamType())
                 .status(match.getStatus())
                 .teams(teamDTOList).build();
+    }
+
+    private Server getFreeServer() {
+        Server server = serverRepository.findFirstByIsBusyIsFalseOrderByLastModifiedDate()
+                .orElseThrow(() -> new ServerUnavailableException("There is no available server to play match"));
+        server.setIsBusy(true);
+        serverRepository.save(server);
+        return server;
     }
 }
