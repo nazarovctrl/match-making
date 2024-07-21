@@ -12,19 +12,25 @@ import uz.ccrew.matchmaking.repository.TeamPlayerRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.web.socket.WebSocketSession;
 
+import java.util.Map;
 import java.util.List;
 import java.util.UUID;
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
 public class MatchAsyncService {
     private final TeamRepository teamRepository;
-    private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyRepository lobbyRepository;
     private final MatchRepository matchRepository;
+    private final Map<String, WebSocketSession> sessions;
+    private final TeamPlayerRepository teamPlayerRepository;
+
 
     @Async
     public void checkMatchToStart(Match match, MatchMode mode, TeamType teamType) {
@@ -38,7 +44,6 @@ public class MatchAsyncService {
             return;
         }
 
-        //TODO send notification to match players and change their lobby status to WAITING
         List<Lobby> lobbies = lobbyRepository.findByMatchId(match.getMatchId());
         lobbies.forEach(lobby -> lobby.setStatus(LobbyStatus.IN_GAME));
         lobbyRepository.saveAll(lobbies);
@@ -46,7 +51,16 @@ public class MatchAsyncService {
         initializeNumber(match.getMatchId());
 
         List<Player> players = teamPlayerRepository.findByMatchId(match.getMatchId());
-        players.forEach(player -> System.out.println(player.getNickname()));
+        players.forEach(player -> {
+            var session = sessions.get(player.getUser().getLogin());
+            if (session != null) {
+                try {
+                    session.sendMessage(new TextMessage("Your match started"));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
         match.setStatus(MatchStatus.STARTED);
         matchRepository.save(match);
