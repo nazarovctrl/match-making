@@ -25,25 +25,25 @@ Then, execute the commands in the specified order.
    .env file content
 
  ```.env
-DB_URL=<your-databse-url>
-DB_USERNAME=<your-databse-username>
-DB_PASSWORD=<your-databse-password>
-SECURITY_TOKEN_ACCESS_SECRET_KEY=<repalce-with-generated-secret-koy-for-access-token>
-SECURITY_TOKEN_ACCESS_TIME=<access-token-valid-time-in-millieseconds>
-SECURITY_TOKEN_REFRESH_SECRET_KEY=<repalce-with-generated-secret-koy-for-refresh-token>
-SECURITY_TOKEN_REFRESH_TIME=<refresht-token-valid-time-in-millieseconds>
+   DB_URL=<your-databse-url>
+   DB_USERNAME=<your-databse-username>
+   DB_PASSWORD=<your-databse-password>
+   SECURITY_TOKEN_ACCESS_SECRET_KEY=<repalce-with-generated-secret-koy-for-access-token>
+   SECURITY_TOKEN_ACCESS_TIME=<access-token-valid-time-in-millieseconds>
+   SECURITY_TOKEN_REFRESH_SECRET_KEY=<repalce-with-generated-secret-koy-for-refresh-token>
+   SECURITY_TOKEN_REFRESH_TIME=<refresht-token-valid-time-in-millieseconds>
 ```
 
 3. **Pull the Docker Image**
 
 ```sh
-docker pull nazarovv2/match-making:latest
+  docker pull nazarovv2/match-making:latest
 ```
 
 4. **Start the Application**
 
 ```sh
-docker-compose up -d match-making-app
+  docker-compose up -d match-making-app
 ```
 
 </details>
