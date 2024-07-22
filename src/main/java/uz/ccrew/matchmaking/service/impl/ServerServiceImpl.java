@@ -4,6 +4,7 @@ import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.entity.Server;
 import uz.ccrew.matchmaking.util.AuthUtil;
 import uz.ccrew.matchmaking.enums.UserRole;
+import uz.ccrew.matchmaking.exp.NotFoundException;
 import uz.ccrew.matchmaking.mapper.ServerMapper;
 import uz.ccrew.matchmaking.dto.server.ServerDTO;
 import uz.ccrew.matchmaking.service.ServerService;
@@ -32,6 +33,11 @@ public class ServerServiceImpl implements ServerService {
     @Transactional
     @Override
     public ServerDTO create(ServerCreateDTO dto) {
+
+        if (userRepository.existsByLogin(dto.login())){
+            throw new NotFoundException("Server already exist");
+        }
+
         //TODO check login to exists (use equalsIgnoreCase)
         User user = User.builder()
                 .login(dto.login())
