@@ -68,9 +68,9 @@ public class EloServiceImpl implements EloService {
 
 
     private int calculateNewRating(int playerRating, int opponentRating, boolean isWinner) {
-        double kFactor = 32;
-        double expectedScore = 1 / (1 + Math.pow(10, (opponentRating - playerRating) / 400.0));
-        double actualScore = isWinner ? 1 : 0;
+        int kFactor = 32;
+        int expectedScore = (int) (1 / (1 + Math.pow(10, (opponentRating - playerRating) / 400.0)));
+        int actualScore = isWinner ? 1 : 0;
 
         return (int) (playerRating + kFactor * (actualScore - expectedScore));
     }
