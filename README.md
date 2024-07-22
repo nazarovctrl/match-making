@@ -17,8 +17,10 @@
 
 To run the application, ensure that Docker is installed on your machine.
 Then, execute the commands in the specified order.
+1. **Create match-making folder in your machine**
 
-1. **Paste the .env file into  match-making folder**
+
+2. **Create and copy the .env file into the match-making folder**
 
    .env file content
 
@@ -32,13 +34,13 @@ SECURITY_TOKEN_REFRESH_SECRET_KEY=<repalce-with-generated-secret-koy-for-refresh
 SECURITY_TOKEN_REFRESH_TIME=<refresht-token-valid-time-in-millieseconds>
 ```
 
-2. **Pull the Docker Image**
+3. **Pull the Docker Image**
 
 ```sh
 docker pull nazarovv2/match-making:latest
 ```
 
-3. **Start the Application**
+4. **Start the Application**
 
 ```sh
 docker-compose up -d match-making-app
