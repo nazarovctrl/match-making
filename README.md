@@ -44,7 +44,6 @@ java -jar target/matchmaking-server-0.0.1-SNAPSHOT.jar
 To run the application, ensure that Docker is installed on your machine. 
 Then, execute the commands in the specified order.
 
-
 1. **Pull the Docker Image**
 
 ```sh
