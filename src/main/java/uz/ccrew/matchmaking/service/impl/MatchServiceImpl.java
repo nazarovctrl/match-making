@@ -125,7 +125,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public void handleResult(MatchResultDTO dto){
+    public void handleResult(MatchResultDTO dto) {
         UUID matchUUID = UUID.fromString(dto.matchId());
         Match match = matchRepository.loadById(matchUUID);
         List<Team> teams = new ArrayList<>();
@@ -139,28 +139,26 @@ public class MatchServiceImpl implements MatchService {
         teamRepository.saveAll(teams);
 
         if (match.getMode().equals(MatchMode.FFA)) {
-            switch (match.getTeamType()){
-                case SOLO:
-                    eloService.updateRatings(teams);
-                case SQUAD:
-                    throw new RuntimeException("Not implemented yet");
+            if (match.getTeamType() == TeamType.SOLO) {
+                eloService.updateRatings(teams);
+            } else if (match.getTeamType() == TeamType.SQUAD) {
+                eloService.updateRatings(teams);
             }
-        }else {
-            List<Player> winners = new ArrayList<>();
-            List<Player> losers = new ArrayList<>();
-            for (Team team : teams) {
-                List<Player> players = teamPlayerRepository.findByTeamId(team.getTeamId());
-                if (team.getPlace() == 1) {
-                    winners.addAll(players);
-                }else {
-                    losers.addAll(players);
+        } else {
+            if (match.getTeamType() == TeamType.SOLO) {
+                List<Player> winners = new ArrayList<>();
+                List<Player> losers = new ArrayList<>();
+                for (Team team : teams) {
+                    List<Player> players = teamPlayerRepository.findByTeamId(team.getTeamId());
+                    if (team.getPlace() == 1) {
+                        winners.addAll(players);
+                    } else {
+                        losers.addAll(players);
+                    }
                 }
-            }
-            switch (match.getTeamType()){
-                case SOLO:
-                    eloService.updateRatings(winners.getFirst(),losers.getFirst());
-                case SQUAD:
-                    throw new RuntimeException("Not implemented yet");
+                eloService.updateRatings(winners.get(0), losers.get(0));
+            } else if (match.getTeamType() == TeamType.SQUAD) {
+                eloService.updateRatings(teams);
             }
         }
     }

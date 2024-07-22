@@ -33,36 +33,31 @@ public class EloServiceImpl implements EloService {
         }
     }
 
-
-//    @Override
-//    public void updateRatings(List<Player> winners,List<Player> losers) {
-//        for (int i = 0; i < winners.size(); i++) {
-//            updateRatings(winners.get(i), losers.get(i));
-//        }
-//    }
-
     @Override
     public void updateRatings(List<Team> teams) {
         int size = teams.size();
         for (Team team : teams) {
-            Player player = teamPlayerRepository.findByTeamId(team.getTeamId()).getFirst();
+            List<Player> players = teamPlayerRepository.findByTeamId(team.getTeamId());
 
-            int playerRating = player.getPoints();
+            for (Player player : players) {
+                int playerRating = player.getPoints();
+                int actualScore = (int) calculateActualScore(size, team.getPlace());
+                int expectedScore = 0;
 
-            double actualScore = calculateActualScore(size,team.getPlace());
-            double expectedScore = 0;
-
-            for (Team opponentTeam: teams){
-                if (opponentTeam.getTeamId().equals(team.getTeamId())){
-                    continue;
+                for (Team opponentTeam : teams) {
+                    if (opponentTeam.getTeamId().equals(team.getTeamId())) {
+                        continue;
+                    }
+                    List<Player> opponentPlayers = teamPlayerRepository.findByTeamId(opponentTeam.getTeamId());
+                    int opponentRating = opponentPlayers.stream().mapToInt(Player::getPoints).sum() / opponentPlayers.size();
+                    expectedScore += (int) calculateExpectedScore(playerRating, opponentRating);
                 }
-                Player opponentRating = teamPlayerRepository.findByTeamId(opponentTeam.getTeamId()).getFirst();
-                expectedScore += calculateExpectedScore(playerRating, opponentRating.getPoints());
-            }
-            expectedScore /= (size - 1);
+                expectedScore /= (size - 1);
 
-            int newRating = calculateNewRating(playerRating, expectedScore, actualScore);
-            player.setPoints(newRating);
+                int newRating = calculateNewRating(playerRating, expectedScore, actualScore);
+                player.setPoints(newRating);
+                playerRepository.save(player);
+            }
         }
     }
 
@@ -74,7 +69,6 @@ public class EloServiceImpl implements EloService {
 
         return (int) (playerRating + kFactor * (actualScore - expectedScore));
     }
-
 
     private double calculateExpectedScore(int playerRating, int opponentRating) {
         return 1 / (1 + Math.pow(10, (opponentRating - playerRating) / 400.0));
