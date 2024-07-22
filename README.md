@@ -44,7 +44,7 @@ Then, execute the commands in the specified order.
 4. **Start the Application**
 
     ```sh
-   docker-compose up -d match-making-app
+   docker-compose up -d match-making
    ```
 
 </details>
