@@ -25,7 +25,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public PlayerDTO create(PlayerCreateDTO playerCreateDTO) {
-        //TODO check username to exists in table
+        //TODO check username to exists in table (use equalsIgnoreCase)
         User user = authUtil.loadLoggedUser();
 
         Player player = playerMapper.toEntity(playerCreateDTO);

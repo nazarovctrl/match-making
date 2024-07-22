@@ -21,8 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -38,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDTO register(RegisterDTO dto) {
+        //TODO login to lowercase
         Optional<User> optional = userRepository.findByLogin(dto.login());
         if (optional.isPresent()) {
             throw new AlreadyExistException("Login is already existing");
@@ -54,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponseDTO login(final LoginDTO loginRequest) {
+        //TODO login to lowercase
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.login(), loginRequest.password()));
 
