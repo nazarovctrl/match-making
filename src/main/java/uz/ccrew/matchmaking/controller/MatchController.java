@@ -32,11 +32,18 @@ public class MatchController {
         this.matchService = matchService;
     }
 
-    @PostMapping("/find")
-    @Operation(summary = "Find match")
-    public ResponseEntity<Response<MatchDTO>> find() {
-        MatchDTO result = matchService.find();
-        return ResponseMaker.ok(result);
+    @PostMapping("/join")
+    @Operation(summary = "Join to queue")
+    public ResponseEntity<Response<?>> find() {
+        matchService.join();
+        return ResponseMaker.okMessage("Successfully joined to queue");
+    }
+
+    @PatchMapping("/ready-to-play/{ready}")
+    @Operation(summary = "Confirm to play in match")
+    public ResponseEntity<Response<?>> readyToPlay(@PathVariable("ready") boolean isReady) {
+        matchService.readyToPlay(isReady);
+        return ResponseMaker.okMessage("Successfully confirmed");
     }
 
     @GetMapping("/get/{matchId}")

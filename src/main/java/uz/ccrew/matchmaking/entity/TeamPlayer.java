@@ -26,6 +26,9 @@ public class TeamPlayer {
     @Column
     private Integer number;
 
+    @Column
+    private Boolean isReady;
+
     @ManyToOne
     @MapsId("teamId")
     @JoinColumn(name = "team_id", foreignKey = @ForeignKey(name = "team_players_f1"), nullable = false)

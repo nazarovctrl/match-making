@@ -3,7 +3,9 @@ package uz.ccrew.matchmaking.service.impl;
 import uz.ccrew.matchmaking.entity.*;
 import uz.ccrew.matchmaking.repository.*;
 import uz.ccrew.matchmaking.enums.TeamType;
+import uz.ccrew.matchmaking.util.PlayerUtil;
 import uz.ccrew.matchmaking.enums.MatchMode;
+import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.dto.match.TeamDTO;
 import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
@@ -16,6 +18,7 @@ import uz.ccrew.matchmaking.exp.ServerUnavailableException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uz.ccrew.matchmaking.websocket.WebSocketService;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +28,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
+    private final PlayerUtil playerUtil;
     private final MatchMapper matchMapper;
     private final TeamRepository teamRepository;
     private final LobbyRepository lobbyRepository;
@@ -33,11 +37,12 @@ public class MatchServiceImpl implements MatchService {
     private final ServerRepository serverRepository;
     private final TeamPlayerMapper teamPlayerMapper;
     private final MatchAsyncService matchAsyncService;
+    private final WebSocketService webSocketService;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
 
     @Override
-    public MatchDTO find() { //TODO send less query to database
+    public void join() { //TODO send less query to database
         LobbyPlayer lobbyPlayer = lobbyPlayerUtil.loadLobbyPlayer();
         lobbyPlayerUtil.checkToLeader(lobbyPlayer);
 
@@ -81,9 +86,7 @@ public class MatchServiceImpl implements MatchService {
         lobby.setStatus(LobbyStatus.WAITING);
         lobbyRepository.save(lobby);
 
-        matchAsyncService.checkMatchToStart(match, mode, teamType);
-
-        return matchMapper.toDTO(match);
+        matchAsyncService.checkMatchToFull(match, mode, teamType);
     }
 
     @Override
@@ -111,6 +114,36 @@ public class MatchServiceImpl implements MatchService {
                 .teamType(match.getTeamType())
                 .status(match.getStatus())
                 .teams(teamDTOList).build();
+    }
+
+    @Override
+    public void readyToPlay(boolean isReady) {
+        Player player = playerUtil.loadPLayer();
+        Optional<TeamPlayer> optional = matchRepository.findByPlayerIdAndMatchStatus(player.getPlayerId(), MatchStatus.WAITING);
+        if (optional.isEmpty()) {
+            throw new BadRequestException("You are not in match to confirm play or your match already canceled");
+        }
+
+        TeamPlayer teamPlayer = optional.get();
+        teamPlayer.setIsReady(isReady);
+        teamPlayerRepository.save(teamPlayer);
+
+        Match match = teamPlayer.getTeam().getMatch();
+        if (!isReady) {
+            match.setStatus(MatchStatus.CANCELED);
+            matchRepository.save(match);
+
+            Server server = match.getServer();
+            server.setIsBusy(false);
+            serverRepository.save(server);
+
+            List<String> users = teamPlayerRepository.findLoginsByMatchId(match.getMatchId());
+            users.add(server.getUser().getLogin());
+            webSocketService.sendMessage(users, String.format("Cant start match matchId=%s", match.getMatchId()));
+            return;
+        }
+
+        matchAsyncService.checkMatchToStart(match);
     }
 
     private Server getFreeServer() {
