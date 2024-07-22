@@ -14,6 +14,22 @@
       Docker    
     </h3>
   </summary>
+
+To run the application, ensure that Docker is installed on your machine.
+Then, execute the commands in the specified order.
+
+1. **Pull the Docker Image**
+
+```sh
+docker pull nazarovv2/match-making:latest
+```
+
+2. **Start the Application**
+
+```sh
+docker-compose up -d match-making-app
+```
+
 </details>
 
 <details close>
