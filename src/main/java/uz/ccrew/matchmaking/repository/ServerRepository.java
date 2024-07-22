@@ -1,9 +1,12 @@
 package uz.ccrew.matchmaking.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import uz.ccrew.matchmaking.entity.Server;
 
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
 @Repository
-public interface ServerRepository extends JpaRepository<Server, Integer> {
+public interface ServerRepository extends BasicRepository<Server, Integer> {
+    Optional<Server> findFirstByIsBusyIsFalseOrderByLastModifiedDate();
 }

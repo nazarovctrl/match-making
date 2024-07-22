@@ -1,15 +1,5 @@
 # Matchmaking Server
 
-This project is a matchmaking server built with Java 21 and Spring Boot 3.3.1. The server supports various game modes, client readiness confirmation, match result reporting, and ELO rating calculation.
-
-## Table of Contents
-
-- [Requirements](#requirements)
-- [Setup](#setup)
-- [Running the Application](#running-the-application)
-- [API Endpoints](#api-endpoints)
-- [ELO Calculation](#elo-calculation)
-- [License](#license)
 
 ## Requirements
 

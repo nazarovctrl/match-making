@@ -1,14 +1,20 @@
 package uz.ccrew.matchmaking.entity;
 
-import lombok.NoArgsConstructor;
 import uz.ccrew.matchmaking.enums.UserRole;
 
+import lombok.*;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-public class User {
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -16,13 +22,13 @@ public class User {
     private String login;
     @Column(nullable = false)
     private String password;
+
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column
-    private UserRole role;
+    private UserRole role = UserRole.PLAYER;
 
-    public User(String login, String password, UserRole role) {
-        this.login = login;
-        this.password = password;
-        this.role = role;
-    }
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "timestamp default CURRENT_TIMESTAMP")
+    private LocalDateTime credentialsModifiedDate = LocalDateTime.now();
 }

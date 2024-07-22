@@ -1,25 +1,39 @@
 package uz.ccrew.matchmaking.entity;
 
-import uz.ccrew.matchmaking.enums.MatchMode;
-import uz.ccrew.matchmaking.enums.TeamType;
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "teams")
+@Check(name = "teams_c1", constraints = "placement is null or placement between 1 and 100")
+@Check(name = "teams_c2", constraints = "number between 1 and 100")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Team {
     @Id
-    private String id;
-    @Enumerated(EnumType.STRING)
+    @UuidGenerator
+    private UUID teamId;
     @Column
-    private TeamType type;
-    @Enumerated(EnumType.STRING)
-    @Column
-    private MatchMode matchMode;
-    @ManyToMany
-    private List<Player> players;
+    private Integer number;
     @ManyToOne
-    private Player leader;
+    @JoinColumn(name = "match_id", foreignKey = @ForeignKey(name = "teams_f1"), nullable = false)
+    private Match match;
+    @Column
+    private Integer placement;
+
+    public Team(Match match) {
+        this.match = match;
+    }
+//    @OneToMany(cascade = CascadeType.REMOVE)
+//    @JoinTable(name = "team_players",
+//            joinColumns = @JoinColumn(name = "team_id", foreignKey = @ForeignKey(name = "team_players_f1")),
+//            inverseJoinColumns = @JoinColumn(name = "player_id", foreignKey = @ForeignKey(name = "team_players_f2")))
+//    private List<Player> players;
 }
