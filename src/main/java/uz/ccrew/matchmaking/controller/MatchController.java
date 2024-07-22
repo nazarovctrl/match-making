@@ -37,7 +37,7 @@ public class MatchController {
         return ResponseMaker.ok(result);
     }
 
-    @PatchMapping("/")
+    @PatchMapping("/changeResult")
     @Operation(summary = "")
     public ResponseEntity<Response<?>> handleResult(@RequestBody MatchResultDTO dto) {
         matchService.handleResult(dto);

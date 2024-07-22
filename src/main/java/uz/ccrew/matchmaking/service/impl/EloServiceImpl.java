@@ -87,7 +87,7 @@ public class EloServiceImpl implements EloService {
     }
 
     private int calculateNewRating(int playerRating, double expectedScore, double actualScore) {
-        double kFactor = 32; // K-factor determines the maximum possible change per game
+        double kFactor = 32;
         return (int) (playerRating + kFactor * (actualScore - expectedScore));
     }
 }

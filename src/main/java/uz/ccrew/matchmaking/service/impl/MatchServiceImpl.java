@@ -37,7 +37,6 @@ public class MatchServiceImpl implements MatchService {
     private final MatchAsyncService matchAsyncService;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
-    private final TeamPlayerMapper teamPlayerMapper;
     private final EloService eloService;
 
     @Override
