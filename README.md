@@ -41,7 +41,7 @@ java -jar target/matchmaking-server-0.0.1-SNAPSHOT.jar
 
 ## Running the Application with Docker Compose
 
-To run the application, ensure that Docker and Docker Compose are installed on your machine. 
+To run the application, ensure that Docker is installed on your machine. 
 Then, execute the commands in the specified order.
 
 1. **Pull the Docker Image**
