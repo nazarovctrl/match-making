@@ -39,7 +39,7 @@ To run the application, make sure you have Java 21 installed. You can run the ap
 java -jar target/matchmaking-server-0.0.1-SNAPSHOT.jar
 ```
 
-## Running the Application with Docker Compose
+## Running the Application with Docker
 
 To run the application, ensure that Docker is installed on your machine. 
 Then, execute the commands in the specified order.
