@@ -14,6 +14,42 @@
       Docker    
     </h3>
   </summary>
+
+To run the application, ensure that Docker is installed on your machine.
+Then, execute the commands in the specified order.
+
+1. **Create match-making folder in your machine**
+
+
+2. **Create and copy the .env file, and get docker-compose.yml from GitHub link below and put them into the match-making folder**
+
+   .env file content
+
+    ```.env
+    DB_URL=<your-databse-url>
+    DB_USERNAME=<your-databse-username>
+    DB_PASSWORD=<your-databse-password>
+    SECURITY_TOKEN_ACCESS_SECRET_KEY=<repalce-with-generated-secret-koy-for-access-token>
+    SECURITY_TOKEN_ACCESS_TIME=<access-token-valid-time-in-millieseconds>
+    SECURITY_TOKEN_REFRESH_SECRET_KEY=<repalce-with-generated-secret-koy-for-refresh-token>
+    SECURITY_TOKEN_REFRESH_TIME=<refresht-token-valid-time-in-millieseconds>
+    ```
+   docker-compose.yml link
+
+   https://github.com/nazarovctrl/match-making/blob/master/docker-compose.yml
+   
+3. **Pull the Docker Image**
+
+    ```sh
+   docker pull nazarovv2/match-making:latest
+    ```
+
+4. **Start the Application**
+
+    ```sh
+   docker-compose up -d match-making
+   ```
+
 </details>
 
 <details close>
