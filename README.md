@@ -17,7 +17,7 @@
 
 2. **Build the project:**
 
-    Use Maven to build the project.
+   Use Maven to build the project.
 
     ```sh
     ./mvnw clean install
@@ -25,7 +25,7 @@
 
 3. **Run the application:**
 
-    Use Maven to run the Spring Boot application.
+   Use Maven to run the Spring Boot application.
 
     ```sh
     ./mvnw spring-boot:run
@@ -41,8 +41,9 @@ java -jar target/matchmaking-server-0.0.1-SNAPSHOT.jar
 
 ## Running the Application with Docker
 
-To run the application, ensure that Docker is installed on your machine. 
+To run the application, ensure that Docker is installed on your machine.
 Then, execute the commands in the specified order.
+
 
 1. **Pull the Docker Image**
 
