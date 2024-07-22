@@ -26,7 +26,7 @@ public class Team {
     @JoinColumn(name = "match_id", foreignKey = @ForeignKey(name = "teams_f1"), nullable = false)
     private Match match;
     @Column
-    private Integer place;
+    private Integer placement;
 
     public Team(Match match) {
         this.match = match;

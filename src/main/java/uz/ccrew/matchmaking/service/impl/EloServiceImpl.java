@@ -18,22 +18,6 @@ public class EloServiceImpl implements EloService {
     private final TeamPlayerRepository teamPlayerRepository;
 
     @Override
-    public void updateRatings(Player winner, Player loser) {
-        int winnerRating = winner.getPoints();
-        int loserRating = loser.getPoints();
-
-        int newWinnerRating = calculateNewRating(winnerRating, loserRating, true);
-        winner.setPoints(newWinnerRating);
-        playerRepository.save(winner);
-
-        if (loser.getPoints() != 0) {
-            int newLoserRating = calculateNewRating(loserRating, winnerRating, false);
-            loser.setPoints(newLoserRating);
-            playerRepository.save(loser);
-        }
-    }
-
-    @Override
     public void updateRatings(List<Team> teams) {
         int size = teams.size();
         for (Team team : teams) {
@@ -41,8 +25,8 @@ public class EloServiceImpl implements EloService {
 
             for (Player player : players) {
                 int playerRating = player.getPoints();
-                int actualScore = (int) calculateActualScore(size, team.getPlace());
-                int expectedScore = 0;
+                double actualScore = calculateActualScore(size, team.getPlacement());
+                double expectedScore = 0;
 
                 for (Team opponentTeam : teams) {
                     if (opponentTeam.getTeamId().equals(team.getTeamId())) {
@@ -62,24 +46,16 @@ public class EloServiceImpl implements EloService {
     }
 
 
-    private int calculateNewRating(int playerRating, int opponentRating, boolean isWinner) {
-        int kFactor = 32;
-        int expectedScore = (int) (1 / (1 + Math.pow(10, (opponentRating - playerRating) / 400.0)));
-        int actualScore = isWinner ? 1 : 0;
-
-        return (int) (playerRating + kFactor * (actualScore - expectedScore));
+    private double calculateActualScore(int numPlayers, int playerRanking) {
+        return (numPlayers - playerRanking) / (double) (numPlayers - 1);
     }
 
     private double calculateExpectedScore(int playerRating, int opponentRating) {
         return 1 / (1 + Math.pow(10, (opponentRating - playerRating) / 400.0));
     }
 
-    private double calculateActualScore(int numPlayers, int playerRanking) {
-        return (numPlayers - playerRanking) / (double) (numPlayers - 1);
-    }
-
     private int calculateNewRating(int playerRating, double expectedScore, double actualScore) {
-        double kFactor = 32;
+        int kFactor = 32;
         return (int) (playerRating + kFactor * (actualScore - expectedScore));
     }
 }

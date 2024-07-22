@@ -1,7 +1,9 @@
 package uz.ccrew.matchmaking.service.impl;
 
+import jakarta.transaction.Transactional;
 import uz.ccrew.matchmaking.dto.match.MatchResultDTO;
 import uz.ccrew.matchmaking.entity.*;
+import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.repository.*;
 import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.enums.MatchMode;
@@ -124,42 +126,26 @@ public class MatchServiceImpl implements MatchService {
         return server;
     }
 
+    @Transactional
     @Override
     public void handleResult(MatchResultDTO dto) {
         UUID matchUUID = UUID.fromString(dto.matchId());
         Match match = matchRepository.loadById(matchUUID);
+        if (!match.getStatus().equals(MatchStatus.STARTED)) {
+            throw new BadRequestException("Match status is not Started");
+        }
+        match.setStatus(MatchStatus.FINISHED);
+        lobbyRepository.updateStatusByMatchId(matchUUID, LobbyStatus.PREPARING);
+        matchRepository.save(match);
         List<Team> teams = new ArrayList<>();
 
         dto.teamResults().forEach(teamResult -> {
             Team team = teamRepository.loadById(UUID.fromString(teamResult.teamId()));
-            team.setPlace(teamResult.place());
+            team.setPlacement(teamResult.place());
             teams.add(team);
         });
 
         teamRepository.saveAll(teams);
-
-        if (match.getMode().equals(MatchMode.FFA)) {
-            if (match.getTeamType() == TeamType.SOLO) {
-                eloService.updateRatings(teams);
-            } else if (match.getTeamType() == TeamType.SQUAD) {
-                eloService.updateRatings(teams);
-            }
-        } else {
-            if (match.getTeamType() == TeamType.SOLO) {
-                List<Player> winners = new ArrayList<>();
-                List<Player> losers = new ArrayList<>();
-                for (Team team : teams) {
-                    List<Player> players = teamPlayerRepository.findByTeamId(team.getTeamId());
-                    if (team.getPlace() == 1) {
-                        winners.addAll(players);
-                    } else {
-                        losers.addAll(players);
-                    }
-                }
-                eloService.updateRatings(winners.get(0), losers.get(0));
-            } else if (match.getTeamType() == TeamType.SQUAD) {
-                eloService.updateRatings(teams);
-            }
-        }
+        eloService.updateRatings(teams);
     }
 }
