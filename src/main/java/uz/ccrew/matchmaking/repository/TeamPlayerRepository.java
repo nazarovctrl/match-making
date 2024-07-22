@@ -1,5 +1,6 @@
 package uz.ccrew.matchmaking.repository;
 
+import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.entity.Team;
 import uz.ccrew.matchmaking.entity.TeamPlayer;
 
@@ -31,4 +32,10 @@ public interface TeamPlayerRepository extends BasicRepository<TeamPlayer, TeamPl
              where tp.team.match.matchId =?1
             """)
     List<String> findByMatchId(UUID matchId);
+    @Query("""
+             select tp.player
+               from TeamPlayer tp
+              where tp.team.teamId =?1
+            """)
+    List<Player> findByTeamId(UUID matchId);
 }

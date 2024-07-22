@@ -1,6 +1,9 @@
 package uz.ccrew.matchmaking.service.impl;
 
+import jakarta.transaction.Transactional;
+import uz.ccrew.matchmaking.dto.match.MatchResultDTO;
 import uz.ccrew.matchmaking.entity.*;
+import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.repository.*;
 import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.enums.MatchMode;
@@ -8,6 +11,7 @@ import uz.ccrew.matchmaking.dto.match.TeamDTO;
 import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.mapper.MatchMapper;
+import uz.ccrew.matchmaking.service.EloService;
 import uz.ccrew.matchmaking.service.MatchService;
 import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
 import uz.ccrew.matchmaking.mapper.TeamPlayerMapper;
@@ -35,6 +39,7 @@ public class MatchServiceImpl implements MatchService {
     private final MatchAsyncService matchAsyncService;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
+    private final EloService eloService;
 
     @Override
     public MatchDTO find() { //TODO send less query to database
@@ -119,5 +124,28 @@ public class MatchServiceImpl implements MatchService {
         server.setIsBusy(true);
         serverRepository.save(server);
         return server;
+    }
+
+    @Transactional
+    @Override
+    public void handleResult(MatchResultDTO dto) {
+        UUID matchUUID = UUID.fromString(dto.matchId());
+        Match match = matchRepository.loadById(matchUUID);
+        if (!match.getStatus().equals(MatchStatus.STARTED)) {
+            throw new BadRequestException("Match status is not Started");
+        }
+        match.setStatus(MatchStatus.FINISHED);
+        lobbyRepository.updateStatusByMatchId(matchUUID, LobbyStatus.PREPARING);
+        matchRepository.save(match);
+        List<Team> teams = new ArrayList<>();
+
+        dto.teamResults().forEach(teamResult -> {
+            Team team = teamRepository.loadById(UUID.fromString(teamResult.teamId()));
+            team.setPlacement(teamResult.place());
+            teams.add(team);
+        });
+
+        teamRepository.saveAll(teams);
+        eloService.updateRatings(teams);
     }
 }
