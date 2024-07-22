@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  bandla-app:
+  match-making-app:
     build:
       context: .
     container_name: match-making
@@ -9,6 +9,14 @@ services:
       - "80:80"
     networks:
       - net
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SECURITY_TOKEN_ACCESS_SECRET_KEY=${SECURITY_TOKEN_ACCESS_SECRET_KEY}
+      - SECURITY_TOKEN_ACCESS_TIME=${SECURITY_TOKEN_ACCESS_TIME}
+      - SECURITY_TOKEN_REFRESH_SECRET_KEY=${SECURITY_TOKEN_REFRESH_SECRET_KEY}
+      - SECURITY_TOKEN_REFRESH_TIME=${SECURITY_TOKEN_REFRESH_TIME}
 networks:
   net:
     driver: "bridge"
