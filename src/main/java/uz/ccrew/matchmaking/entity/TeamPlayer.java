@@ -1,5 +1,6 @@
 package uz.ccrew.matchmaking.entity;
 
+import lombok.Setter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Check(name = "team_players_c1", constraints = "number between 1 and 4")
 @NoArgsConstructor
 @Getter
+@Setter
 public class TeamPlayer {
     @EmbeddedId
     private TeamPlayerId id;

@@ -33,10 +33,12 @@ public class ServerServiceImpl implements ServerService {
     @Transactional
     @Override
     public ServerDTO create(ServerCreateDTO dto) {
+
         if (userRepository.existsByLogin(dto.login())){
             throw new NotFoundException("Server already exist");
         }
 
+        //TODO check login to exists (use equalsIgnoreCase)
         User user = User.builder()
                 .login(dto.login())
                 .password(passwordEncoder.encode(dto.password()))

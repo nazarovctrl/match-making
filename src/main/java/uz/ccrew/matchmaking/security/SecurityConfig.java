@@ -78,6 +78,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/server/change-busy/*").hasAuthority(UserRole.SERVER.name())
                         .requestMatchers("/api/v1/player/**").hasAuthority(UserRole.PLAYER.name())
                         .requestMatchers("/api/v1/player/**", "/api/v1/lobby/**", "/api/v1/lobby-player/**", "/api/v1/match/**").hasAuthority(UserRole.PLAYER.name())
+                        .requestMatchers("/ws/match-notify").hasAnyAuthority(UserRole.PLAYER.name(), UserRole.SERVER.name())
                         .anyRequest().authenticated());
         return httpSecurity.build();
     }

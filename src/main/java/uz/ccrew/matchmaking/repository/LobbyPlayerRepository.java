@@ -21,7 +21,11 @@ public interface LobbyPlayerRepository extends BasicRepository<LobbyPlayer, Lobb
 
     @Modifying
     @Transactional
-    @Query("delete LobbyPlayer w where w.lobby.id=?1 and w.player.playerId=?2")
+    @Query("""
+            delete LobbyPlayer w
+             where w.lobby.id = ?1
+               and w.player.playerId = ?2
+            """)
     void deleteByLobbyIdAndPlayerId(UUID lobbyId, Integer playerId);
 
     List<LobbyPlayer> findByLobby_Id(UUID lobbyId);
