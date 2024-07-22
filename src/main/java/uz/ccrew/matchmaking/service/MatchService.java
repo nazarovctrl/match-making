@@ -10,5 +10,5 @@ public interface MatchService {
 
     void readyToPlay(boolean isReady);
 
-    void handleResult(MatchResultDTO dto);
+    void calculateResult(MatchResultDTO dto);
 }

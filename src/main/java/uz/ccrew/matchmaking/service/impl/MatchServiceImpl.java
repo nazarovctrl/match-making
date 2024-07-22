@@ -1,13 +1,12 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import jakarta.transaction.Transactional;
-import uz.ccrew.matchmaking.dto.match.MatchResultDTO;
 import uz.ccrew.matchmaking.entity.*;
-import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.repository.*;
+import uz.ccrew.matchmaking.util.AuthUtil;
 import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.util.PlayerUtil;
 import uz.ccrew.matchmaking.enums.MatchMode;
+import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.dto.match.TeamDTO;
 import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
@@ -16,9 +15,11 @@ import uz.ccrew.matchmaking.service.MatchService;
 import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
 import uz.ccrew.matchmaking.mapper.TeamPlayerMapper;
 import uz.ccrew.matchmaking.exp.BadRequestException;
+import uz.ccrew.matchmaking.dto.match.MatchResultDTO;
 import uz.ccrew.matchmaking.exp.ServerUnavailableException;
 
 import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +30,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
+    private final AuthUtil authUtil;
     private final PlayerUtil playerUtil;
+    private final EloService eloService;
     private final TeamRepository teamRepository;
     private final LobbyRepository lobbyRepository;
     private final LobbyPlayerUtil lobbyPlayerUtil;
@@ -39,7 +42,7 @@ public class MatchServiceImpl implements MatchService {
     private final MatchAsyncService matchAsyncService;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
-    private final EloService eloService;
+
 
     @Override
     public void join() { //TODO send less query to database
@@ -151,9 +154,13 @@ public class MatchServiceImpl implements MatchService {
 
     @Transactional
     @Override
-    public void handleResult(MatchResultDTO dto) {
+    public void calculateResult(MatchResultDTO dto) {
         UUID matchUUID = UUID.fromString(dto.matchId());
         Match match = matchRepository.loadById(matchUUID);
+        if (!match.getServer().getUser().getId().equals(authUtil.loadLoggedUser().getId())) {
+            throw new BadRequestException("You cant calculate result for another server match");
+        }
+
         if (!match.getStatus().equals(MatchStatus.STARTED)) {
             throw new BadRequestException("Match status is not Started");
         }
@@ -168,7 +175,30 @@ public class MatchServiceImpl implements MatchService {
             teams.add(team);
         });
 
+        List<Player> winners = new ArrayList<>();
+        List<Player> losers = new ArrayList<>();
+        for (Team team : teams) {
+            List<Player> players = teamPlayerRepository.findByTeamId(team.getTeamId());
+            if (team.getPlacement() == 1) {
+                winners.addAll(players);
+            } else {
+                losers.addAll(players);
+            }
+        }
+
         teamRepository.saveAll(teams);
-        eloService.updateRatings(teams);
+        if (match.getMode().equals(MatchMode.TDM)) {
+            if (match.getTeamType().equals(TeamType.SOLO)) {
+                eloService.updateRating(winners.getFirst(), losers.getFirst());
+            } else {
+                eloService.updateTeamRatings(winners, losers);
+            }
+        } else {
+            if (match.getTeamType().equals(TeamType.SOLO)) {
+                eloService.updateFFARatings(teams);
+            } else {
+                eloService.updateFFATeamRatings(teams);
+            }
+        }
     }
 }
