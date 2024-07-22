@@ -6,8 +6,23 @@
 - Java 21
 - Spring Boot 3.3.1
 
-## Setup
+## How to run
 
+<details close>
+  <summary>
+    <h3>
+      Docker    
+    </h3>
+  </summary>
+</details>
+
+<details close>
+  <summary>
+    <h3>
+      Jar    
+    </h3>
+  </summary>
+    
 1. **Clone the repository:**
 
     ```sh
@@ -25,15 +40,10 @@
 
 3. **Run the application:**
 
-    Use Maven to run the Spring Boot application.
+    To run the application, make sure you have Java 21 installed
+    
+      ```sh
+      java -jar target/match-making-0.0.1-SNAPSHOT.jar
+      ```
 
-    ```sh
-    ./mvnw spring-boot:run
-    ```
-
-## Running the Application
-
-To run the application, make sure you have Java 21 installed. You can run the application using the following command:
-
-```sh
-java -jar target/matchmaking-server-0.0.1-SNAPSHOT.jar
+</details>
