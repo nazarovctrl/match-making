@@ -32,7 +32,7 @@ public class ServerServiceImpl implements ServerService {
     @Transactional
     @Override
     public ServerDTO create(ServerCreateDTO dto) {
-        //TODO check login to exists
+        //TODO check login to exists (use equalsIgnoreCase)
         User user = User.builder()
                 .login(dto.login())
                 .password(passwordEncoder.encode(dto.password()))

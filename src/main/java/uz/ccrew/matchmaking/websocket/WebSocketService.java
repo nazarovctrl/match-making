@@ -17,11 +17,11 @@ import java.io.IOException;
 public class WebSocketService {
     private final Map<String, WebSocketSession> sessions;
 
+    @Async
     public void sendMessage(List<String> users, String message) {
         users.forEach(user -> sendMessage(user, message));
     }
 
-    @Async
     public void sendMessage(String user, String message) {
         WebSocketSession session = sessions.get(user);
         if (session == null) {
