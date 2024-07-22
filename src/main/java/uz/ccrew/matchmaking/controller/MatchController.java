@@ -1,5 +1,6 @@
 package uz.ccrew.matchmaking.controller;
 
+import jakarta.validation.Valid;
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
@@ -39,7 +40,7 @@ public class MatchController {
 
     @PatchMapping("/calculate/result")
     @Operation(summary = "Calculate match result")
-    public ResponseEntity<Response<?>> handleResult(@RequestBody MatchResultDTO dto) {
+    public ResponseEntity<Response<?>> handleResult(@RequestBody @Valid MatchResultDTO dto) {
         matchService.handleResult(dto);
         return ResponseMaker.okMessage("Result successfully created");
     }
