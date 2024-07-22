@@ -36,7 +36,7 @@ Then, execute the commands in the specified order.
     ```
    docker-compose.yml link
 
-   https://github.com/nazarovctrl/match-making/blob/1f22590a659bacd4c97e08cdd2be53a96c4668fd/docker-compose.yml
+   https://github.com/nazarovctrl/match-making/blob/master/docker-compose.yml
    
 3. **Pull the Docker Image**
 
