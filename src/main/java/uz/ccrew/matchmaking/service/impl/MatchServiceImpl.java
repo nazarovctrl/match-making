@@ -1,5 +1,6 @@
 package uz.ccrew.matchmaking.service.impl;
 
+import uz.ccrew.matchmaking.dto.match.MatchResultDTO;
 import uz.ccrew.matchmaking.entity.*;
 import uz.ccrew.matchmaking.repository.*;
 import uz.ccrew.matchmaking.enums.TeamType;
@@ -124,25 +125,44 @@ public class MatchServiceImpl implements MatchService {
         matchRepository.save(match);
     }
 
-    public void handleResult(String matchId,String teamID){
-        UUID matchUUID = UUID.fromString(matchId);
+    @Override
+    public void handleResult(MatchResultDTO dto){
+        UUID matchUUID = UUID.fromString(dto.matchId());
         Match match = matchRepository.loadById(matchUUID);
-        List<Team> teams = teamRepository.findByMatch_MatchId(matchUUID);
-        List<Player> winners = new ArrayList<>();
-        List<Player> losers = new ArrayList<>();
-        for (Team team : teams) {
-            List<Player> players = teamPlayerRepository.findByTeamId(team.getTeamId());
-            if (team.getTeamId().toString().equals(teamID)) {
-                winners.addAll(players);
-            }else {
-                losers.addAll(players);
-            }
-        }
+        List<Team> teams = new ArrayList<>();
 
-        if (match.getTeamType().equals(TeamType.SQUAD)){
-            eloService.updateRatings(winners,losers);
+        dto.teamResults().forEach(teamResult -> {
+            Team team = teamRepository.loadById(UUID.fromString(teamResult.teamId()));
+            team.setPlace(teamResult.place());
+            teams.add(team);
+        });
+
+        teamRepository.saveAll(teams);
+
+        if (match.getMode().equals(MatchMode.FFA)) {
+            switch (match.getTeamType()){
+                case SOLO:
+                    eloService.updateRatings(teams);
+                case SQUAD:
+                    throw new RuntimeException("Not implemented yet");
+            }
         }else {
-            eloService.updateRatings(winners.getFirst(),losers.getFirst());
+            List<Player> winners = new ArrayList<>();
+            List<Player> losers = new ArrayList<>();
+            for (Team team : teams) {
+                List<Player> players = teamPlayerRepository.findByTeamId(team.getTeamId());
+                if (team.getPlace() == 1) {
+                    winners.addAll(players);
+                }else {
+                    losers.addAll(players);
+                }
+            }
+            switch (match.getTeamType()){
+                case SOLO:
+                    eloService.updateRatings(winners.getFirst(),losers.getFirst());
+                case SQUAD:
+                    throw new RuntimeException("Not implemented yet");
+            }
         }
     }
 }

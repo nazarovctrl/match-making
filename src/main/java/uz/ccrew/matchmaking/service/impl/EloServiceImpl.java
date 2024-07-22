@@ -1,7 +1,9 @@
 package uz.ccrew.matchmaking.service.impl;
 
 import uz.ccrew.matchmaking.entity.Player;
+import uz.ccrew.matchmaking.entity.Team;
 import uz.ccrew.matchmaking.repository.PlayerRepository;
+import uz.ccrew.matchmaking.repository.TeamPlayerRepository;
 import uz.ccrew.matchmaking.service.EloService;
 
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EloServiceImpl implements EloService {
     private final PlayerRepository playerRepository;
+    private final TeamPlayerRepository teamPlayerRepository;
 
     @Override
     public void updateRatings(Player winner, Player loser) {
@@ -33,18 +36,58 @@ public class EloServiceImpl implements EloService {
         playerRepository.save(loser);
     }
 
+//    @Override
+//    public void updateRatings(List<Player> winners,List<Player> losers) {
+//        for (int i = 0; i < winners.size(); i++) {
+//            updateRatings(winners.get(i), losers.get(i));
+//        }
+//    }
+
     @Override
-    public void updateRatings(List<Player> winners,List<Player> losers) {
-        for (int i = 0; i < winners.size(); i++) {
-            updateRatings(winners.get(i), losers.get(i));
+    public void updateRatings(List<Team> teams) {
+        int size = teams.size();
+        for (Team team : teams) {
+            Player player = teamPlayerRepository.findByTeamId(team.getTeamId()).getFirst();
+
+            int playerRating = player.getPoints();
+
+            double actualScore = calculateActualScore(size,team.getPlace());
+            double expectedScore = 0;
+
+            for (Team opponentTeam: teams){
+                if (opponentTeam.getTeamId().equals(team.getTeamId())){
+                    continue;
+                }
+                Player opponentRating = teamPlayerRepository.findByTeamId(opponentTeam.getTeamId()).getFirst();
+                expectedScore += calculateExpectedScore(playerRating, opponentRating.getPoints());
+            }
+            expectedScore /= (size - 1);
+
+            int newRating = calculateNewRating(playerRating, expectedScore, actualScore);
+            player.setPoints(newRating);
         }
     }
+
 
     private int calculateNewRating(int playerRating, int opponentRating, boolean isWinner) {
         double kFactor = 32;
         double expectedScore = 1 / (1 + Math.pow(10, (opponentRating - playerRating) / 400.0));
         double actualScore = isWinner ? 1 : 0;
 
+        return (int) (playerRating + kFactor * (actualScore - expectedScore));
+    }
+
+
+    private double calculateExpectedScore(int playerRating, int opponentRating) {
+        return 1 / (1 + Math.pow(10, (opponentRating - playerRating) / 400.0));
+    }
+
+    private double calculateActualScore(int numPlayers, int playerRanking) {
+        return (numPlayers - playerRanking) / (double) (numPlayers - 1);
+    }
+
+    private int calculateNewRating(int playerRating, double expectedScore, double actualScore) {
+        double kFactor = 32; // K-factor determines the maximum possible change per game
         return (int) (playerRating + kFactor * (actualScore - expectedScore));
     }
 }

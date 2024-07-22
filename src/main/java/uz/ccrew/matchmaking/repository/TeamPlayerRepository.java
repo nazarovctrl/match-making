@@ -32,8 +32,9 @@ public interface TeamPlayerRepository extends BasicRepository<TeamPlayer, TeamPl
     List<TeamPlayer> findByTeam(Team team);
 
     @Query("""
-             select tp.player from TeamPlayer  tp
-             where tp.team.teamId =?1
+             select tp.player
+               from TeamPlayer tp
+              where tp.team.teamId =?1
             """)
     List<Player> findByTeamId(UUID matchId);
 }
