@@ -21,7 +21,7 @@ Then, execute the commands in the specified order.
 1. **Create match-making folder in your machine**
 
 
-2. **Create and copy the .env file into the match-making folder**
+2. **Create and copy the .env and docker-compose.yml files into the match-making folder**
 
    .env file content
 
@@ -34,7 +34,10 @@ Then, execute the commands in the specified order.
     SECURITY_TOKEN_REFRESH_SECRET_KEY=<repalce-with-generated-secret-koy-for-refresh-token>
     SECURITY_TOKEN_REFRESH_TIME=<refresht-token-valid-time-in-millieseconds>
     ```
-
+   docker-compose.yml
+   ```
+   https://github.com/nazarovctrl/match-making/blob/1f22590a659bacd4c97e08cdd2be53a96c4668fd/docker-compose.yml
+   ````
 3. **Pull the Docker Image**
 
     ```sh
