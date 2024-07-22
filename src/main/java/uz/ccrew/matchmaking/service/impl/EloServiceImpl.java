@@ -24,14 +24,13 @@ public class EloServiceImpl implements EloService {
 
         int newWinnerRating = calculateNewRating(winnerRating, loserRating, true);
         winner.setPoints(newWinnerRating);
+        playerRepository.save(winner);
 
         if (loser.getPoints() != 0) {
             int newLoserRating = calculateNewRating(loserRating, winnerRating, false);
             loser.setPoints(newLoserRating);
             playerRepository.save(loser);
         }
-
-        playerRepository.save(winner);
     }
 
 
