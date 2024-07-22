@@ -9,7 +9,6 @@ import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.dto.match.TeamDTO;
 import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
-import uz.ccrew.matchmaking.mapper.MatchMapper;
 import uz.ccrew.matchmaking.service.MatchService;
 import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
 import uz.ccrew.matchmaking.mapper.TeamPlayerMapper;
@@ -18,7 +17,6 @@ import uz.ccrew.matchmaking.exp.ServerUnavailableException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.ccrew.matchmaking.websocket.WebSocketService;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +27,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
     private final PlayerUtil playerUtil;
-    private final MatchMapper matchMapper;
     private final TeamRepository teamRepository;
     private final LobbyRepository lobbyRepository;
     private final LobbyPlayerUtil lobbyPlayerUtil;
@@ -37,7 +34,6 @@ public class MatchServiceImpl implements MatchService {
     private final ServerRepository serverRepository;
     private final TeamPlayerMapper teamPlayerMapper;
     private final MatchAsyncService matchAsyncService;
-    private final WebSocketService webSocketService;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
 
@@ -125,25 +121,20 @@ public class MatchServiceImpl implements MatchService {
         }
 
         TeamPlayer teamPlayer = optional.get();
+        if (teamPlayer.getIsReady() != null) {
+            throw new BadRequestException("Already confirmed or declined");
+        }
+
         teamPlayer.setIsReady(isReady);
         teamPlayerRepository.save(teamPlayer);
 
         Match match = teamPlayer.getTeam().getMatch();
-        if (!isReady) {
-            match.setStatus(MatchStatus.CANCELED);
-            matchRepository.save(match);
 
-            Server server = match.getServer();
-            server.setIsBusy(false);
-            serverRepository.save(server);
-
-            List<String> users = teamPlayerRepository.findLoginsByMatchId(match.getMatchId());
-            users.add(server.getUser().getLogin());
-            webSocketService.sendMessage(users, String.format("Cant start match matchId=%s", match.getMatchId()));
-            return;
+        if (isReady) {
+            matchAsyncService.checkMatchToStart(match);
+        } else {
+            matchAsyncService.cancelMatch(match);
         }
-
-        matchAsyncService.checkMatchToStart(match);
     }
 
     private Server getFreeServer() {

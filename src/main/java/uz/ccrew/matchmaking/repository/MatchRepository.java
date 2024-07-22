@@ -33,16 +33,17 @@ public interface MatchRepository extends BasicRepository<Match, UUID> {
     @Query("""
             select tp
             from TeamPlayer tp
-            join fetch tp.team.match m
+            join fetch tp.team t
+            join fetch t.match m
             where tp.player.playerId=?1
             and m.status = ?2
             """)
     Optional<TeamPlayer> findByPlayerIdAndMatchStatus(Integer playerId, MatchStatus status);
 
     @Query("""
-             select true from TeamPlayer  tp
+             select count(*) from TeamPlayer  tp
               where tp.team.match.matchId = ?1
-                and tp.isReady <> true
+                and tp.isReady = true
             """)
-    Boolean isNotReadyToStart(UUID matchId);
+    int readyPlayersCount(UUID matchId);
 }

@@ -23,6 +23,7 @@ public class MatchAsyncService {
     private final LobbyRepository lobbyRepository;
     private final MatchRepository matchRepository;
     private final WebSocketService webSocketService;
+    private final ServerRepository serverRepository;
     private final TeamPlayerRepository teamPlayerRepository;
 
     @Async
@@ -32,16 +33,31 @@ public class MatchAsyncService {
         }
         //sending notification
         List<String> users = teamPlayerRepository.findLoginsByMatchId(match.getMatchId());
-        webSocketService.sendMessage(users, String.format("Confirm matchId=%s", match.getMatchId()));
+        webSocketService.sendMessage(users, "Confirm play");
 
         match.setStatus(MatchStatus.WAITING);
         matchRepository.save(match);
     }
 
     @Async
+    public void cancelMatch(Match match) {
+        lobbyRepository.updateStatusByMatchId(match.getMatchId(), LobbyStatus.PREPARING);
+
+        match.setStatus(MatchStatus.CANCELED);
+        matchRepository.save(match);
+
+        Server server = match.getServer();
+        server.setIsBusy(false);
+        serverRepository.save(server);
+
+        List<String> users = teamPlayerRepository.findLoginsByMatchId(match.getMatchId());
+        webSocketService.sendMessage(users, "Cant start match");
+    }
+
+    @Async
     public void checkMatchToStart(Match match) {
-        Boolean isNotReady = matchRepository.isNotReadyToStart(match.getMatchId());
-        if (isNotReady) {
+        int readyPlayersCount = matchRepository.readyPlayersCount(match.getMatchId());
+        if (readyPlayersCount < match.getTeamType().getPlayerCount() * match.getMode().getTeamCount()) {
             return;
         }
 
