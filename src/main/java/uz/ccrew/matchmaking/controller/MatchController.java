@@ -37,8 +37,8 @@ public class MatchController {
         return ResponseMaker.ok(result);
     }
 
-    @PatchMapping("/changeResult")
-    @Operation(summary = "")
+    @PatchMapping("/calculate/result")
+    @Operation(summary = "Get summary")
     public ResponseEntity<Response<?>> handleResult(@RequestBody MatchResultDTO dto) {
         matchService.handleResult(dto);
         return ResponseMaker.okMessage("Result successfully created");
