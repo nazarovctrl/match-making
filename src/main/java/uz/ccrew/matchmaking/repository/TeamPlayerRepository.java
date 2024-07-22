@@ -32,5 +32,5 @@ public interface TeamPlayerRepository extends BasicRepository<TeamPlayer, TeamPl
                from TeamPlayer tp
               where tp.team.teamId =?1
             """)
-    List<Player> findByTeamId(UUID matchId);
+    List<String> findByMatchId(UUID matchid);
 }
