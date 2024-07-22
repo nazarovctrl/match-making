@@ -37,3 +37,21 @@ To run the application, make sure you have Java 21 installed. You can run the ap
 
 ```sh
 java -jar target/matchmaking-server-0.0.1-SNAPSHOT.jar
+```
+
+## Running the Application with Docker Compose
+
+To run the application, ensure that Docker and Docker Compose are installed on your machine. 
+Then, execute the commands in the specified order.
+
+1. **Pull the Docker Image**
+
+```sh
+docker pull nazarovv2/match-making:latest
+```
+
+2. **Start the Application**
+
+```sh
+docker-compose up -d match-making-app
+```
