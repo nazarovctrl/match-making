@@ -21,7 +21,7 @@ Then, execute the commands in the specified order.
 1. **Create match-making folder in your machine**
 
 
-2. **Create and copy the .env and docker-compose.yml files into the match-making folder**
+2. **Create and copy the .env file, and get docker-compose.yml from GitHub link below and put them into the match-making folder**
 
    .env file content
 
