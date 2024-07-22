@@ -11,8 +11,8 @@
 1. **Clone the repository:**
 
     ```sh
-    git clone https://github.com/yourusername/matchmaking-server.git
-    cd matchmaking-server
+    git clone https://github.com/nazarovctrl/match-making.git
+    cd match-making
     ```
 
 2. **Build the project:**
