@@ -80,7 +80,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/lobby/**", "/api/v1/lobby-player/**", "/api/v1/match/*").hasAuthority(UserRole.PLAYER.name())
                         .requestMatchers("/api/v1/match/calculate/result").hasAuthority(UserRole.SERVER.name())
                         .requestMatchers("/ws/match-notify").hasAnyAuthority(UserRole.PLAYER.name(), UserRole.SERVER.name())
-                        .requestMatchers("/api/v1/match/changeResult").hasAuthority(UserRole.SERVER.name())
                         .anyRequest().authenticated());
         return httpSecurity.build();
     }
