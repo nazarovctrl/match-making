@@ -23,18 +23,18 @@ public class EloServiceImpl implements EloService {
         int loserRating = loser.getPoints();
 
         int newWinnerRating = calculateNewRating(winnerRating, loserRating, true);
-        if (loser.getPoints() == 0){
-            loser.setPoints(0);
-        }else {
+        winner.setPoints(newWinnerRating);
+
+
+        if (loser.getPoints() != 0) {
             int newLoserRating = calculateNewRating(loserRating, winnerRating, false);
             loser.setPoints(newLoserRating);
         }
 
-        winner.setPoints(newWinnerRating);
-
         playerRepository.save(winner);
         playerRepository.save(loser);
     }
+
 
 //    @Override
 //    public void updateRatings(List<Player> winners,List<Player> losers) {
