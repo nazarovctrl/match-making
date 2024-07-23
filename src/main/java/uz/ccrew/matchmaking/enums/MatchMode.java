@@ -1,7 +1,7 @@
 package uz.ccrew.matchmaking.enums;
 
 public enum MatchMode {
-    TDM(2), FFA(5);
+    TDM(2), FFA(10);
     private final int teamCount;
 
     MatchMode(int teamCount) {

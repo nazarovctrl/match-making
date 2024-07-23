@@ -83,7 +83,7 @@ public class MatchAsyncService {
         return !Boolean.TRUE.equals(existsNotFullTeam);
     }
 
-    public void initializeNumbers(UUID matchId) {
+    private void initializeNumbers(UUID matchId) {
         List<Team> teams = teamRepository.findByMatch_MatchId(matchId);
         int teamNumber = 1;
 
