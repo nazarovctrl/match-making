@@ -75,7 +75,7 @@ public class EloServiceImpl implements EloService {
         }
 
         for (Player loser : losers) {
-            double calculateRating = calculateRating(loser.getPoints(), team2Expected, 1);
+            double calculateRating = calculateRating(loser.getPoints(), team2Expected, 0);
             loser.setPoints((int) calculateRating);
         }
     }

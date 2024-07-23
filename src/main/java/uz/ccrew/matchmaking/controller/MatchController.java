@@ -1,12 +1,12 @@
 package uz.ccrew.matchmaking.controller;
 
-import jakarta.validation.Valid;
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
 import uz.ccrew.matchmaking.dto.match.MatchResultDTO;
 import uz.ccrew.matchmaking.service.MatchService;
 
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +47,7 @@ public class MatchController {
 
     @PatchMapping("/calculate/result")
     @Operation(summary = "Calculate match result")
-    public ResponseEntity<Response<?>> handleResult(@RequestBody @Valid MatchResultDTO dto) {
+    public ResponseEntity<Response<?>> calculateResult(@RequestBody @Valid MatchResultDTO dto) {
         matchService.calculateResult(dto);
         return ResponseMaker.okMessage("Result successfully created");
     }

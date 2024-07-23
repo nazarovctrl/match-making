@@ -164,6 +164,10 @@ public class MatchServiceImpl implements MatchService {
         if (!match.getStatus().equals(MatchStatus.STARTED)) {
             throw new BadRequestException("Match status is not Started");
         }
+        Server server = match.getServer();
+        server.setIsBusy(false);
+        serverRepository.save(server);
+
         match.setStatus(MatchStatus.FINISHED);
         lobbyRepository.updateStatusByMatchId(matchUUID, LobbyStatus.PREPARING);
         matchRepository.save(match);
