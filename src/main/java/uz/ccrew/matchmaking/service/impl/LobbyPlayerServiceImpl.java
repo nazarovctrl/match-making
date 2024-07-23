@@ -3,6 +3,7 @@ package uz.ccrew.matchmaking.service.impl;
 import uz.ccrew.matchmaking.entity.Lobby;
 import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.util.PlayerUtil;
+import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.entity.LobbyPlayer;
 import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
 import uz.ccrew.matchmaking.exp.BadRequestException;
@@ -32,6 +33,10 @@ public class LobbyPlayerServiceImpl implements LobbyPlayerService {
     public void join(String lobbyId) {
         //TODO add check for lobby status == PREPARING
         Lobby lobby = lobbyRepository.loadById(UUID.fromString(lobbyId)); //TODO check players count
+
+        if (!lobby.getStatus().equals(LobbyStatus.PREPARING)) {
+            throw new BadRequestException("Can't join to lobby");
+        }
 
         Player player = playerUtil.loadPLayer();
 

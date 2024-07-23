@@ -28,4 +28,11 @@ public class Player extends Auditable {
     @OneToOne
     @JoinColumn(name = "player_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "players_f1"), nullable = false)
     private User user;
+
+    public void setPoints(Integer points) {
+        if (points < 0) {
+            points = 0;
+        }
+        this.points = points;
+    }
 }

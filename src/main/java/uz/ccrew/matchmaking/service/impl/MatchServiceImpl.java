@@ -1,24 +1,25 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import jakarta.transaction.Transactional;
-import uz.ccrew.matchmaking.dto.match.MatchResultDTO;
 import uz.ccrew.matchmaking.entity.*;
-import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.repository.*;
+import uz.ccrew.matchmaking.util.AuthUtil;
 import uz.ccrew.matchmaking.enums.TeamType;
+import uz.ccrew.matchmaking.util.PlayerUtil;
 import uz.ccrew.matchmaking.enums.MatchMode;
+import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.dto.match.TeamDTO;
 import uz.ccrew.matchmaking.enums.LobbyStatus;
 import uz.ccrew.matchmaking.dto.match.MatchDTO;
-import uz.ccrew.matchmaking.mapper.MatchMapper;
 import uz.ccrew.matchmaking.service.EloService;
 import uz.ccrew.matchmaking.service.MatchService;
 import uz.ccrew.matchmaking.util.LobbyPlayerUtil;
 import uz.ccrew.matchmaking.mapper.TeamPlayerMapper;
 import uz.ccrew.matchmaking.exp.BadRequestException;
+import uz.ccrew.matchmaking.dto.match.MatchResultDTO;
 import uz.ccrew.matchmaking.exp.ServerUnavailableException;
 
 import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +30,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
-    private final MatchMapper matchMapper;
+    private final AuthUtil authUtil;
+    private final PlayerUtil playerUtil;
+    private final EloService eloService;
     private final TeamRepository teamRepository;
     private final LobbyRepository lobbyRepository;
     private final LobbyPlayerUtil lobbyPlayerUtil;
@@ -39,10 +42,10 @@ public class MatchServiceImpl implements MatchService {
     private final MatchAsyncService matchAsyncService;
     private final TeamPlayerRepository teamPlayerRepository;
     private final LobbyPlayerRepository lobbyPlayerRepository;
-    private final EloService eloService;
+
 
     @Override
-    public MatchDTO find() { //TODO send less query to database
+    public void join() { //TODO send less query to database
         LobbyPlayer lobbyPlayer = lobbyPlayerUtil.loadLobbyPlayer();
         lobbyPlayerUtil.checkToLeader(lobbyPlayer);
 
@@ -86,9 +89,7 @@ public class MatchServiceImpl implements MatchService {
         lobby.setStatus(LobbyStatus.WAITING);
         lobbyRepository.save(lobby);
 
-        matchAsyncService.checkMatchToStart(match, mode, teamType);
-
-        return matchMapper.toDTO(match);
+        matchAsyncService.checkMatchToFull(match, mode, teamType);
     }
 
     @Override
@@ -118,6 +119,31 @@ public class MatchServiceImpl implements MatchService {
                 .teams(teamDTOList).build();
     }
 
+    @Override
+    public void readyToPlay(boolean isReady) {
+        Player player = playerUtil.loadPLayer();
+        Optional<TeamPlayer> optional = matchRepository.findByPlayerIdAndMatchStatus(player.getPlayerId(), MatchStatus.WAITING);
+        if (optional.isEmpty()) {
+            throw new BadRequestException("You are not in match to confirm play or your match already canceled");
+        }
+
+        TeamPlayer teamPlayer = optional.get();
+        if (teamPlayer.getIsReady() != null) {
+            throw new BadRequestException("Already confirmed or declined");
+        }
+
+        teamPlayer.setIsReady(isReady);
+        teamPlayerRepository.save(teamPlayer);
+
+        Match match = teamPlayer.getTeam().getMatch();
+
+        if (isReady) {
+            matchAsyncService.checkMatchToStart(match);
+        } else {
+            matchAsyncService.cancelMatch(match);
+        }
+    }
+
     private Server getFreeServer() {
         Server server = serverRepository.findFirstByIsBusyIsFalseOrderByLastModifiedDate()
                 .orElseThrow(() -> new ServerUnavailableException("There is no available server to play match"));
@@ -128,12 +154,20 @@ public class MatchServiceImpl implements MatchService {
 
     @Transactional
     @Override
-    public void handleResult(MatchResultDTO dto) {
+    public void calculateResult(MatchResultDTO dto) {
         UUID matchUUID = UUID.fromString(dto.matchId());
         Match match = matchRepository.loadById(matchUUID);
+        if (!match.getServer().getUser().getId().equals(authUtil.loadLoggedUser().getId())) {
+            throw new BadRequestException("You cant calculate result for another server match");
+        }
+
         if (!match.getStatus().equals(MatchStatus.STARTED)) {
             throw new BadRequestException("Match status is not Started");
         }
+        Server server = match.getServer();
+        server.setIsBusy(false);
+        serverRepository.save(server);
+
         match.setStatus(MatchStatus.FINISHED);
         lobbyRepository.updateStatusByMatchId(matchUUID, LobbyStatus.PREPARING);
         matchRepository.save(match);
@@ -145,7 +179,30 @@ public class MatchServiceImpl implements MatchService {
             teams.add(team);
         });
 
+        List<Player> winners = new ArrayList<>();
+        List<Player> losers = new ArrayList<>();
+        for (Team team : teams) {
+            List<Player> players = teamPlayerRepository.findByTeamId(team.getTeamId());
+            if (team.getPlacement() == 1) {
+                winners.addAll(players);
+            } else {
+                losers.addAll(players);
+            }
+        }
+
         teamRepository.saveAll(teams);
-        eloService.updateRatings(teams);
+        if (match.getMode().equals(MatchMode.TDM)) {
+            if (match.getTeamType().equals(TeamType.SOLO)) {
+                eloService.updateRating(winners.getFirst(), losers.getFirst());
+            } else {
+                eloService.updateTeamRatings(winners, losers);
+            }
+        } else {
+            if (match.getTeamType().equals(TeamType.SOLO)) {
+                eloService.updateFFARatings(teams);
+            } else {
+                eloService.updateFFATeamRatings(teams);
+            }
+        }
     }
 }

@@ -1,15 +1,12 @@
 package uz.ccrew.matchmaking.service.impl;
 
 import uz.ccrew.matchmaking.entity.*;
+import uz.ccrew.matchmaking.repository.*;
 import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.enums.MatchMode;
 import uz.ccrew.matchmaking.enums.MatchStatus;
 import uz.ccrew.matchmaking.enums.LobbyStatus;
-import uz.ccrew.matchmaking.repository.TeamRepository;
 import uz.ccrew.matchmaking.websocket.WebSocketService;
-import uz.ccrew.matchmaking.repository.LobbyRepository;
-import uz.ccrew.matchmaking.repository.MatchRepository;
-import uz.ccrew.matchmaking.repository.TeamPlayerRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,27 +23,57 @@ public class MatchAsyncService {
     private final LobbyRepository lobbyRepository;
     private final MatchRepository matchRepository;
     private final WebSocketService webSocketService;
+    private final ServerRepository serverRepository;
     private final TeamPlayerRepository teamPlayerRepository;
 
     @Async
-    public void checkMatchToStart(Match match, MatchMode mode, TeamType teamType) {
-        if (!isMatchReady(match, mode, teamType)) {
+    public void checkMatchToFull(Match match, MatchMode mode, TeamType teamType) {
+        if (!isMatchFull(match, mode, teamType)) {
             return;
         }
-
-        lobbyRepository.updateStatusByMatchId(match.getMatchId(), LobbyStatus.IN_GAME);
-        initializeNumbers(match.getMatchId());
-
         //sending notification
-        List<String> users = teamPlayerRepository.findByMatchId(match.getMatchId());
-        users.add(match.getServer().getUser().getLogin());
-        webSocketService.sendMessage(users, String.format("Match started matchId=%s", match.getMatchId()));
+        List<String> users = teamPlayerRepository.findLoginsByMatchId(match.getMatchId());
+        webSocketService.sendMessage(users, "Confirm play");
 
-        match.setStatus(MatchStatus.STARTED);
+        match.setStatus(MatchStatus.WAITING);
         matchRepository.save(match);
     }
 
-    private boolean isMatchReady(Match match, MatchMode mode, TeamType teamType) {
+    @Async
+    public void cancelMatch(Match match) {
+        lobbyRepository.updateStatusByMatchId(match.getMatchId(), LobbyStatus.PREPARING);
+
+        match.setStatus(MatchStatus.CANCELED);
+        matchRepository.save(match);
+
+        Server server = match.getServer();
+        server.setIsBusy(false);
+        serverRepository.save(server);
+
+        List<String> users = teamPlayerRepository.findLoginsByMatchId(match.getMatchId());
+        webSocketService.sendMessage(users, "Cant start match");
+    }
+
+    @Async
+    public void checkMatchToStart(Match match) {
+        int readyPlayersCount = matchRepository.readyPlayersCount(match.getMatchId());
+        if (readyPlayersCount < match.getTeamType().getPlayerCount() * match.getMode().getTeamCount()) {
+            return;
+        }
+
+        initializeNumbers(match.getMatchId());
+        lobbyRepository.updateStatusByMatchId(match.getMatchId(), LobbyStatus.IN_GAME);
+
+        match.setStatus(MatchStatus.STARTED);
+        matchRepository.save(match);
+
+        //sending notification
+        List<String> users = teamPlayerRepository.findLoginsByMatchId(match.getMatchId());
+        users.add(match.getServer().getUser().getLogin());
+        webSocketService.sendMessage(users, String.format("Match started matchId=%s", match.getMatchId()));
+    }
+
+    private boolean isMatchFull(Match match, MatchMode mode, TeamType teamType) {
         Integer teamCount = teamRepository.countByMatch_MatchId(match.getMatchId());
         if (teamCount == null || teamCount < mode.getTeamCount()) {
             return false;
@@ -56,7 +83,7 @@ public class MatchAsyncService {
         return !Boolean.TRUE.equals(existsNotFullTeam);
     }
 
-    public void initializeNumbers(UUID matchId) {
+    private void initializeNumbers(UUID matchId) {
         List<Team> teams = teamRepository.findByMatch_MatchId(matchId);
         int teamNumber = 1;
 
