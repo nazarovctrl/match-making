@@ -49,6 +49,9 @@ Then, execute the commands in the specified order.
     ```sh
    docker-compose up -d match-making
    ```
+5. **Link for the application**
+
+   http://localhost/swagger-ui/index.html#/
 
 </details>
 
