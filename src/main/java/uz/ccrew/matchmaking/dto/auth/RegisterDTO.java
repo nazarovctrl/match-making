@@ -1,7 +1,7 @@
 package uz.ccrew.matchmaking.dto.auth;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Request body for Registration")
 public record RegisterDTO(@NotBlank(message = "Login must not be blank")

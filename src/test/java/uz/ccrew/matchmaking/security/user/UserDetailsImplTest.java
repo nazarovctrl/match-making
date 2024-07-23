@@ -3,16 +3,16 @@ package uz.ccrew.matchmaking.security.user;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.GrantedAuthority;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")

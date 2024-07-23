@@ -1,8 +1,8 @@
 package uz.ccrew.matchmaking.mapper;
 
-import uz.ccrew.matchmaking.dto.server.ServerCreateDTO;
-import uz.ccrew.matchmaking.dto.server.ServerDTO;
 import uz.ccrew.matchmaking.entity.Server;
+import uz.ccrew.matchmaking.dto.server.ServerDTO;
+import uz.ccrew.matchmaking.dto.server.ServerCreateDTO;
 
 import org.springframework.stereotype.Component;
 

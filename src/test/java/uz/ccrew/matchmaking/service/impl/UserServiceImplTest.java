@@ -1,25 +1,25 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import uz.ccrew.matchmaking.dto.user.UserDTO;
-import uz.ccrew.matchmaking.dto.user.UserUpdateDTO;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
+import uz.ccrew.matchmaking.dto.user.UserDTO;
+import uz.ccrew.matchmaking.service.UserService;
+import uz.ccrew.matchmaking.dto.user.UserUpdateDTO;
 import uz.ccrew.matchmaking.exp.AlreadyExistException;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.security.user.UserDetailsServiceImpl;
-import uz.ccrew.matchmaking.service.UserService;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.util.List;
 

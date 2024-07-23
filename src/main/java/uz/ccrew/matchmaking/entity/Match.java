@@ -7,7 +7,6 @@ import uz.ccrew.matchmaking.enums.MatchStatus;
 
 import lombok.*;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Check;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;

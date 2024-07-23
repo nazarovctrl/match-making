@@ -2,17 +2,17 @@ package uz.ccrew.matchmaking.controller;
 
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
-import uz.ccrew.matchmaking.dto.lobby.LobbyCreateDTO;
 import uz.ccrew.matchmaking.dto.lobby.LobbyDTO;
-import uz.ccrew.matchmaking.dto.lobby.LobbyUpdateDTO;
 import uz.ccrew.matchmaking.service.LobbyService;
+import uz.ccrew.matchmaking.dto.lobby.LobbyCreateDTO;
+import uz.ccrew.matchmaking.dto.lobby.LobbyUpdateDTO;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api/v1/lobby")

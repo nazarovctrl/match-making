@@ -1,14 +1,14 @@
 package uz.ccrew.matchmaking.security.user;
 
-import jakarta.servlet.http.HttpServletResponse;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
 

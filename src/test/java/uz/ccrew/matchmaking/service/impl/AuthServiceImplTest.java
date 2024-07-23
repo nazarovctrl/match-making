@@ -1,29 +1,28 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import uz.ccrew.matchmaking.dto.auth.LoginDTO;
-import uz.ccrew.matchmaking.dto.auth.LoginResponseDTO;
-import uz.ccrew.matchmaking.dto.auth.RegisterDTO;
-import uz.ccrew.matchmaking.dto.user.UserDTO;
 import uz.ccrew.matchmaking.entity.User;
 import uz.ccrew.matchmaking.enums.UserRole;
-import uz.ccrew.matchmaking.exp.AlreadyExistException;
+import uz.ccrew.matchmaking.dto.user.UserDTO;
 import uz.ccrew.matchmaking.mapper.UserMapper;
+import uz.ccrew.matchmaking.dto.auth.LoginDTO;
+import uz.ccrew.matchmaking.dto.auth.RegisterDTO;
+import uz.ccrew.matchmaking.dto.auth.LoginResponseDTO;
+import uz.ccrew.matchmaking.exp.AlreadyExistException;
 import uz.ccrew.matchmaking.repository.UserRepository;
 import uz.ccrew.matchmaking.security.user.UserDetailsServiceImpl;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import java.util.concurrent.atomic.AtomicReference;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.ActiveProfiles;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 

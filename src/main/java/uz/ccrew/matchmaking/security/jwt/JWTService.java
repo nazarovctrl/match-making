@@ -1,22 +1,21 @@
 package uz.ccrew.matchmaking.security.jwt;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import io.jsonwebtoken.SignatureAlgorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.security.Key;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
+import java.time.ZoneId;
+import java.security.Key;
+import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.function.Function;
 
 @Service
