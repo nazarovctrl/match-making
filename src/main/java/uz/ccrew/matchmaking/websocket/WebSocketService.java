@@ -17,21 +17,21 @@ import java.io.IOException;
 public class WebSocketService {
     private final Map<String, WebSocketSession> sessions;
 
+    @Async
     public void sendMessage(List<String> users, String message) {
         users.forEach(user -> sendMessage(user, message));
     }
 
-    @Async
     public void sendMessage(String user, String message) {
         WebSocketSession session = sessions.get(user);
         if (session == null) {
-            log.warn("User {} did not receive a notification about the start of the match, Because user's session not found", user);
+            log.warn("User {} did not receive a notification, Because user's session not found", user);
             return;
         }
         try {
             session.sendMessage(new TextMessage(message));
         } catch (IOException e) {
-            log.warn("User {} did not receive a notification about the start of the match", user);
+            log.warn("User {} did not receive a notification", user);
         }
     }
 }
