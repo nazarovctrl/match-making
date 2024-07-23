@@ -2,8 +2,8 @@ package uz.ccrew.matchmaking.entity;
 
 import uz.ccrew.matchmaking.enums.Rank;
 
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "players")

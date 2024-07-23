@@ -2,9 +2,9 @@ package uz.ccrew.matchmaking.entity;
 
 import lombok.Setter;
 import lombok.Getter;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import jakarta.persistence.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
