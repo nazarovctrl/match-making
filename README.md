@@ -20,7 +20,6 @@ Then, execute the commands in the specified order.
 
 1. **Create match-making folder in your machine**
 
-
 2. **Create and copy the .env file, and get docker-compose.yml from GitHub link below and put them into the match-making folder**
 
    .env file content
@@ -37,7 +36,7 @@ Then, execute the commands in the specified order.
    docker-compose.yml link
 
    https://github.com/nazarovctrl/match-making/blob/master/docker-compose.yml
-
+   
 3. **Pull the Docker Image**
 
     ```sh
@@ -61,7 +60,7 @@ Then, execute the commands in the specified order.
       Jar    
     </h3>
   </summary>
-
+    
 1. **Clone the repository:**
 
     ```sh
@@ -70,8 +69,8 @@ Then, execute the commands in the specified order.
     ```
 2. **Paste the .env file into  match-making folder**
 
-   .env file content
-
+    .env file content
+   
     ```.env
     DB_URL=<your-databse-url>
     DB_USERNAME=<your-databse-username>
@@ -81,23 +80,28 @@ Then, execute the commands in the specified order.
     SECURITY_TOKEN_REFRESH_SECRET_KEY=<repalce-with-generated-secret-koy-for-refresh-token>
     SECURITY_TOKEN_REFRESH_TIME=<refresht-token-valid-time-in-millieseconds>
     ```
-4. **Build the project:**
+3. **Build the project:**
 
-   Use Maven to build the project.
+    Use Maven to build the project.
 
     ```sh
     mvn clean install
     ```
 
-5. **Run the application:**
+4. **Run the application:**
 
-   To run the application, make sure you have Java 21 installed
-
+    To run the application, make sure you have Java 21 installed
+    
     ```sh
     java -jar target/match-making-0.0.1-SNAPSHOT.jar
     ```
+5. **Link for the application**
+
+   http://localhost/swagger-ui/index.html#/
 
 </details>
 
-## Documentation
+
+## More detailed instructions
 For detailed instructions, visit the [Notion page](https://www.notion.so/match-making-a374c786725c4de59c06a69c9d0abab8?pvs=4).
+
