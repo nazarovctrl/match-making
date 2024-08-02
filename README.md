@@ -100,3 +100,8 @@ Then, execute the commands in the specified order.
    http://localhost/swagger-ui/index.html#/
 
 </details>
+
+
+## More detailed instructions
+For detailed instructions, visit the [Notion page](https://www.notion.so/match-making-a374c786725c4de59c06a69c9d0abab8?pvs=4).
+
