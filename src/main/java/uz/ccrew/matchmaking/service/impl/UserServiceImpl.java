@@ -1,23 +1,22 @@
 package uz.ccrew.matchmaking.service.impl;
 
-import uz.ccrew.matchmaking.dto.user.UserDTO;
-import uz.ccrew.matchmaking.dto.user.UserUpdateDTO;
 import uz.ccrew.matchmaking.entity.User;
-import uz.ccrew.matchmaking.exp.AlreadyExistException;
-import uz.ccrew.matchmaking.mapper.UserMapper;
-import uz.ccrew.matchmaking.repository.UserRepository;
-import uz.ccrew.matchmaking.service.UserService;
 import uz.ccrew.matchmaking.util.AuthUtil;
+import uz.ccrew.matchmaking.dto.user.UserDTO;
+import uz.ccrew.matchmaking.mapper.UserMapper;
+import uz.ccrew.matchmaking.service.UserService;
+import uz.ccrew.matchmaking.dto.user.UserUpdateDTO;
+import uz.ccrew.matchmaking.exp.AlreadyExistException;
+import uz.ccrew.matchmaking.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.data.domain.*;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

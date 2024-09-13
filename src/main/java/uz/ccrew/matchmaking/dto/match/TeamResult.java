@@ -1,8 +1,8 @@
 package uz.ccrew.matchmaking.dto.match;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "TeamResult")
 public record TeamResult(

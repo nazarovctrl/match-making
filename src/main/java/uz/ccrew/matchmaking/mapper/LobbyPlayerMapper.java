@@ -1,7 +1,7 @@
 package uz.ccrew.matchmaking.mapper;
 
-import uz.ccrew.matchmaking.dto.lobby.LobbyPlayerDTO;
 import uz.ccrew.matchmaking.entity.LobbyPlayer;
+import uz.ccrew.matchmaking.dto.lobby.LobbyPlayerDTO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

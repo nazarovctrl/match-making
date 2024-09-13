@@ -1,7 +1,7 @@
 package uz.ccrew.matchmaking.mapper;
 
-import uz.ccrew.matchmaking.dto.user.UserDTO;
 import uz.ccrew.matchmaking.entity.User;
+import uz.ccrew.matchmaking.dto.user.UserDTO;
 
 import org.springframework.stereotype.Component;
 

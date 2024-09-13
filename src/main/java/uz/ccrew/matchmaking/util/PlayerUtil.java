@@ -1,7 +1,7 @@
 package uz.ccrew.matchmaking.util;
 
-import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.entity.User;
+import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.repository.PlayerRepository;
 
 import lombok.RequiredArgsConstructor;

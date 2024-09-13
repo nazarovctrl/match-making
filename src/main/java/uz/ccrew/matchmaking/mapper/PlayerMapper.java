@@ -1,9 +1,9 @@
 package uz.ccrew.matchmaking.mapper;
 
-import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
-import uz.ccrew.matchmaking.dto.player.PlayerDTO;
-import uz.ccrew.matchmaking.entity.Player;
 import uz.ccrew.matchmaking.enums.Rank;
+import uz.ccrew.matchmaking.entity.Player;
+import uz.ccrew.matchmaking.dto.player.PlayerDTO;
+import uz.ccrew.matchmaking.dto.player.PlayerCreateDTO;
 
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,8 @@
 package uz.ccrew.matchmaking.dto.match;
 
+import uz.ccrew.matchmaking.enums.TeamType;
 import uz.ccrew.matchmaking.enums.MatchMode;
 import uz.ccrew.matchmaking.enums.MatchStatus;
-import uz.ccrew.matchmaking.enums.TeamType;
 
 import lombok.Builder;
 

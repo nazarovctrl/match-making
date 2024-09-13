@@ -2,19 +2,19 @@ package uz.ccrew.matchmaking.controller;
 
 import uz.ccrew.matchmaking.dto.Response;
 import uz.ccrew.matchmaking.dto.ResponseMaker;
-import uz.ccrew.matchmaking.dto.server.ServerCreateDTO;
 import uz.ccrew.matchmaking.dto.server.ServerDTO;
-import uz.ccrew.matchmaking.dto.server.ServerUpdateDTO;
 import uz.ccrew.matchmaking.service.ServerService;
+import uz.ccrew.matchmaking.dto.server.ServerCreateDTO;
+import uz.ccrew.matchmaking.dto.server.ServerUpdateDTO;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/server")
